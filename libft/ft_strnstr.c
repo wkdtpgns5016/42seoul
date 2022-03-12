@@ -1,6 +1,5 @@
 #include "libft.h"
 
-// little null포인터로 넘어올경우 생각하기
 char    *ft_strnstr(const char *big, const char *little, size_t len)
 {
     size_t  i;

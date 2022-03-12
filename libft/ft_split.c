@@ -1,6 +1,6 @@
 #include "libft.h"
 
-size_t  wordcount(char  const *s, char c)
+static size_t  wordcount(char  const *s, char c)
 {
     size_t i;
     size_t count;
@@ -18,7 +18,7 @@ size_t  wordcount(char  const *s, char c)
     return (count);
 }
 
-char    *init_word(char const *s, size_t idx, size_t len)
+static char    *init_word(char const *s, size_t idx, size_t len)
 {
     char    *word;
 
@@ -30,7 +30,7 @@ char    *init_word(char const *s, size_t idx, size_t len)
     return (word);
 }
 
-void    start_split(char **arr, char const *s, char c, size_t size)
+static void    start_split(char **arr, char const *s, char c, size_t size)
 {
     size_t     i;
     size_t     j;

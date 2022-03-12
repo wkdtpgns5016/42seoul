@@ -14,12 +14,12 @@ int     ft_atoi(const char *nptr)
     {
         if (*nptr == '-')
             mark *= -1;
-        *nptr++;
+        nptr++;
     }
     while (*nptr >= '0' && *nptr <= '9')
     {
         num = (num * 10) + (*nptr - '0');
-        *nptr++;
+        nptr++;
     }
     return (mark * num);
 }

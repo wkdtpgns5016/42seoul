@@ -1,72 +1,64 @@
 #include "libft.h"
 
-char    *ft_strtrim(char const *s1, char const *set)
+static int find_tail(const char *haystack, const char *needle)
 {
-    char    *arr;
-
-    arr = ft_strdup(s1);
-
-    return (arr);
-}
-
-char    *del_first_set(char *s1)
-{
-    
-}
-
-char    *ft_strrstr(const char *haystack, const char *needle)
-{
-    size_t  i;
-    size_t  j;
-    size_t  len;
+    int  i;
+    int  j;
+    int  len;
 
     i = 0;
-    len = ft_strlen(haystack);
+    len = (int)ft_strlen(haystack);
     if (*needle == 0)
-        return ((char *)haystack);
+        return (0);
     while (i < len)
     {
         j = 0;
-        while (*(haystack + len + j) == *(needle + j))
+        while (*(haystack - i + len + j) == *(needle + j))
         {
             j++;
             if (*(needle + j) == 0)
-                return ((char *)haystack + len);
+                return (len - i);
         }
-        haystack--;
         i++;
     }
-    return (0);
+    return (-1);
 }
 
-char    *ft_strstr(const char *haystack, const char *needle)
+static int find_head(const char *haystack, const char *needle)
 {
-    size_t  i;
-    size_t  j;
+    int  i;
+    int  j;
 
     i = 0;
     if (*needle == 0)
-        return ((char *)haystack);
-    while (*haystack != 0)
+        return (0);
+    while (*(haystack + i) != 0)
     {
         j = 0;
-        while (*(haystack + j) == *(needle + j))
+        while (*(haystack + i + j) == *(needle + j))
         {
             j++;
             if (*(needle + j) == 0)
-                return ((char *)haystack);
+                return (i);
         }
-        haystack++;
         i++;
     }
-    return (0);
+    return (-1);
 }
 
-#include <stdio.h>
-
-int main(void)
+char    *ft_strtrim(char const *s1, char const *set)
 {
-    char *test = "this is test code.";
+    char    *arr;
+    int     head;
+    int     tail;
+    size_t  set_len;
 
-    printf("%s", ft_strstr(test, "is"));
+    set_len = ft_strlen(set);
+    arr = (char *)malloc(sizeof(char) * (ft_strlen(s1) - (set_len * 2) + 1));
+    head = find_head(s1, set);
+    tail = find_tail(s1, set);
+    ft_memmove(arr, s1, head);
+    ft_memmove(arr + ft_strlen(arr), s1 + head + set_len, tail - head - set_len);
+    ft_memmove(arr + ft_strlen(arr), s1 + tail + set_len, ft_strlen(s1 + tail + set_len));
+    return (arr);
 }

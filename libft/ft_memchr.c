@@ -9,7 +9,7 @@ void    *ft_memchr(const void *s, int c, size_t n)
     {
         if (*temp == (unsigned char)c)
             return (temp);
-        *temp++;
+        temp++;
     }
     return (0);
 }

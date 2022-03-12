@@ -15,7 +15,7 @@ char    *ft_strchr(const char *s, int c)
     {
         if (*temp == (char)c)
             return (temp);
-        *temp++;
+        temp++;
     }
     return (0);
 }

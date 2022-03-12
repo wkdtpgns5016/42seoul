@@ -3,7 +3,7 @@
 char    *ft_strrchr(const char *s, int c)
 {
     char    *temp;
-    size_t  len;
+    int     len;
 
     temp = (char *)s;
     len = 0;
@@ -13,7 +13,7 @@ char    *ft_strrchr(const char *s, int c)
     {
         if (*temp == (char)c)
             return (temp);
-        *temp--;
+        temp--;
         len--;
     }
     return (0);

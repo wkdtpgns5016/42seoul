@@ -1,6 +1,6 @@
 #include "libft.h"
 
-int get_unit(int n)
+static int get_unit(int n)
 {
     int  count;
 
@@ -13,7 +13,7 @@ int get_unit(int n)
     return (count);
 }
 
-int get_level(int unit)
+static int get_level(int unit)
 {
     int level;
 
@@ -23,7 +23,7 @@ int get_level(int unit)
     return (level);
 }
 
-void    insert_value(char *arr, int num, int size)
+static void    insert_value(char *arr, int num, int size)
 {
     int unit;
     int level;
@@ -46,7 +46,6 @@ void    insert_value(char *arr, int num, int size)
 char    *ft_itoa(int n)
 {
     char    *arr;
-    int     i;
     int     size;
     int     num;
 

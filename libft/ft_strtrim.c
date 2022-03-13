@@ -62,3 +62,12 @@ char    *ft_strtrim(char const *s1, char const *set)
     ft_memmove(arr + ft_strlen(arr), s1 + tail + set_len, ft_strlen(s1 + tail + set_len));
     return (arr);
 }
+
+#include <stdio.h>
+int main(void)
+{
+    char *set =  "\t \n";
+    char s1[] = "lorem \n ipsum \t dolor \n sit \t amet";
+    char *arr = ft_strtrim(s1, set);
+    printf("%s", arr);
+}

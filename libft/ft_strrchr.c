@@ -6,9 +6,9 @@ char    *ft_strrchr(const char *s, int c)
     int     len;
 
     temp = (char *)s;
-    len = 0;
-    while (*temp++ != 0)
-        len++;
+    len = ft_strlen(s) + 1;
+    while (*temp != 0)
+        temp++;
     while (len >= 0)
     {
         if (*temp == (char)c)

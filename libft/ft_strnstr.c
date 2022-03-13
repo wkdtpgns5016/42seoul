@@ -19,6 +19,8 @@ char    *ft_strnstr(const char *big, const char *little, size_t len)
         }
         big++;
         i++;
+        if (len < i + ft_strlen(little))
+            break;
     }
     return (0);
 }

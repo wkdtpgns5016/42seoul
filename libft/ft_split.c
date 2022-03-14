@@ -26,7 +26,6 @@ static char    *init_word(char const *s, size_t idx, size_t len)
     if (word == 0)
         return (0);
     ft_strlcpy(word, s + idx, len + 1);
-    word[len] = 0;
     return (word);
 }
 
@@ -67,7 +66,7 @@ char    **ft_split(char const *s, char c)
     char    **arr;
 
     size = wordcount(s, c);
-    arr = (char **)malloc(sizeof(char *) * size + 1);
+    arr = (char **)malloc(sizeof(char *) * (size + 1));
     if (arr == 0)
         return (0);
     start_split(arr, s, c, size);

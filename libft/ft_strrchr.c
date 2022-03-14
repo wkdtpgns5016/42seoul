@@ -3,18 +3,17 @@
 char    *ft_strrchr(const char *s, int c)
 {
     char    *temp;
-    int     len;
+    size_t  len;
 
     temp = (char *)s;
-    len = ft_strlen(s) + 1;
+    len = 0;
     while (*temp != 0)
         temp++;
-    while (len >= 0)
+    while (len++ < ft_strlen(s) + 1)
     {
         if (*temp == (char)c)
             return (temp);
         temp--;
-        len--;
     }
     return (0);
 }

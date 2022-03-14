@@ -2,18 +2,13 @@
 
 char    *ft_strdup(const char *s)
 {
+    size_t  len;
     char    *arr;
-    int     i;
 
-    arr = (char *)malloc(sizeof(s) + 1);
+    len = ft_strlen(s);
+    arr = (char *)malloc(sizeof(char) * (len + 1));
     if (arr == 0)
         return (0);
-    i = 0;
-    while (s[i] != 0)
-    {
-        arr[i] = s[i];
-        i++;
-    }
-    arr[i] = '\0';
+    ft_strlcpy(arr, s, len + 1);
     return (arr);
 }

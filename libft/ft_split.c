@@ -6,7 +6,7 @@
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 13:58:35 by sehjang           #+#    #+#             */
-/*   Updated: 2022/03/15 14:32:25 by sehjang          ###   ########.fr       */
+/*   Updated: 2022/03/15 16:21:23 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	start_split(char **arr, char const *s, char c, size_t size)
 			k = 0;
 			while (s[j + k] != c && s[j + k] != '\0')
 				k++;
-			arr[i] = init_wrod(s, j, k);
+			arr[i] = init_word(s, j, k);
 			if (check_null(arr, arr[i]) == 1)
 				return ;
 			j += k;

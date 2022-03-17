@@ -1,0 +1,30 @@
+lift
+
+ft_atoi
+	man에 의하면 atoi()의 오류처리는 따로 하지 않는다고 한다.
+	atoi() 함수는 libc에 의해 stdtol()를 내부로 돌려서 결과값을 리턴하는 방식을 가졌다.
+	atoi()의 리턴 타입은 int, strtol()의 리턴 타입은 long 이다.
+	atoi()에서 나오는 언더플로우/오버플로우의 리턴값은 strtol()에서 나온 결과값을 처리하는 과정에서 나오는 ERANGE 오류이다.
+	strtol()함수에 오버플로우 값이 들어오면 LONG_MAX, 언더플로우 값이 들어오면 LONG_MIN을 리턴한다.
+	atoi()함수에 LONG 오버플로우 값이 들어오면 -1, 언더플로우 값이 들어오면 0을 리턴한다.
+
+void 포인터 연산하는 법
+	void 포인터 연산은 호환성을 위해 사용하지 않는 것이 좋습니다. 즉, 표준을 지켜야 호환성이 좋은 코드가 됩니다. 만약 메모리를 1바이트씩 접근하려면 unsigned char *를 사용하면 됩니다.
+
+ft_memcpy 예외처리
+	ft_memcpy(0,0,1); < s1와 s2가 null임에도 함수가 터지는일 없이 null을 반환해야함
+
+ft_memmove
+	memmove 함수는 오버랩을 방지하는 함수 이므로, src가 dst보다 클경우 앞에서 복사를 작을 경우, 뒤에서 복사를 해야함
+
+매개변수에 const
+	매개변수로 전달 받은 변수를 수정하지 못하게 하여 함수 내부에서 외부로 온 변수가 변형되지 않도록 함. 
+
+ft_split
+	만약 이중포인터내의 포인터 변수 할당 실패시, 이전 포인터변수들을 메모리해제 시켜야 메모리 leak을 방지 할 수 있다.
+
+make bonus 리링크 방지
+	ifdef WITH_BONUS : WITH_BONUS가 선언되어있으면 보너스파일까지/ 써주는 이유: relink를 방지하기 위해서
+	else : ifndef, 즉 WITH_BONUS가 선언되어있지 않으면 일반문제만
+	https://sie-kyin.github.io/42_libft/2021/05/09/makefile/
+	https://iamdooddi.tistory.com/category/STUDY/42

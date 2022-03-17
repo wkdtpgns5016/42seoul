@@ -73,7 +73,7 @@ char	*ft_itoa(int n)
 		size++;
 	}
 	size += get_unit(num);
-	arr = (char *)malloc(sizeof(char) * size + 1);
+	arr = (char *)ft_calloc(sizeof(char), size + 1);
 	if (arr == 0)
 		return (0);
 	insert_value(arr, num, size);

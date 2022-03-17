@@ -65,6 +65,10 @@ OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 AR = ar -rc
 HEAD = ./
 
+ifdef FLAG_BONUS
+	OBJS += $(OBJS_BONUS)
+endif
+
 .c.o:
 	$(CC) $(CFLAGS) -c -I $(HEAD) $< -o $(<:.c=.o)
 
@@ -81,7 +85,7 @@ fclean: clean
 
 re: fclean all
 
-bonus: $(OBJS_BONUS)
-	$(AR) $(NAME) $(OBJS_BONUS)
+bonus: 
+	make FLAG_BONUS=1 all
 
 .PHONY = all clean fclean re bonus

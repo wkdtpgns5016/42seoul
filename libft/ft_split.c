@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
 
 static size_t	wordcount(char const *s, char c)
 {
@@ -34,7 +35,7 @@ static char	*init_word(char const *s, size_t idx, size_t len)
 {
 	char	*word;
 
-	word = (char *)malloc(sizeof(char) * len + 1);
+	word = (char *)ft_calloc(sizeof(char), len + 1);
 	if (word == 0)
 		return (0);
 	ft_strlcpy(word, s + idx, len + 1);
@@ -45,6 +46,8 @@ static int	check_null(char **arr, char *str)
 {
 	if (str == 0)
 	{
+		while (*arr != 0)
+			free(*arr++);
 		free(arr);
 		arr = 0;
 		return (1);
@@ -86,7 +89,7 @@ char	**ft_split(char const *s, char c)
 	char	**arr;
 
 	size = wordcount(s, c);
-	arr = (char **)malloc(sizeof(char *) * (size + 1));
+	arr = (char **)ft_calloc(sizeof(char *), (size + 1));
 	if (arr == 0)
 		return (0);
 	start_split(arr, s, c, size);

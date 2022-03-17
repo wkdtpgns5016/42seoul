@@ -20,7 +20,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
-	arr = (char *)malloc(sizeof(char) * s1_len + s2_len + 1);
+	arr = (char *)ft_calloc(sizeof(char), s1_len + s2_len + 1);
 	if (arr == 0)
 		return (0);
 	ft_memcpy(arr, s1, ft_strlen(s1));

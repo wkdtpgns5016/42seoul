@@ -59,4 +59,8 @@ dkms.conf
 libft-unit-test/
 libft-war-machine/
 Libfttest/
+
+# Mac Finder .DS_store
+.DS_store
+
 # End of https://www.toptal.com/developers/gitignore/api/c

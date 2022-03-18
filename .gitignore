@@ -59,6 +59,7 @@ dkms.conf
 libft-unit-test/
 libft-war-machine/
 Libfttest/
+gnlTester/
 
 # Mac Finder .DS_store
 .DS_store

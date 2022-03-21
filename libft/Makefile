@@ -69,8 +69,8 @@ ifdef FLAG_BONUS
 	OBJS += $(OBJS_BONUS)
 endif
 
-.c.o:
-	$(CC) $(CFLAGS) -c -I $(HEAD) $< -o $(<:.c=.o)
+%.o: %.c
+	$(CC) $(CFLAGS) -c -I $(HEAD) $< -o $@
 
 $(NAME): $(OBJS)
 	$(AR) $(NAME) $(OBJS)
@@ -78,7 +78,7 @@ $(NAME): $(OBJS)
 all: $(NAME)
 
 clean:
-	rm -f *.o
+	rm -f $(OBJS) $(OBJS_BONUS) 
 
 fclean: clean
 	rm -f $(NAME)

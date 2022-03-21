@@ -4,81 +4,81 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-int check_newline(char *buf, int size)
+int	check_newline(char *buf, int size)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < size)
-    {
-        if (buf[i] == '\n')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	while (i < size)
+	{
+		if (buf[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
-int get_newline(char *buf, int size)
+int	get_newline(char *buf, int size)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < size)
-    {
-        if (buf[i] == '\n')
-            return (i);
-        i++;
-    }
-    return (-1);
+	i = 0;
+	while (i < size)
+	{
+		if (buf[i] == '\n')
+			return (i);
+		i++;
+	}
+	return (-1);
 }
 
-char    *get_line(char *buf, char *backup, int size)
+char	*get_line(char *buf, char *backup, int size)
 {
-    int     newline;
-    char    *line;
+	int		newline;
+	char	*line;
 
-    newline = get_newline(buf, size);
-    line = (char *)malloc(sizeof(char) * (ft_strlen(backup) + newline + 1));
-    if (line == 0)
-        return (0);
-    ft_strlcat(line, backup, ft_strlen(backup) + 1);
-    ft_strlcat(line, buf, ft_strlen(backup) + newline + 1);
-    return (line);    
+	newline = get_newline(buf, size);
+	line = (char *)malloc(sizeof(char) * (ft_strlen(backup) + newline + 1));
+	if (line == 0)
+		return (0);
+	ft_strlcat(line, backup, ft_strlen(backup) + 1);
+	ft_strlcat(line, buf, ft_strlen(backup) + newline + 1);
+	return (line);
 }
 
-char    *get_backup(char *buf, char *backup, int size)
+char	*get_backup(char *buf, char *backup, int size)
 {
-    int     newline;
-    char    *str;
+	int		newline;
+	char	*str;
 
-    newline = get_newline(buf, size);
-    str = ft_strjoin(backup, buf + newline + 1);
-    return (str);
+	newline = get_newline(buf, size);
+	str = ft_strjoin(backup, buf + newline + 1);
+	return (str);
 }
 
-char    *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    ssize_t        flag;
-    char           buf[BUFFER_SIZE + 1];
-    char           *line;
-    static char    *backup = "";
-    
-    flag = 1;
-    while (flag != 0)
-    {
-        flag = read(fd, buf, BUFFER_SIZE);
-        buf[flag] = '\0';
-        if (check_newline(buf, (int)flag))
-        {
-            line = get_line(buf, backup, (int)flag);
-            backup = "";
-            backup = get_backup(buf, backup, (int)flag);
-            return (line);
-        }
-        else
-            backup = get_backup(buf, backup, (int)flag);
-    }
-    return (backup);
+	ssize_t		flag;
+	char		buf[BUFFER_SIZE + 1];
+	char		*line;
+	static char	*backup = "";
+
+	flag = 1;
+	while (flag != 0)
+	{
+		flag = read(fd, buf, BUFFER_SIZE);
+		buf[flag] = '\0';
+		if (check_newline(buf, (int)flag))
+		{
+			line = get_line(buf, backup, (int)flag);
+			backup = "";
+			backup = get_backup(buf, backup, (int)flag);
+			return (line);
+		}
+		else
+			backup = get_backup(buf, backup, (int)flag);
+	}
+	return (backup);
 }
 
 // int main() 

@@ -33,14 +33,43 @@ char	*get_line(char *buf, char **backup, int size)
 	return (line);
 }
 
-void	set_backup(char *buf, char **backup, int size)
+char	*set_backup(char *newline_str, char *str, int size)
 {
 	int		newline;
-	char	*str;
+	char	*backup;
 
-	newline = get_newline(buf, size);
-	str = ft_strjoin(*backup, buf + newline + 1);
-	*backup = str;
+	newline = get_newline(newline_str, size);
+	backup = ft_strjoin(str, newline_str + newline + 1);
+	return (backup);
+}
+
+int	make_line(char **line, char *buf, char **backup, int fd)
+{
+	ssize_t		flag;
+	char		*temp;
+
+	if (get_newline(*backup, ft_strlen(*backup)) >= 0)
+	{
+		*line = (char *)malloc(sizeof(char) * get_newline(*backup, ft_strlen(*backup)) + 1);
+		ft_strlcpy(*line, *backup, get_newline(*backup, ft_strlen(*backup)) + 1);
+		temp = *backup;
+		*backup = set_backup(*backup, "", ft_strlen(*backup));
+		free(temp);
+		return (1);
+	}
+	while ((flag = read(fd, buf, BUFFER_SIZE)) > 0)
+	{
+		buf[flag] = '\0';
+		if (get_newline(buf, (int)flag) >= 0)
+		{
+			*line = get_line(buf, backup, (int)flag);
+			*backup = set_backup(buf, *backup, (int)flag);
+			return (1);
+		}
+		else
+			*backup = set_backup(buf, *backup, (int)flag);
+	}
+	return (0);
 }
 
 char	*get_next_line(int fd)
@@ -49,8 +78,8 @@ char	*get_next_line(int fd)
 	char		*buf;
 	char		*line;
 	static char	*backup;
+	char		*temp;
 
-	line = 0;
 	if ((buf = (char *)malloc(BUFFER_SIZE + 1)) == 0)
 		return (0);
 	if (backup == 0)
@@ -58,22 +87,18 @@ char	*get_next_line(int fd)
 		if ((backup = (char *)malloc(sizeof(char))) == 0)
 		return (0);
 	}
-	while ((flag = read(fd, buf, BUFFER_SIZE)) != 0)
-	{
-		buf[flag] = '\0';
-		if (get_newline(buf, (int)flag) >= 0)
-		{
-			line = get_line(buf, &backup, (int)flag);
-			set_backup(buf, &backup, (int)flag);
-			return (line);
-		}
-		else
-			set_backup(buf, &backup, (int)flag);
-	}
+	if (make_line(&line, buf, &backup, fd) > 0)
+		return (line);
 	if (backup != 0)
 	{
-		line = backup;
+		line = (char *)malloc(sizeof(char) * (ft_strlen(backup) + 1));
+		ft_strlcpy(line, backup, ft_strlen(backup) + 1);
+		free(backup);
 		backup = 0;
+	}
+	else
+	{
+		line = 0;
 	}
 	return (line);
 }
@@ -90,20 +115,18 @@ int main()
     printf("\n==========================================\n"); 
     printf("========= TEST 2 : Empty Lines ===========\n"); 
     printf("==========================================\n\n"); 
-    if (!(fd = open("/home/bigdata/42seoul/gnlTester/files/42_with_nl", O_RDONLY))) 
+    if (!(fd = open("/home/bigdata/42seoul/gnlTester/files/multiple_line_no_nl", O_RDONLY))) 
     { 
         printf("\nError in open\n"); 
         return (0); 
     }
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-    // while ((line = get_next_line(fd)) != 0) 
-    // { 
-    //     printf("|%s\n", line); 
-    //     free(line); 
-    //     j++; 
-    // } 
-    // printf("|%s\n", line); 
-    // free(line); 
+    while ((line = get_next_line(fd)) != 0) 
+    { 
+        printf("|%s\n", line);
+        free(line); 
+        j++; 
+    } 
+    printf("|%s\n", line); 
+    free(line); 
     close(fd); 
 }

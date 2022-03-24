@@ -115,15 +115,16 @@ int main()
     printf("\n==========================================\n"); 
     printf("========= TEST 2 : Empty Lines ===========\n"); 
     printf("==========================================\n\n"); 
-    if (!(fd = open("/home/bigdata/42seoul/gnlTester/files/multiple_line_no_nl", O_RDONLY))) 
+    if (!(fd = open("/home/bigdata/42seoul/gnlTester/files/41_no_nl", O_RDONLY))) 
     { 
         printf("\nError in open\n"); 
         return (0); 
     }
     while ((line = get_next_line(fd)) != 0) 
     { 
-        printf("|%s\n", line);
-        free(line); 
+        printf("|%s", line);
+		getchar();
+        free(line);
         j++; 
     } 
     printf("|%s\n", line); 

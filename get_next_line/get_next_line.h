@@ -1,7 +1,6 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# define BUFFER_SIZE 5000
 # include <stdlib.h>
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);

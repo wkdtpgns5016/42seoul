@@ -1,5 +1,6 @@
 #include "get_next_line_bonus.h"
 #include <unistd.h>
+#include <limits.h>
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -104,22 +105,26 @@ static void	split_backup(char **backup)
 
 char	*get_next_line(int fd)
 {
-	static char	*backup;
+	static char	*backup[_SC_OPEN_MAX];
 	char		*line;
 
 	line = 0;
-	if(init_backup(fd, &backup) == 0)
+	if(init_backup(fd, &backup[fd]) == 0)
 		return (0);
-	if (backup != 0)
-		line = make_line(backup);
-	if (backup != 0)
-		split_backup(&backup);
+	if (backup[fd] != 0)
+		line = make_line(backup[fd]);
+	if (backup[fd] != 0)
+		split_backup(&backup[fd]);
 	return (line);
 }
+
+#include <stdio.h>
+#include <fcntl.h>
 
 int main() 
 { 
     int fd; 
+    int fd2; 
     int i; 
     int j; 
     char *line = 0; 
@@ -134,13 +139,30 @@ int main()
         printf("\nError in open\n"); 
         return (0); 
     }
-    while ((line = get_next_line(fd)) != 0) 
+	if (!(fd2 = open("/home/bigdata/42seoul/gnlTester/files/41_with_nl", O_RDONLY))) 
     { 
-        printf("|%s\n", line);
-        free(line);
-        j++; 
-    } 
-    printf("|%s\n", line); 
+        printf("\nError in open\n"); 
+        return (0); 
+    }
+	printf("|%s\n",get_next_line(fd));
+	getchar();
+	printf("|%s\n",get_next_line(fd2));
+	getchar();
+	printf("|%s\n",get_next_line(fd));
+	getchar();
+	printf("|%s\n",get_next_line(fd2));
+	getchar();
+	printf("|%s\n",get_next_line(fd));
+	getchar();
+	printf("|%s\n",get_next_line(fd2));
+	getchar();
+    // while ((line = get_next_line(fd)) != 0) 
+    // { 
+    //     printf("|%s\n", line);
+    //     free(line);
+    //     j++; 
+    // } 
+    // printf("|%s\n", line); 
     free(line); 
     close(fd); 
 }

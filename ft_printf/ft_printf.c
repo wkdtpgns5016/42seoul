@@ -11,7 +11,39 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include "libft/libft.h"
 #include <stdarg.h>
+
+int	get_format(t_format **format, const char *str)
+{
+
+}
+
+t_list	*split_format(const char *format)
+{
+	t_list		*format_list;
+	t_list		*temp;
+	t_format	*fmt;
+	int			fmt_len;
+
+	while (*format != 0)
+	{
+		if (*format == '%')
+		{
+			fmt_len = get_format(&fmt, format + 1);
+			if(fmt == 0)
+				return (0);
+			temp = ft_lstnew(fmt);
+			if (temp == 0)
+				return (0);
+			ft_lstadd_back(&format_list, temp);
+			format+=fmt_len;
+		}
+		else
+			format++;
+	}
+	return (format_list);
+}
 
 int	ft_printf(const char *format, ...)
 {

@@ -14,33 +14,118 @@
 #include "libft/libft.h"
 #include <stdarg.h>
 
-int	get_format(t_format **format, const char *str)
+#include <stdio.h>
+int	is_flag_char(const char c)
 {
-
+	if (c == '-' || c == '0' || c == '+' || c == '#' || c == ' ')
+		return (1);
+	return (0);
 }
 
-t_list	*split_format(const char *format)
+int	is_type_char(const char c)
+{
+	if (c == 'c' || c == 's' || c == 'p' || c == 'd' || c == 'i' || \
+	c == 'u' || c == 'x' || c == 'X' || c == '%')
+		return (1);
+	return (0);
+}
+
+char	*get_flag(const char *str, size_t len)
+{
+	char	*flag;
+
+	flag = ft_substr(str, 0, len);
+	if (flag == 0)
+		return (0);
+	return (flag);
+}
+
+int		get_num(const char *str, size_t len)
+{
+	int		n;
+	char	*num;
+
+	num = ft_substr(str, 0, len);
+	if (num == 0)
+		return (0);
+	n = ft_atoi(num);
+	free(num);
+	return (n);
+}
+
+int	set_format(t_format **format, const char *str)
+{
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = 0;
+	// flag 속성
+	while (is_flag_char(*(str + len)))
+	{
+		i++;
+		len++;
+	}
+	if (is_flag_char(*(str + len - i)))
+		(*format)->flags = get_flag(str + len - i, i);
+		
+	// width 속성
+	i = 0;
+	while (ft_isdigit(*(str + len)))
+	{
+		i++;
+		len++;
+	}
+	if (ft_isdigit(*(str + len - i)))
+		(*format)->width = get_num(str + len - i, i);
+
+	// precision 속성
+	i = 0;
+	if (*(str + len) == '.')
+	{
+		len++;
+		while (ft_isdigit(*(str + len)))
+		{
+			i++;
+			len++;
+		}
+		if (ft_isdigit(*(str + len - i)))
+			(*format)->precision = get_num(str + len - i, i);
+		i = 0;
+	}
+
+	// type 속성
+	if (is_type_char(*(str + len)))
+		(*format)->type = *(str + len);
+	len++;
+
+	// len 속성
+	(*format)->len = (int)len;
+	return ((int)len);
+}
+
+t_list	*split_format(const char *str)
 {
 	t_list		*format_list;
 	t_list		*temp;
 	t_format	*fmt;
 	int			fmt_len;
 
-	while (*format != 0)
+	while (*str != 0)
 	{
-		if (*format == '%')
+		if (*str == '%')
 		{
-			fmt_len = get_format(&fmt, format + 1);
+			fmt_len = set_format(&fmt, str + 1);
 			if(fmt == 0)
 				return (0);
 			temp = ft_lstnew(fmt);
 			if (temp == 0)
 				return (0);
 			ft_lstadd_back(&format_list, temp);
-			format+=fmt_len;
+			str+=fmt_len;
 		}
 		else
-			format++;
+			str++;
 	}
 	return (format_list);
 }
@@ -60,7 +145,7 @@ int	main(void)
 	int a = 10;
 	char *str = "string";
 
-	printf("%%d   : %d\n", a);
+	printf("%%d   : %.0d\n", a);
 	printf("%%i   : %i\n", a);
 	printf("%%x   : %x\n", a);
 	printf("%%X   : %X\n", a);
@@ -74,4 +159,13 @@ int	main(void)
 	printf("%% d  : % d\n", a);
 	printf("%%5d  : %5d\n", a);
 	printf("%%.5d  : %.5d\n", a);
+
+	t_format *format;
+	format = fmt_new();
+
+	int len;
+
+	char *st2r = "-#.5%ff";
+	len = set_format(&format, st2r);
+	printf("%d\n", format->len);
 }

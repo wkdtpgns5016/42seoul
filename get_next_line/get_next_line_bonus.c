@@ -12,7 +12,6 @@
 
 #include "get_next_line_bonus.h"
 #include <unistd.h>
-#include <limits.h>
 
 static char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -128,6 +127,8 @@ char	*get_next_line(int fd)
 	static char	*backup[OPEN_MAX];
 	char		*line;
 
+	if (fd > OPEN_MAX && fd < 0)
+		return (0);
 	line = 0;
 	if (init_backup(fd, &backup[fd]) == 0)
 		return (0);

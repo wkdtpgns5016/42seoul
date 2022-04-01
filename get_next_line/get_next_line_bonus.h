@@ -13,6 +13,7 @@
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
 
+# define OPEN_MAX 10240
 # include <stdlib.h>
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);

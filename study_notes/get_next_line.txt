@@ -22,6 +22,19 @@ gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 <파일들>.c
     파일에 접근하면 커널은 fd값중 사용하지 않는 가장 작은 값을 할당함. 기본적으로 할당되는 fd값은 0 1 2 인데
     각각 표준입력, 표준출력, 표준에러임
 
+    1) 표준 입력 [0 - stdin]
+        키보드로 명령어를 치고 엔터를 이용해 입력하는 방식을 의미합니다. 파일 디스크립터에서 0번으로 지정됩니다.
+    2) 표준 출력 [1 - stdout]
+        키보드로 명령어를 실행하고 정상 종료 시 출력되는 내용을 의미합니다. 파일 디스크립터에서 1번으로 지정됩니다.
+    3) 표준 에러 [2 - stderr]
+        명령어 실행 시 발생한 에러 메시지 내용을 의미합니다. 파일 디스크립터에서 2번으로 지정됩니다.
+
+open 함수
+    헤더: fcntl.h
+    형태: int open(const char *path, int flags);
+         int open(const char *path, int flags, mode_t mode);
+    반환값: 파일디스크립터, 오류시 (-1)
+
 read 함수
     헤더: unistd.h
     형태: ssize_t read (int fd, void *buf, size_t nbytes)
@@ -29,7 +42,6 @@ read 함수
     void *buf 파일을 읽어 들일 버퍼
     size_t nbytes 퍼버의 크기
     반환값: -1(실패), 양수(읽은 바이트 수)
-
 
 lseek
     함수의 seek pointer (커서) 를 조정하는 함수입니다. 조정된 seek pointer 는 파일의 read/write 시 사용됩니다.

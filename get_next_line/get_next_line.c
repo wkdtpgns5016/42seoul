@@ -127,6 +127,8 @@ char	*get_next_line(int fd)
 	static char	*backup;
 	char		*line;
 
+	if (fd > OPEN_MAX && fd < 0)
+		return (0);
 	line = 0;
 	if (init_backup(fd, &backup) == 0)
 		return (0);

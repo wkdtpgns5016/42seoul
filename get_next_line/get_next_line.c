@@ -65,32 +65,37 @@ static char	*make_line(char *backup)
 	return (line);
 }
 
-static int	init_backup(int fd, char	**backup)
+static int	init_backup(int fd, char **buf, ssize_t nbytes, char **backup)
 {
-	char	*buf;
-	ssize_t	nbytes;
+	// char	*buf;
+	// ssize_t	nbytes;
 	char	*temp;
 
-	buf = (char *)malloc(BUFFER_SIZE + 1);
-	if (buf == 0)
-		return (0);
-	nbytes = read(fd, buf, BUFFER_SIZE);
+	// buf = (char *)malloc(BUFFER_SIZE + 1);
+	// if (buf == 0)
+	// 	return (0);
+	// nbytes = read(fd, buf, BUFFER_SIZE);
 	while (nbytes > 0)
 	{
-		buf[nbytes] = '\0';
+		(*buf)[nbytes] = '\0';
 		temp = *backup;
-		*backup = ft_strjoin(temp, buf);
+		*backup = ft_strjoin(temp, *buf);
 		free(temp);
 		if (*backup == 0)
 		{
-			free(buf);
+			free(*buf);
 			return (0);
 		}
-		if (ft_strchr(buf, '\n') != 0)
+		if (ft_strchr(*buf, '\n') != 0)
 			break ;
-		nbytes = read(fd, buf, BUFFER_SIZE);
+		nbytes = read(fd, *buf, BUFFER_SIZE);
 	}
-	free(buf);
+	if (nbytes < 0)
+	{
+		free(*buf);
+		return (0);
+	}
+	free(*buf);
 	return (1);
 }
 
@@ -126,12 +131,24 @@ char	*get_next_line(int fd)
 {
 	static char	*backup;
 	char		*line;
+	char		*buf;
+	int			nbytes;
 
 	if (fd > OPEN_MAX && fd < 0)
 		return (0);
 	line = 0;
-	if (init_backup(fd, &backup) == 0)
+	buf = (char *)malloc(BUFFER_SIZE + 1);
+	if (buf == 0)
 		return (0);
+	nbytes = read(fd, buf, BUFFER_SIZE);
+	if (init_backup(fd, &buf, nbytes &backup) == 0)
+	{
+		if (backup != 0)
+		{
+			free(backup);
+			backup = 0;
+		}
+	}
 	if (backup != 0)
 		line = make_line(backup);
 	if (backup != 0)

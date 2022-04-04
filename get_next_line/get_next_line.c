@@ -67,14 +67,8 @@ static char	*make_line(char *backup)
 
 static int	init_backup(int fd, char **buf, ssize_t nbytes, char **backup)
 {
-	// char	*buf;
-	// ssize_t	nbytes;
 	char	*temp;
 
-	// buf = (char *)malloc(BUFFER_SIZE + 1);
-	// if (buf == 0)
-	// 	return (0);
-	// nbytes = read(fd, buf, BUFFER_SIZE);
 	while (nbytes > 0)
 	{
 		(*buf)[nbytes] = '\0';

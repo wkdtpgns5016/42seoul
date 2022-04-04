@@ -133,3 +133,22 @@ Heap Segment
 
     Stack 영역이 크면 클 수록 Heap 영역이 작아지고, Heap 영역이 크면 클수록 Stack 영역이 작아집니다.
     
+ulimit 명령어
+    Ulimit [조회 옵션] 값
+    -a : 모든 제한 사항을 보여줌.
+    -c : 최대 코어 파일 사이즈
+    -d : 프로세스 데이터 세그먼트의 최대 크기
+    -f : shell에 의해 만들어질 수 있는 파일의 최대 크기
+    -s : 최대 스택 크기
+    -p : 파이프 크기
+    -n : 오픈 파일의 최대수
+    -u : 오픈파일의 최대수
+    -v : 최대 가상메모리의 양
+    -S : soft 한도
+    -H : hard 한도
+
+open_max
+    limit.h
+    클러스터 아이맥의 터미널 ulimit -n 시 oepn max file의 수는 256으로 설정되어 있다.
+    vscode 개발 환경 상에서는 ulimit -n 시 open max file의 수는 12800으로 설정되어 있다.
+    개발환경에 따라 open_max 값이 달라진다.

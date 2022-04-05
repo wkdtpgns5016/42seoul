@@ -15,6 +15,7 @@
 #include <stdarg.h>
 
 #include <stdio.h>
+
 int	is_flag_char(const char c)
 {
 	if (c == '-' || c == '0' || c == '+' || c == '#' || c == ' ')
@@ -40,7 +41,7 @@ char	*get_flag(const char *str, size_t len)
 	return (flag);
 }
 
-int		get_num(const char *str, size_t len)
+int	get_num(const char *str, size_t len)
 {
 	int		n;
 	char	*num;
@@ -116,13 +117,13 @@ t_list	*split_format(const char *str)
 		if (*str == '%')
 		{
 			fmt_len = set_format(&fmt, str + 1);
-			if(fmt == 0)
+			if (fmt == 0)
 				return (0);
 			temp = ft_lstnew(fmt);
 			if (temp == 0)
 				return (0);
 			ft_lstadd_back(&format_list, temp);
-			str+=fmt_len;
+			str += fmt_len;
 		}
 		else
 			str++;
@@ -167,5 +168,9 @@ int	main(void)
 
 	char *st2r = "-#.5%ff";
 	len = set_format(&format, st2r);
-	printf("%d\n", format->len);
+	printf("type: %c\n", format->type);
+	printf("flags: %s\n", format->flags);
+	printf("len: %d\n", format->len);
+	printf("precision: %d\n", format->precision);
+	printf("width: %d\n", format->width);
 }

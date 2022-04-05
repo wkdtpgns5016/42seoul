@@ -135,7 +135,7 @@ char	*get_next_line(int fd)
 	if (buf == 0)
 		return (0);
 	nbytes = read(fd, buf, BUFFER_SIZE);
-	if (init_backup(fd, &buf, nbytes &backup) == 0)
+	if (init_backup(fd, &buf, nbytes, &backup) == 0)
 	{
 		if (backup != 0)
 		{

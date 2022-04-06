@@ -146,7 +146,7 @@ int	main(void)
 	int a = 10;
 	char *str = "string";
 
-	printf("%%d   : %.0d\n", a);
+	printf("%%d   : %05.d\n", a);
 	printf("%%i   : %i\n", a);
 	printf("%%x   : %x\n", a);
 	printf("%%X   : %X\n", a);

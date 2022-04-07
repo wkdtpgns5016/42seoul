@@ -12,5 +12,8 @@ typedef struct s_format
 
 int         ft_printf(const char *format, ...);
 t_format	*fmt_new();
+int	set_format(t_format **format, const char *str);
+int	is_type_char(const char c);
+int is_vaild_format(t_format *format);
 
 #endif

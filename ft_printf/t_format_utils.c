@@ -11,5 +11,6 @@ t_format	*fmt_new()
 	format->width = 0;
 	format->precision = 0;
 	format->type = 0;
+	format->len = 0;
 	return (format);
 }

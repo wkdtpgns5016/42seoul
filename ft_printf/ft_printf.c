@@ -112,10 +112,12 @@ t_list	*split_format(const char *str)
 	t_format	*fmt;
 	int			fmt_len;
 
+	format_list = 0;
 	while (*str != 0)
 	{
 		if (*str == '%')
 		{
+			fmt = fmt_new();
 			fmt_len = set_format(&fmt, str + 1);
 			if (fmt == 0)
 				return (0);
@@ -135,9 +137,12 @@ int	ft_printf(const char *format, ...)
 {
 	va_list	ap;
 
-	va_start(ap, format);
+	va_start(ap, 0);
+	printf("%d", va_arg(ap, int));
+	printf("%d", va_arg(ap, int));
 	return (0);
 }
+
 
 #include <stdio.h>
 
@@ -146,7 +151,7 @@ int	main(void)
 	int a = 10;
 	char *str = "string";
 
-	printf("%%d   : %05.d\n", a);
+	printf("%%d   : %d\n", a);
 	printf("%%i   : %i\n", a);
 	printf("%%x   : %x\n", a);
 	printf("%%X   : %X\n", a);
@@ -166,11 +171,22 @@ int	main(void)
 
 	int len;
 
-	char *st2r = "-#.5%ff";
+	char *st2r = " dff";
 	len = set_format(&format, st2r);
-	printf("type: %c\n", format->type);
+	printf("\n\ntype: %c\n", format->type);
 	printf("flags: %s\n", format->flags);
 	printf("len: %d\n", format->len);
 	printf("precision: %d\n", format->precision);
-	printf("width: %d\n", format->width);
+	printf("width: %d\n\n", format->width);
+
+	t_list *list;
+	t_format *format2;
+	list = split_format("%d %s %i");
+	printf("%d\n", ft_lstsize(list));
+	while (list != 0)
+	{
+		format2 = (t_format *)(list->content);
+		printf("%c\n", format2->type);
+		list = list->next;
+	}
 }

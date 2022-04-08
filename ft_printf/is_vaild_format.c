@@ -50,11 +50,23 @@ static int is_duplicate_flag(char *flags)
     return (1);
 }
 
+static int is_precision_to_type(t_format *format)
+{
+    if (format->type == 'c' || format->type == 'p' || format->type == '%')
+    {
+        if (format->precision >= 0)
+            return (0);
+    }
+    return (1);
+}
+
 int is_vaild_format(t_format *format)
 {
     if (!is_type_char(format->type))
         return (0);
     if (!is_flag_to_type(format))
+        return (0);
+    if (!is_precision_to_type(format))
         return (0);
     if (!is_duplicate_flag(format->flags))
         return (0);

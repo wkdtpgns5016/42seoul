@@ -1,5 +1,6 @@
 #include "libft/libft.h"
 #include "ft_printf.h"
+#include <cstdint.h>
 #include <stdlib.h>
 
 int    print_c(t_format *format, char c)

@@ -151,30 +151,30 @@ int	main(void)
 	int a = 10;
 	char *str = "string";
 
-	printf("%%d   : %.d\n", a);
-	printf("%%i   : %.i\n", a);
-	printf("%%u   : %.u\n", a);
-	printf("%%x   : %.x\n", a);
-	printf("%%X   : %.X\n", a);
-	printf("%%p   : %.p\n", &a);
-	printf("%%c   : %.c\n", *str);
-	printf("%%s   : %.s\n", str);
-	printf("%%%%   : %.%\n");
-	printf("%%-5d : %-5d\n", a);
-	printf("%%+d  : %+d\n", a);
-	printf("%%05d : %05d\n", a);
-	printf("%% d  : % d\n", a);
-	printf("%%5d  : %5d\n", a);
-	printf("%%.5d  : %.5d\n", a);
+	// printf("%%d   : %.d\n", a);
+	// printf("%%i   : %.i\n", a);
+	// printf("%%u   : %.u\n", a);
+	// printf("%%x   : %.x\n", a);
+	// printf("%%X   : %.X\n", a);
+	// printf("%%p   : %.p\n", &a);
+	// printf("%%c   : %.c\n", *str);
+	// printf("%%s   : %.s\n", str);
+	// printf("%%%%   : %.%\n");
+	// printf("%%-5d : %-5d\n", a);
+	// printf("%%+d  : %+d\n", a);
+	// printf("%%05d : %05d\n", a);
+	// printf("%% d  : % d\n", a);
+	// printf("%%5d  : %5d\n", a);
+	// printf("%%.5d  : %.5d\n", a);
 
 	t_format *format;
 	format = fmt_new();
 
 	int len;
 
-	char *st2r = ".12cff";
+	char *st2r = "-15p";
 	len = set_format(&format, st2r);
-	printf("\n\ntype: %c\n", format->type);
+	printf("type: %c\n", format->type);
 	printf("flags: %s\n", format->flags);
 	printf("len: %d\n", format->len);
 	printf("precision: %d\n", format->precision);
@@ -185,12 +185,16 @@ int	main(void)
 
 	t_list *list;
 	t_format *format2;
-	list = split_format("% -.5d % -.5s %i");
-	printf("%d\n", ft_lstsize(list));
-	while (list != 0)
-	{
-		format2 = (t_format *)(list->content);
-		printf("%c\n", format2->type);
-		list = list->next;
-	}
+	list = split_format("%-15p");
+	// printf("%d\n", ft_lstsize(list));
+	// while (list != 0)
+	// {
+	// 	format2 = (t_format *)(list->content);
+	// 	printf("%c\n", format2->type);
+	// 	list = list->next;
+	// }
+	int ab = 3;
+	print_p(format, &ab);
+	printf("\n%-15p", &ab);
+
 }

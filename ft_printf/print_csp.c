@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-int    print_c(t_format *format, char c)
+int print_c(t_format *format, char c)
 {
     int width;
     int len;

@@ -85,6 +85,7 @@ int	set_format(t_format **format, const char *str)
 	if (*(str + len) == '.')
 	{
 		len++;
+		(*format)->precision = 0;
 		while (ft_isdigit(*(str + len)))
 		{
 			i++;
@@ -151,7 +152,7 @@ int	main(void)
 	int a = 10;
 	char *str = "string";
 
-	// printf("%%d   : %.d\n", a);
+	printf("%%d   : %+7.4dz\n", a);
 	// printf("%%i   : %.i\n", a);
 	// printf("%%u   : %.u\n", a);
 	// printf("%%x   : %.x\n", a);
@@ -172,7 +173,7 @@ int	main(void)
 
 	int len;
 
-	char *st2r = "-15p";
+	char *st2r = "+7.4d";
 	len = set_format(&format, st2r);
 	printf("type: %c\n", format->type);
 	printf("flags: %s\n", format->flags);
@@ -195,6 +196,8 @@ int	main(void)
 	// }
 	int ab = 3;
 	print_p(format, &ab);
-	printf("\n%-15p", &ab);
+	printf("\n%-15p\n", &ab);
+
+	print_d(format, a);
 
 }

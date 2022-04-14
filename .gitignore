@@ -64,4 +64,7 @@ gnlTester/
 # Mac Finder .DS_store
 .DS_store
 
+# Mac vscode .vscode/
+.vscode/
+
 # End of https://www.toptal.com/developers/gitignore/api/c

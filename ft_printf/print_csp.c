@@ -1,79 +1,80 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_csp.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/14 18:30:25 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/14 18:30:26 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft/libft.h"
 #include "ft_printf.h"
 #include <stdint.h>
 #include <stdlib.h>
 
-int print_c(t_format *format, char c)
+int	print_c(t_format *format, char c)
 {
-    int width;
-    int len;
-    int temp;
+	int		len;
+	char	*str;
 
-    width = format->width;
-    len = 0;
-    ft_putchar_fd(c, 1);
-    len++;
-    temp = 0;
-    while (width > len)
-    {
-        ft_putchar_fd(' ', 1);
-        width--;
-        temp++;
-    }
-    return (len + temp);
+	str = (char *)malloc(sizeof(char) + 1);
+	if (str == 0)
+		return (-1);
+	ft_memset(str, c, sizeof(char));
+	str[1] = '\0';
+	if (add_flag_zd(format, &str) < 0)
+		return (-1);
+	len = ft_strlen(str);
+	len += print_width(format->width, len);
+	ft_putstr_fd(str, 1);
+	free(str);
+	return (len);
 }
 
-int print_s(t_format *format, char *str)
+int	print_s(t_format *format, char *value)
 {
-    int width;
-    int len;
-    int temp;
+	int		len;
+	char	*str;
 
-    len = 0;
-    width = format->width;
-    ft_putstr_fd(str, 1);
-    len = ft_strlen(str);
-    temp = 0;
-    while (width > len)
-    {
-        ft_putchar_fd(' ', 1);
-        width--;
-        temp++;
-    }
-    return (len + temp);
+	str = add_precision_s(format, value);
+	if (str == 0)
+		return (-1);
+	if (add_flag_zd(format, &str) < 0)
+		return (-1);
+	len = ft_strlen(str);
+	len += print_width(format->width, len);
+	ft_putstr_fd(str, 1);
+	free(str);
+	return (len);
 }
 
-void    print_hex(unsigned long long num, int *len)
+int	print_p(t_format *format, void *ptr)
 {
-    if (num != 0)
-    {
-        *len = *len + 1;
-        print_hex(num / 16, len);
-        if (num % 16 < 10)
-            ft_putnbr_fd((int)(num % 16), 1);
-        else
-            ft_putchar_fd((int)(num % 16) + 87, 1);
-    }
-}
+	int			len;
+	uintptr_t	addr;
+	char		*str;
+	char		*temp;
 
-int print_p(t_format *format, void *ptr)
-{
-    int width;
-    int len;
-    int temp;
-    unsigned long long addr;
-
-    addr = (unsigned long long)ptr;
-    width = format->width;
-    len = 2;
-    ft_putstr_fd("0x", 1);
-    print_hex(addr, &len);
-    temp = 0;
-    while (width > len)
-    {
-        ft_putchar_fd(' ', 1);
-        width--;
-        temp++;
-    }
-    return (len + temp);
+	addr = (uintptr_t)ptr;
+	str = make_str_hex(addr);
+	if (str == 0)
+		return (-1);
+	str = revrse_str(&str);
+	if (str == 0)
+		return (-1);
+	temp = str;
+	str = ft_strjoin("0x", temp);
+	free(temp);
+	if (str == 0)
+		return (-1);
+	if (add_flag_zd(format, &str) < 0)
+		return (-1);
+	len = ft_strlen(str);
+	len += print_width(format->width, len);
+	ft_putstr_fd(str, 1);
+	free(str);
+	return (len);
 }

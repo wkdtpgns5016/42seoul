@@ -23,7 +23,35 @@ char	*add_precision_d(t_format *format, int value)
 	num = ft_itoa(value);
 	if (num == 0)
 		return (0);
-	if (format->precision - ft_strlen(num) > 1)
+	if (format->precision - (int)ft_strlen(num) > 1)
+	{
+		zero = (char *)malloc(format->precision - ft_strlen(num) + 1);
+		if (zero == 0)
+			return (0);
+		i = 0;
+		while (i < format->precision - ft_strlen(num))
+			zero[i++] = '0';
+		zero[i] = '\0';
+		temp = ft_strjoin(zero, num);
+		free(zero);
+		free(num);
+		return (temp);
+	}
+	else
+		return (num);
+}
+
+char	*add_precision_u(t_format *format, unsigned int value)
+{
+	char	*num;
+	char	*zero;
+	char	*temp;
+	int		i;
+
+	num = ft_uitoa(value);
+	if (num == 0)
+		return (0);
+	if (format->precision - (int)ft_strlen(num) > 1)
 	{
 		zero = (char *)malloc(format->precision - ft_strlen(num) + 1);
 		if (zero == 0)

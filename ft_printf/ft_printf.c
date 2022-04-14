@@ -62,20 +62,17 @@ int	ft_printf(const char *format, ...)
 int	main(void)
 {
 	int a = 10;
+	unsigned int b = 4294967297;
 	char *str = "string";
 
 	//printf("%%d   : %+7.4dz\n", a);
 	// printf("%%i   : %.i\n", a);
-	// printf("%%u   : %.u\n", a);
+	 printf("%%u   : %uz\n", b);
 	// printf("%%x   : %.x\n", a);
 	// printf("%%X   : %.X\n", a);
 	// printf("%%p   : %.p\n", &a);
 	//printf("%%c   : %*.cz\n","f", *str);
-	 printf("%%s   : %sz\n", str);
-	 printf("%%3s  : %3sz\n", str);
-	 printf("%%8s  : %8sz\n", str);
-	 printf("%%9.3s : %-2sz\n", str);
-	 printf("%%.0s : %.*sz\n",0 ,str);
+	// printf("%%s   : %s\n", str);
 	// printf("%%%%   : %.%\n");
 	// printf("%%-5d : %-5d\n", a);
 	// printf("%%+d  : %+d\n", a);
@@ -89,7 +86,7 @@ int	main(void)
 
 	int len;
 
-	char *st2r = "-17p";
+	char *st2r = "u";
 	len = set_format(&format, st2r, NULL);
 	printf("type: %c\n", format->type);
 	printf("flags: %s\n", format->flags);
@@ -117,6 +114,6 @@ int	main(void)
 	// printf("\n%-15p\n", &ab);
 
 	printf("%-17pz\n", &a);
-	print_p(format, &a);
+	print_u(format, b);
 
 }

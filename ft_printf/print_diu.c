@@ -31,3 +31,28 @@ int	print_d(t_format *format, int value)
 	free(str);
 	return (len);
 }
+
+int	print_i(t_format *format, int value)
+{
+	int		len;
+
+	len = print_d(format, value);
+	return (len);
+}
+
+int	print_u(t_format *format, unsigned int value)
+{
+	int		len;
+	char	*str;
+
+	str = add_precision_u(format, value);
+	if (str == 0)
+		return (-1);
+	if (add_flag_zd(format, &str) < 0)
+		return (-1);
+	len = ft_strlen(str);
+	len += print_width(format->width, len);
+	ft_putstr_fd(str, 1);
+	free(str);
+	return (len);
+}

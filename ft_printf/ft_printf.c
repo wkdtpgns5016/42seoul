@@ -67,13 +67,13 @@ int	main(void)
 
 	//printf("%%d   : %+7.4dz\n", a);
 	// printf("%%i   : %.i\n", a);
-	 printf("%%u   : %uz\n", b);
+	// printf("%%u   : %uz\n", b);
 	// printf("%%x   : %.x\n", a);
 	// printf("%%X   : %.X\n", a);
 	// printf("%%p   : %.p\n", &a);
 	//printf("%%c   : %*.cz\n","f", *str);
 	// printf("%%s   : %s\n", str);
-	// printf("%%%%   : %.%\n");
+	 printf("%%%%   : %7.5%z\n");
 	// printf("%%-5d : %-5d\n", a);
 	// printf("%%+d  : %+d\n", a);
 	// printf("%%05d : %05d\n", a);
@@ -86,7 +86,7 @@ int	main(void)
 
 	int len;
 
-	char *st2r = "u";
+	char *st2r = "7.5%";
 	len = set_format(&format, st2r, NULL);
 	printf("type: %c\n", format->type);
 	printf("flags: %s\n", format->flags);
@@ -114,6 +114,6 @@ int	main(void)
 	// printf("\n%-15p\n", &ab);
 
 	printf("%-17pz\n", &a);
-	print_u(format, b);
+	print_shap(format);
 
 }

@@ -55,5 +55,6 @@ char		*make_str_hex(uintptr_t num);
 int			get_size_hex(uintptr_t num);
 char		*revrse_str(char **str);
 char		*ft_uitoa(unsigned int n);
+int			print_shap(t_format *format);
 
 #endif

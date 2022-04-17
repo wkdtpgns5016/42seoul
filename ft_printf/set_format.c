@@ -90,5 +90,7 @@ int	set_format(t_format **format, const char *str, va_list *ap)
 		(*format)->type = *(str + len);
 	len++;
 	(*format)->len = (int)len;
+	if (!is_vaild_format(*format))
+		return (-1);
 	return ((int)len);
 }

@@ -19,6 +19,11 @@ int	add_flag_gsp_d(t_format *format, int value, char **str)
 		*str = flag_gap(format, str, value);
 	else if (ft_strchr(format->flags, '+') != 0)
 		*str = flag_plus(format, str, value);
+	else if (ft_strchr(format->flags, '#') != 0)
+	{
+		if (value != 0)
+			*str = flag_shap(format, str);
+	}
 	if (str == 0)
 		return (-1);
 	return (ft_strlen(*str));

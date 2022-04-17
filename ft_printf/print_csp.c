@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-int	print_c(t_format *format, char c)
+int	print_c(t_format *format, char c, int length)
 {
 	int		len;
 	char	*str;
@@ -27,54 +27,68 @@ int	print_c(t_format *format, char c)
 	str[1] = '\0';
 	if (add_flag_zd(format, &str) < 0)
 		return (-1);
-	len = ft_strlen(str);
-	len += print_width(format->width, len);
-	ft_putstr_fd(str, 1);
-	free(str);
+	str = add_width(format, &str);
+	if (str == 0)
+		return (-1);
+	len = print_value(&str, length);
 	return (len);
 }
 
-int	print_s(t_format *format, char *value)
+int	print_s(t_format *format, char *value, int length)
 {
 	int		len;
 	char	*str;
+	char	*temp;
 
-	str = add_precision_s(format, value);
+	temp = value;
+	if (temp == 0)
+		temp = ft_strdup("(null)");
+	if (temp == 0)
+		return (-1);
+	str = add_precision_s(format, temp);
 	if (str == 0)
 		return (-1);
 	if (add_flag_zd(format, &str) < 0)
 		return (-1);
-	len = ft_strlen(str);
-	len += print_width(format->width, len);
-	ft_putstr_fd(str, 1);
-	free(str);
+	str = add_width(format, &str);
+	if (str == 0)
+		return (-1);
+	len = print_value(&str, length);
 	return (len);
 }
 
-int	print_p(t_format *format, void *ptr)
+static char	*convert_addr(uintptr_t addr)
 {
-	int			len;
-	uintptr_t	addr;
-	char		*str;
-	char		*temp;
+	char	*str;
+	char	*temp;
 
-	addr = (uintptr_t)ptr;
-	str = make_str_hex(addr);
+	str = make_str_addr(addr);
 	if (str == 0)
-		return (-1);
+		return (0);
 	str = revrse_str(&str);
 	if (str == 0)
-		return (-1);
+		return (0);
 	temp = str;
 	str = ft_strjoin("0x", temp);
 	free(temp);
 	if (str == 0)
+		return (0);
+	return (str);
+}
+
+int	print_p(t_format *format, void *ptr, int length)
+{
+	int			len;
+	char		*str;
+
+	str = convert_addr((uintptr_t)ptr);
+	if (str == 0)
 		return (-1);
 	if (add_flag_zd(format, &str) < 0)
 		return (-1);
-	len = ft_strlen(str);
-	len += print_width(format->width, len);
-	ft_putstr_fd(str, 1);
-	free(str);
+	str = add_width(format, &str);
+	if (str == 0)
+		return (-1);
+	len = print_value(&str, length);
 	return (len);
 }

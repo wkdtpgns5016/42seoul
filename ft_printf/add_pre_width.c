@@ -13,45 +13,13 @@
 #include "libft/libft.h"
 #include "ft_printf.h"
 
-char	*add_precision_d(t_format *format, int value)
+char	*add_precision_num(t_format *format, char *num)
 {
-	char	*num;
 	char	*zero;
 	char	*temp;
 	int		i;
 
-	num = ft_itoa(value);
-	if (num == 0)
-		return (0);
-	if (format->precision - (int)ft_strlen(num) > 1)
-	{
-		zero = (char *)malloc(format->precision - ft_strlen(num) + 1);
-		if (zero == 0)
-			return (0);
-		i = 0;
-		while (i < format->precision - ft_strlen(num))
-			zero[i++] = '0';
-		zero[i] = '\0';
-		temp = ft_strjoin(zero, num);
-		free(zero);
-		free(num);
-		return (temp);
-	}
-	else
-		return (num);
-}
-
-char	*add_precision_u(t_format *format, unsigned int value)
-{
-	char	*num;
-	char	*zero;
-	char	*temp;
-	int		i;
-
-	num = ft_uitoa(value);
-	if (num == 0)
-		return (0);
-	if (format->precision - (int)ft_strlen(num) > 1)
+	if (format->precision - (int)ft_strlen(num) > 0)
 	{
 		zero = (char *)malloc(format->precision - ft_strlen(num) + 1);
 		if (zero == 0)
@@ -81,15 +49,26 @@ char	*add_precision_s(t_format *format, char *value)
 	return (str);
 }
 
-int	print_width(int width, int len)
+char	*add_width(t_format *format, char **str)
 {
-	int	size;
+	int		size;
+	int		len;
+	char	*dash;
+	char	*temp;
 
-	size = 0;
-	while (len++ < width)
+	len = ft_strlen(*str);
+	size = format->width - len;
+	if (size > 0)
 	{
-		ft_putchar_fd(' ', 1);
-		size++;
+		dash = (char *)malloc(sizeof(char) * size + 1);
+		if (dash == 0)
+			return (0);
+		ft_memset(dash, ' ', size);
+		dash[size] = '\0';
+		temp = ft_strjoin(dash, *str);
+		free(dash);
+		free(*str);
+		return (temp);
 	}
-	return (size);
+	return (*str);
 }

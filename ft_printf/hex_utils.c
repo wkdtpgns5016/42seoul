@@ -18,6 +18,8 @@ int	get_size_hex(uintptr_t num)
 	int	size;
 
 	size = 0;
+	if (num == 0)
+		return (1);
 	while (num > 0)
 	{
 		num /= 16;
@@ -26,24 +28,58 @@ int	get_size_hex(uintptr_t num)
 	return (size);
 }
 
-char	*make_str_hex(uintptr_t num)
+char	*make_str_hex(unsigned int num, int flag)
 {
 	char	*str;
 	int		size;
 	int		i;
 
 	size = get_size_hex(num);
-	str = (char *)malloc(sizeof(char) * (size + 1));
-	if (str == 0)
-		return (0);
-	i = 0;
-	while (num > 0)
+	if (size == 1)
+		str = ft_strdup("0");
+	else
 	{
-		str[i] = "0123456789abcdef"[num % 16];
-		num /= 16;
-		i++;
+		str = (char *)malloc(sizeof(char) * (size + 1));
+		if (str == 0)
+			return (0);
+		i = 0;
+		while (num > 0)
+		{
+			if (flag)
+				str[i] = "0123456789abcdef"[num % 16];
+			else
+				str[i] = "0123456789ABCDEF"[num % 16];
+			num /= 16;
+			i++;
+		}
+		str[i] = '\0';
 	}
-	str[i] = '\0';
+	return (str);
+}
+
+char	*make_str_addr(uintptr_t num)
+{
+	char	*str;
+	int		size;
+	int		i;
+
+	size = get_size_hex(num);
+	if (size == 1)
+		str = ft_strdup("0");
+	else
+	{
+		str = (char *)malloc(sizeof(char) * (size + 1));
+		if (str == 0)
+			return (0);
+		i = 0;
+		while (num > 0)
+		{
+			str[i] = "0123456789abcdef"[num % 16];
+			num /= 16;
+			i++;
+		}
+		str[i] = '\0';
+	}
 	return (str);
 }
 

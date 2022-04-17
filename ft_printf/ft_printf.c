@@ -13,107 +13,69 @@
 #include "ft_printf.h"
 #include "libft/libft.h"
 
-#include <stdio.h>
-
-
-t_list	*split_format(const char *format, ...)
+static int	controller_print(t_format *format, va_list *ap, int len)
 {
-	t_list		*format_list;
-	t_list		*temp;
-	t_format	*fmt;
-	int			fmt_len;
-	va_list		ap;
+	int	print_len;
 
-	format_list = 0;
-	va_start(ap, format);
-	while (*format != 0)
+	print_len = -1;
+	if (format->type == 'c')
+		print_len = print_c(format, va_arg(*ap, int), len);
+	else if (format->type == 's')
+		print_len = print_s(format, va_arg(*ap, char *), len);
+	else if (format->type == 'p')
+		print_len = print_p(format, va_arg(*ap, void *), len);
+	else if (format->type == 'd')
+		print_len = print_d(format, va_arg(*ap, int), len);
+	else if (format->type == 'i')
+		print_len = print_d(format, va_arg(*ap, int), len);
+	else if (format->type == 'u')
+		print_len = print_u(format, va_arg(*ap, unsigned int), len);
+	else if (format->type == 'x')
+		print_len = print_x(format, va_arg(*ap, unsigned int), len);
+	else if (format->type == 'X')
+		print_len = print_x(format, va_arg(*ap, unsigned int), len);
+	else if (format->type == '%')
+		print_len = print_per(format, len);
+	return (print_len);
+}
+
+static int	start_printf(const char **format, va_list *ap, int *len)
+{
+	t_format	*fmt;
+	int			print_len;
+
+	if (**format == '%')
 	{
-		if (*format == '%')
-		{
-			fmt = fmt_new();
-			fmt_len = set_format(&fmt, format + 1, &ap);
-			if (fmt == 0)
-				return (0);
-			temp = ft_lstnew(fmt);
-			if (temp == 0)
-				return (0);
-			ft_lstadd_back(&format_list, temp);
-			format += fmt_len;
-		}
-		else
-			format++;
+		fmt = fmt_new();
+		if (fmt == 0)
+			return (-1);
+		if (set_format(&fmt, (*format) + 1, ap) < 0)
+			return (-1);
+		print_len = controller_print(fmt, ap, *len);
+		if (print_len < 0)
+			return (-1);
+		*format += fmt->len + 1;
+		fmt_free(&fmt);
+		return (print_len);
 	}
-	return (format_list);
+	else
+	{
+		ft_putchar_fd(**format, 1);
+		(*format)++;
+		return (1);
+	}
 }
 
 int	ft_printf(const char *format, ...)
 {
-	va_list	ap;
-	t_list	*format_list;
+	va_list		ap;
+	t_format	*fmt;
+	int			print_len;
+	int			len;
 
-	format_list = split_format(format, ap);
-	va_start(ap, ft_lstsize(format_list));
-	return (0);
-}
-
-
-#include <stdio.h>
-
-int	main(void)
-{
-	int a = 10;
-	unsigned int b = 4294967297;
-	char *str = "string";
-
-	//printf("%%d   : %+7.4dz\n", a);
-	// printf("%%i   : %.i\n", a);
-	// printf("%%u   : %uz\n", b);
-	// printf("%%x   : %.x\n", a);
-	// printf("%%X   : %.X\n", a);
-	// printf("%%p   : %.p\n", &a);
-	//printf("%%c   : %*.cz\n","f", *str);
-	// printf("%%s   : %s\n", str);
-	 printf("%%%%   : %7.5%z\n");
-	// printf("%%-5d : %-5d\n", a);
-	// printf("%%+d  : %+d\n", a);
-	// printf("%%05d : %05d\n", a);
-	// printf("%% d  : % d\n", a);
-	// printf("%%5d  : %5d\n", a);
-	// printf("%%.5d  : %.5d\n", a);
-
-	t_format *format;
-	format = fmt_new();
-
-	int len;
-
-	char *st2r = "7.5%";
-	len = set_format(&format, st2r, NULL);
-	printf("type: %c\n", format->type);
-	printf("flags: %s\n", format->flags);
-	printf("len: %d\n", format->len);
-	printf("precision: %d\n", format->precision);
-	printf("width: %d\n\n", format->width);
-
-	//print_c(format, 'a');
-	//printf("$\n");
-
-	t_list *list;
-	t_format *format2;
-	// list = split_format("%- #*.*s",3,4);
-	// printf("%d\n", ft_lstsize(list));
-	// while (list != 0)
-	// {
-	// 	format2 = (t_format *)(list->content);
-	// 	printf("%c\n", format2->type);
-	// 	printf("%d\n", format2->width);
-	// 	printf("%d\n", format2->precision);
-	// 	list = list->next;
-	// }
-	// int ab = 3;
-	// //print_p(format, &ab);
-	// printf("\n%-15p\n", &ab);
-
-	printf("%-17pz\n", &a);
-	print_shap(format);
-
+	len = 0;
+	va_start(ap, format);
+	while (*format != 0)
+		len += start_printf(&format, &ap, &len);
+	return (len);
 }

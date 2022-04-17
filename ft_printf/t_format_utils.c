@@ -27,3 +27,9 @@ t_format	*fmt_new(void)
 	format->len = 0;
 	return (format);
 }
+
+void	fmt_free(t_format **format)
+{
+	free((*format)->flags);
+	free(*format);
+}

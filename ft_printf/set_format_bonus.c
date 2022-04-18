@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   set_format.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/14 18:30:57 by sehjang           #+#    #+#             */
-/*   Updated: 2022/04/14 18:30:58 by sehjang          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 #include "libft/libft.h"
 
 static int	set_flag(t_format **format, const char *str)

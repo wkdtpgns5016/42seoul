@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/14 18:26:53 by sehjang           #+#    #+#             */
-/*   Updated: 2022/04/14 18:26:56 by sehjang          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#ifndef FT_PRINTF_BONUS_H
+# define FT_PRINTF_BONUS_H
 
 # include <stdarg.h>
 # include <stdlib.h>

@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   is_vaild_format.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/14 18:27:25 by sehjang           #+#    #+#             */
-/*   Updated: 2022/04/14 18:27:27 by sehjang          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 #include "libft/libft.h"
 
 static int	is_include_flag(char *flags, char *check)

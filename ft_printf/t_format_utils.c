@@ -30,6 +30,7 @@ t_format	*fmt_new(void)
 
 void	fmt_free(t_format **format)
 {
-	free((*format)->flags);
+	if (ft_strlen((*format)->flags) > 0)
+		free((*format)->flags);
 	free(*format);
 }

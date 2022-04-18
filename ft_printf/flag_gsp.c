@@ -29,7 +29,7 @@ char	*flag_shap(t_format *format, char **str)
 	return (new);
 }
 
-char	*flag_plus(t_format *format, char **str, int value)
+char	*flag_plus(char **str, int value)
 {
 	char	*new;
 
@@ -44,7 +44,7 @@ char	*flag_plus(t_format *format, char **str, int value)
 	return (*str);
 }
 
-char	*flag_gap(t_format *format, char **str, int value)
+char	*flag_gap(char **str, int value)
 {
 	char	*new;
 

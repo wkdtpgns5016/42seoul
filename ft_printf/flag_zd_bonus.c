@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   flag_zd.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/14 15:20:57 by sehjang           #+#    #+#             */
-/*   Updated: 2022/04/14 15:21:00 by sehjang          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "libft/libft.h"
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 
 static char	*flag_zero_minus(int len, char **str)
 {

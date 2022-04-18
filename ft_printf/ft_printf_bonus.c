@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/29 18:07:52 by sehjang           #+#    #+#             */
-/*   Updated: 2022/03/29 18:33:03 by sehjang          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 #include "libft/libft.h"
 
 static int	controller_print(t_format *format, va_list *ap, int len)

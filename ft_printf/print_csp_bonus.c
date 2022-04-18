@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   print_csp.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/14 18:30:25 by sehjang           #+#    #+#             */
-/*   Updated: 2022/04/14 18:30:26 by sehjang          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "libft/libft.h"
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 
 static int	print_c_null(t_format *format, char c, int length)
 {

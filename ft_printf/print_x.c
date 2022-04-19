@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_x.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/19 14:29:43 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/19 14:29:44 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 #include "libft/libft.h"
 
@@ -26,8 +38,7 @@ static char	*add_precision_x(t_format *format, unsigned int value)
 		return (0);
 	if (format->precision == 0 && value == 0)
 	{
-		free(str);
-		str = 0;
+		ft_free_safe(&str);
 		str = (char *)malloc(1);
 		*str = '\0';
 	}

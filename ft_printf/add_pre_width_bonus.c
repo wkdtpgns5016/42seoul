@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add_pre_width_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/19 14:26:03 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/19 14:26:04 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft/libft.h"
 #include "ft_printf_bonus.h"
 
@@ -12,7 +24,7 @@ static char	*add_precision_minus(t_format *format, char **num)
 	str = ft_substr(temp, 1, ft_strlen(temp) - 1);
 	if (str == 0)
 		return (0);
-	free(temp);
+	ft_free_safe(&temp);
 	zero = (char *)malloc(format->precision - ft_strlen(str) + 1);
 	if (zero == 0)
 		return (0);
@@ -23,10 +35,10 @@ static char	*add_precision_minus(t_format *format, char **num)
 	temp = ft_strjoin(zero, str);
 	if (temp == 0)
 		return (0);
-	free(zero);
-	free(str);
+	ft_free_safe(&zero);
+	ft_free_safe(&str);
 	str = ft_strjoin("-", temp);
-	free(temp);
+	ft_free_safe(&temp);
 	return (str);
 }
 
@@ -48,8 +60,8 @@ char	*add_precision_num(t_format *format, char **num)
 			zero[i++] = '0';
 		zero[i] = '\0';
 		temp = ft_strjoin(zero, *num);
-		free(zero);
-		free(*num);
+		ft_free_safe(&zero);
+		ft_free_safe(num);
 		return (temp);
 	}
 	else
@@ -85,8 +97,8 @@ char	*add_width(t_format *format, char **str)
 		ft_memset(dash, ' ', size);
 		dash[size] = '\0';
 		temp = ft_strjoin(dash, *str);
-		free(dash);
-		free(*str);
+		ft_free_safe(&dash);
+		ft_free_safe(str);
 		return (temp);
 	}
 	return (*str);

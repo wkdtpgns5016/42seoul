@@ -84,12 +84,6 @@ int	ft_printf(const char *format, ...)
 			len++;
 		}
 	}
+	va_end(ap);
 	return (len);
 }
-
-// #include <stdio.h>
-// int main(void)
-// {
-// 	ft_printf(" %-0s ", "");
-
-// }

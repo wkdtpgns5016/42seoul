@@ -97,7 +97,7 @@ static char	*convert_addr(uintptr_t addr)
 		return (0);
 	temp = str;
 	str = ft_strjoin("0x", temp);
-	free(temp);
+	ft_free_safe(&temp);
 	if (str == 0)
 		return (0);
 	return (str);

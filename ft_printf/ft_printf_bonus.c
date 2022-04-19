@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/19 14:26:56 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/19 14:26:57 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf_bonus.h"
 #include "libft/libft.h"
 
@@ -74,10 +86,3 @@ int	ft_printf(const char *format, ...)
 	}
 	return (len);
 }
-
-// #include <stdio.h>
-// int main(void)
-// {
-// 	ft_printf(" %-0s ", "");
-
-// }

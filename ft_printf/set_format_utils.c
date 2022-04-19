@@ -6,7 +6,7 @@
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 18:30:47 by sehjang           #+#    #+#             */
-/*   Updated: 2022/04/14 18:30:49 by sehjang          ###   ########.fr       */
+/*   Updated: 2022/04/19 14:30:18 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,6 @@ int	get_num(const char *str, size_t len)
 	if (num == 0)
 		return (0);
 	n = ft_atoi(num);
-	free(num);
+	ft_free_safe(&num);
 	return (n);
 }

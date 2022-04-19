@@ -22,18 +22,18 @@ static char	*flag_zero_minus(int len, char **str)
 	zero = (char *)malloc(len + 1);
 	if (zero == 0)
 	{
-		free(*str);
+		ft_free_safe(str);
 		return (0);
 	}
 	ft_memset(zero, '0', len);
 	zero[len] = '\0';
 	new = ft_strjoin(zero, (*str) + 1);
-	free(zero);
-	free(*str);
+	ft_free_safe(&zero);
+	ft_free_safe(str);
 	if (new == 0)
 		return (0);
 	temp = ft_strjoin("-", new);
-	free(new);
+	ft_free_safe(&new);
 	return (temp);
 }
 
@@ -47,14 +47,14 @@ char	*flag_zero(int len, char **str)
 	zero = (char *)malloc(len + 1);
 	if (zero == 0)
 	{
-		free(*str);
+		ft_free_safe(str);
 		return (0);
 	}
 	ft_memset(zero, '0', len);
 	zero[len] = '\0';
 	new = ft_strjoin(zero, *str);
-	free(zero);
-	free(*str);
+	ft_free_safe(&zero);
+	ft_free_safe(str);
 	if (new == 0)
 		return (0);
 	return (new);
@@ -68,14 +68,14 @@ char	*flag_dash(int len, char **str)
 	dash = (char *)malloc(len + 1);
 	if (dash == 0)
 	{
-		free(*str);
+		ft_free_safe(str);
 		return (0);
 	}
 	ft_memset(dash, ' ', len);
 	dash[len] = '\0';
 	new = ft_strjoin(*str, dash);
-	free(dash);
-	free(*str);
+	ft_free_safe(&dash);
+	ft_free_safe(str);
 	if (new == 0)
 		return (0);
 	return (new);

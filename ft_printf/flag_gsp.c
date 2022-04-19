@@ -23,7 +23,7 @@ char	*flag_shap(t_format *format, char **str)
 		new = ft_strjoin("0X", *str);
 	else
 		return (*str);
-	free(*str);
+	ft_free_safe(str);
 	if (new == 0)
 		return (0);
 	return (new);
@@ -36,7 +36,7 @@ char	*flag_plus(char **str, int value)
 	if (value >= 0)
 	{
 		new = ft_strjoin("+", *str);
-		free(*str);
+		ft_free_safe(str);
 		if (new == 0)
 			return (0);
 		return (new);
@@ -51,7 +51,7 @@ char	*flag_gap(char **str, int value)
 	if (value >= 0)
 	{
 		new = ft_strjoin(" ", *str);
-		free(*str);
+		ft_free_safe(str);
 		if (new == 0)
 			return (0);
 		return (new);

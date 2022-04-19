@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hex_utils_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/19 14:27:38 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/19 14:27:39 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft/libft.h"
 #include "ft_printf_bonus.h"
 
@@ -86,6 +98,6 @@ char	*revrse_str(char **str)
 		str_size--;
 	}
 	new[new_idx] = '\0';
-	free(*str);
+	ft_free_safe(str);
 	return (new);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_format_utils_bonus.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/19 14:30:09 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/19 14:30:09 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf_bonus.h"
 #include "libft/libft.h"
 
@@ -35,6 +47,6 @@ int	get_num(const char *str, size_t len)
 	if (num == 0)
 		return (0);
 	n = ft_atoi(num);
-	free(num);
+	ft_free_safe(&num);
 	return (n);
 }

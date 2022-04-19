@@ -58,5 +58,6 @@ char		*revrse_str(char **str);
 char		*ft_uitoa(unsigned int n);
 int			print_per(t_format *format, int length);
 int			print_x(t_format *format, unsigned int value, int length);
+void		ft_free_safe(char **ptr);
 
 #endif

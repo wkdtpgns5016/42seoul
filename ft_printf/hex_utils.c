@@ -98,6 +98,6 @@ char	*revrse_str(char **str)
 		str_size--;
 	}
 	new[new_idx] = '\0';
-	free(*str);
+	ft_free_safe(str);
 	return (new);
 }

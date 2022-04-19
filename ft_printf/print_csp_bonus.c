@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_csp_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/19 14:28:32 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/19 14:28:32 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft/libft.h"
 #include "ft_printf_bonus.h"
 
@@ -85,7 +97,7 @@ static char	*convert_addr(uintptr_t addr)
 		return (0);
 	temp = str;
 	str = ft_strjoin("0x", temp);
-	free(temp);
+	ft_free_safe(&temp);
 	if (str == 0)
 		return (0);
 	return (str);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_diu.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/19 14:29:04 by sehjang           #+#    #+#             */
+/*   Updated: 2022/04/19 14:29:04 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft/libft.h"
 #include "ft_printf.h"
 
@@ -9,10 +21,10 @@ int	print_value(char **str, int length)
 	if ((unsigned int)(len + length) < 2147483647)
 	{
 		ft_putstr_fd(*str, 1);
-		free(*str);
+		ft_free_safe(str);
 		return (len);
 	}
-	free(*str);
+	ft_free_safe(str);
 	return (-1);
 }
 
@@ -23,8 +35,10 @@ static char	*add_precision_du(t_format *format, char **num, int value)
 	if (format->precision == 0 && value == 0)
 	{
 		str = (char *)malloc(1);
+		if (str == 0)
+			return (0);
 		*str = '\0';
-		free(*num);
+		ft_free_safe(num);
 	}
 	else
 		str = add_precision_num(format, num);

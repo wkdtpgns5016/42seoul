@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/04/19 14:28:17 by sehjang           #+#    #+#              #
+#    Updated: 2022/04/19 14:28:18 by sehjang          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 NAME = libftprintf.a
@@ -15,7 +27,8 @@ SRCS = ft_printf.c \
 		print_csp.c \
 		print_diu.c \
 		print_per.c \
-		print_x.c 
+		print_x.c \
+		ft_free_safe.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -33,37 +46,42 @@ SRCS_BONUS = ft_printf_bonus.c \
 		print_csp_bonus.c \
 		print_diu_bonus.c \
 		print_per_bonus.c \
-		print_x_bonus.c 
+		print_x_bonus.c \
+		ft_free_safe_bonus.c
 
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
+ifdef WITH_BONUS
+	OBJECTS = $(OBJS_BONUS)
+else
+	OBJECTS = $(OBJS)
+endif
+
 AR = ar -rc
 HEAD = ./
-LIBFT = libft
-
-mandatory: $(OBJS)
-	$(MAKE) all -C ./$(LIBFT)
-	cp libft/libft.a ./$(NAME)
-	$(AR) $(NAME) $(OBJS)
-
-bonus: $(OBJS_BONUS)
-	$(MAKE) all -C ./$(LIBFT)
-	cp libft/libft.a ./$(NAME)
-	$(AR) $(NAME) $(OBJS_BONUS)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c -I $(HEAD) -I $(LIBFT) $< -o $@
-
-$(NAME): mandatory
+LIBFT = libft/libft.a
 
 all: $(NAME)
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c -I $(HEAD) -I $(LIBFT) $< -o $@
+	
+bonus: 
+	make WITH_BONUS=1 all
+
+$(LIBFT) : 
+	make -C ./libft
+
+$(NAME): $(LIBFT) $(OBJECTS)
+	cp libft/libft.a ./$(NAME)
+	$(AR) $(NAME) $(OBJECTS)
+
 clean:
-	$(MAKE) -C $(LIBFT) clean
+	$(MAKE) -C libft clean
 	rm -f $(OBJS) $(OBJS_BONUS)
 
 fclean: clean
-	$(MAKE) -C $(LIBFT) fclean
+	$(MAKE) -C libft fclean
 	rm -f $(NAME)
 
 re: fclean all

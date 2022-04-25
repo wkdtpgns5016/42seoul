@@ -179,3 +179,51 @@ Ssh
 
 	외부에서 해당 포트번호로 네트워크 연결을 하게되면,
 	해당 포트번호에 해당하는 내부 ip주소로 매핑을 시켜주는 형태
+
+모니터링 쉘 스크립트
+	uname -a
+		os 및 커널 릴리즈 정보	
+
+	cat /proc/cpuinfo | grep 'cpu cores'
+		cpu 물리 프로세스 개수
+
+	cat /proc/cpuinfo | grep 'processor'
+		cpu 가상 프로세스 개수
+	https://www.cyberciti.biz/faq/check-how-many-cpus-are-there-in-linux-system/	
+
+	free -m
+		메모리 사용량 mb 단위로 보기
+
+	df --total : 슬랙 스레드
+		디스크 공간 사용량 mb 단위로 보기
+		tmpfs : tmpfs (임시 파일 시스템) 가상 메모리에 파일을 보관
+		udev : udev 파일 시스템에 연결된 장치 (usb, 네트워크카드, cd rom) 관련된 정보 저장
+
+	mpstat : https://meongj-devlog.tistory.com/171
+		sysstat 패키지에 포함되어 있는 명령어
+		현재 cpu의 사용량을 출력
+
+	who -b : https://keichee.tistory.com/284
+		마지막 부팅 시각 출력
+
+	grep /bin/bash /etc/passwd | wc -l
+		https://overcode.tistory.com/entry/%EB%A6%AC%EB%88%85%EC%8A%A4-%EC%82%AC%EC%9A%A9%EC%9E%90-%EB%AA%A9%EB%A1%9D-%ED%99%95%EC%9D%B8-Linux-User-List
+		사용자 계정 조회 (root 포함)
+
+	ip addr show dev [인터페이스]
+		해당 인터페이스의 네트워크 정보 출력
+
+	리눅스 로그 파일 https://sisiblog.tistory.com/24
+		auth.log에서 sudo command만 grep
+
+크론탭
+	crontab -e : 크론탭 명령어 수정
+	crontab -l : 크론탭 명령어 조회
+	crontab -r : 크론탭 명령어 삭제
+
+	주기 설정
+	*　　　      *　　　　    *　　　　　　 *　　　　　　  *
+	분(0-59)　　시간(0-23)　　일(1-31)　　월(1-12)　　　요일(0-7)
+
+wall
+	리눅스 사용자에게 해당 메시지를 전송하는 명령어

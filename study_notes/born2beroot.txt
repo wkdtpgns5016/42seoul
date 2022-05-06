@@ -235,3 +235,17 @@ Ssh
 
 wall
 	리눅스 사용자에게 해당 메시지를 전송하는 명령어
+
+user 생성/비밀번호변경
+	adduser userid
+	sudo passwd 사용자이름
+
+그룹 생성/조회/삭제/사용자할당
+	생성 : groupadd 그룹이름
+	조회 : groups
+	삭제 : groupdel 그룹이름
+	사용자할당 : gpasswd -a 사용자이름 그룹이름
+
+hostnamectl
+	현재 호스트네임 조회
+	hostnamectl set-hostname --static 호스트이름

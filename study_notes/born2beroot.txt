@@ -27,6 +27,7 @@
 	센토스
 		1.레드햇 엔터프라이즈 리눅스와 호환가능
 		2.무료 기업용 컴퓨팅 플랫폼 제공을 목적
+		3.현재는 무료 서비스가 종료되어 유료만 가능
 		
 APT vs aptitude
 	APT(Advanced Packaging Tool)

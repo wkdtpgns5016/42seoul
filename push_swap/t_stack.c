@@ -10,58 +10,37 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <push_swap.h>
+#include "push_swap.h"
+#include "libft/libft.h"
 #include <stdio.h>
 
-t_stack	*stack_new(int num)
+int	is_empty_stack(t_stack *stack)
 {
-	t_stack	*stack;
+	if (stack->top == 0)
+		return (1);
+	else return (0);
+}
+
+void	push_stack(t_stack *stack, void *data)
+{
+	t_list	*newnode;
+
+	newnode = (t_list *)malloc(sizeof(t_list));
+	newnode->content = data;
+	newnode->next = stack->top;
+	stack->top = newnode;
+}
+
+void	*pop_stack(t_stack *stack)
+{
 	t_list	*node;
+	void	*data;
 
-	stack = (t_stack *)malloc(sizeof(t_stack));
-	node = ft_lstnew(&num);
-	stack->list = &node;
-	if (stack->list == 0)
+	if (is_empty_stack(stack))
 		return (0);
-	stack->top = ft_lstlast(*(stack->list));
-	return (stack);
-}
-
-void	free_content(void *content)
-{
-	if (content != 0)
-		free(content);
-	content = 0;
-}
-
-void	stack_clear(t_stack **stack, void (*del)(void *))
-{
-	ft_lstclear((*stack)->list, del);
-	(*stack)->top = 0;
-	free(*stack);
-	*stack = 0;
-}
-
-void	push(t_stack **stack, int num)
-{
-	t_list	*new;
-	t_stack	*temp;
-	void	(*del)(void *);
-	int		*ptr;
-
-	temp = *stack;
-	del = free_content;
-	if (temp == 0)
-		temp = stack_new(num);
-	else
-	{
-		new = ft_lstnew(&num);
-		if (new == 0)
-		{
-			stack_clear(stack, del);
-			return ;
-		}
-		ft_lstadd_back(temp->list, new);
-		temp->top = ft_lstlast(*(temp->list));
-	}
+	node = stack->top;
+	data = node->content;
+	stack->top = node->next;
+	free(node);
+	return (data);
 }

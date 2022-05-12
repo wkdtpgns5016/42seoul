@@ -11,23 +11,31 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <push_swap.h>
+#include "push_swap.h"
 
 int	main(void)
 {
-	t_stack	*stack;
-	t_list	*list;
-	int		*ptr;
+	
+	t_stack *stack;
+	int *a;
+	int *b;
+	int *c;
+	stack = (t_stack *)malloc(sizeof(t_stack));
+	stack->top = 0;
 
-	stack = 0;
-	for (int i=0; i<5; i++)
-	{
-		push(&stack, i);
-	}
-	list = *(stack->list);
-	while (list != 0)
-	{
-		ptr = (int *)(list->content);
-		printf("%d\n", *ptr);
-	}
+	a = malloc(sizeof(int));
+	b = malloc(sizeof(int));
+	c = malloc(sizeof(int));
+	*a = 1;
+	*b = 2;
+	*c = 3;
+	
+	push_stack(stack,a);
+	push_stack(stack,b);
+	push_stack(stack,c);
+	pop_stack(stack);
+	
+	printf("hello");
+	int *test = stack->top->content;
+	printf("%d\n", *test);
 }

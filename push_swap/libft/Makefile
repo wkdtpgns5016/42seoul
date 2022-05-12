@@ -80,7 +80,8 @@ all: $(NAME)
 clean:
 	rm -f $(OBJS) $(OBJS_BONUS) 
 
-fclean: clean
+fclean: 
+	$(MAKE) clean
 	rm -f $(NAME)
 
 re: fclean all

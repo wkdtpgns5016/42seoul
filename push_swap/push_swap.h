@@ -13,13 +13,15 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include <libft/libft.h>
+# include "libft/libft.h"
 
 typedef struct s_stack
 {
-	t_list	**list;
 	t_list	*top;
 }	t_stack;
 
-void	push(t_stack **stack, int num);
+int		is_empty_stack(t_stack *stack);
+void	push_stack(t_stack *stack, void *data);
+void	*pop_stack(t_stack *stack);
+
 #endif

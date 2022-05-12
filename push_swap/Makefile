@@ -25,7 +25,7 @@ LIBFT = libft/libft.a
 all: $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c -I $(HEAD) -I $(LIBFT) $< -o $@
+	$(CC) $(CFLAGS) -c -I $(HEAD) $< -o $@
 
 $(LIBFT) : 
 	make -C ./libft bonus

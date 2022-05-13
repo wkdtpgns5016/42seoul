@@ -10,32 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "push_swap.h"
 
-int	main(void)
+void	push_swap(t_deque *a, t_deque *b, int chunk)
 {
-	
-	t_stack *stack;
-	int *a;
-	int *b;
-	int *c;
-	stack = (t_stack *)malloc(sizeof(t_stack));
-	stack->top = 0;
-
-	a = malloc(sizeof(int));
-	b = malloc(sizeof(int));
-	c = malloc(sizeof(int));
-	*a = 1;
-	*b = 2;
-	*c = 3;
-	
-	push_stack(stack,a);
-	push_stack(stack,b);
-	push_stack(stack,c);
-	pop_stack(stack);
-	
-	printf("hello");
-	int *test = stack->top->content;
-	printf("%d\n", *test);
+	/*code*/
 }

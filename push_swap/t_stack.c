@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include "libft/libft.h"
-#include <stdio.h>
 
 int	is_empty_stack(t_stack *stack)
 {

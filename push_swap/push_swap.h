@@ -15,11 +15,6 @@
 
 # include "libft/libft.h"
 
-typedef struct s_stack
-{
-	t_list	*top;
-}	t_stack;
-
 typedef struct s_dlist
 {
 	void	*data;
@@ -33,16 +28,47 @@ typedef	struct s_deque
 	t_dlist	*rear;
 }	t_deque;
 
-int			is_empty_stack(t_stack *stack);
-void		push_stack(t_stack *stack, void *data);
-void		*pop_stack(t_stack *stack);
+
+typedef struct s_stack
+{
+	t_deque	*top;
+}	t_stack;
+
+int			get_size_dlist(t_dlist *list);
 void		init_deque(t_deque	*deque);
+int			get_size_deque(t_deque *deque);
 void		add_front_deque(t_deque *deque, void *data);
 void		add_rear_deque(t_deque *deque, void *data);
 void		*delete_front_deque(t_deque *deque);
 void		*delete_rear_deque(t_deque *deque);
 void		check_vaild_arg(int args, char **argc);
 long long	ft_atol(const char *nptr);
-t_deque	*	parsing_arg(int args, char **argc);
-void		push_swap(t_deque *a, t_deque *b, int chunk);
+t_stack	*	parsing_arg(int args, char **argc);
+int			is_sort_stack(t_stack *stack);
+void		init_stack(t_stack *stack);
+int			is_empty_stack(t_stack *stack);
+int			get_size_stack(t_stack *stack);
+void		print_stack(t_stack *b);
+int			get_top_stack(t_stack *stack);
+void		push_swap(t_stack *a, t_stack *b);
+void		swap_stack(t_stack *a);
+void		sa_stack(t_stack *a);
+void		sb_stack(t_stack *a);
+void		ss_stack(t_stack *a, t_stack *b);
+void		pa_stack(t_stack *a, t_stack *b);
+void		pb_stack(t_stack *a, t_stack *b);
+void		rotate_stack(t_stack *a);
+void		ra_stack(t_stack *a);
+void		rb_stack(t_stack *b);
+void		rr_stack(t_stack *a, t_stack *b);
+void		reverse_rotate_stack(t_stack *a);
+void		rra_stack(t_stack *a);
+void		rrb_stack(t_stack *b);
+void		rrr_stack(t_stack *a, t_stack *b);
+int			get_chunk(double x);
+void		pass_b(t_stack *a, t_stack *b, int num, int chunk);
+int			find_max(t_stack *stack, int max);
+void		rotate_max(t_stack *b);
+void		pass_a(t_stack *a, t_stack *b);
+
 #endif

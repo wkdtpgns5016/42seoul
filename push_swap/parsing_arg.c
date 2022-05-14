@@ -74,7 +74,7 @@ static int	*make_arr(int args, char **argc)
 	return (arr);
 }
 
-t_deque	*parsing_arg(int args, char **argc)
+t_deque	*make_deque(int args, char **argc)
 {
 	t_deque	*deque;
 	int		i;
@@ -97,4 +97,13 @@ t_deque	*parsing_arg(int args, char **argc)
 	free(arr);
 	arr = 0;
 	return (deque);
+}
+
+t_stack	*parsing_arg(int args, char **argc)
+{
+	t_stack	*stack;
+
+	stack = (t_stack *)malloc(sizeof(t_stack));
+	stack->top = make_deque(args, argc);
+	return (stack);
 }

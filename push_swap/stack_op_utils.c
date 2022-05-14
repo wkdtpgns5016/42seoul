@@ -12,33 +12,37 @@
 
 #include "push_swap.h"
 
+void	init_stack(t_stack *stack)
+{
+	stack->top = (t_deque *)malloc(sizeof(t_deque));
+	init_deque(stack->top);
+}
+
 int	is_empty_stack(t_stack *stack)
 {
-	if (stack->top == 0)
+	if (stack->top->front == 0)
 		return (1);
 	else return (0);
 }
 
-void	push_stack(t_stack *stack, void *data)
+int	get_size_stack(t_stack *stack)
 {
-	t_list	*newnode;
-
-	newnode = (t_list *)malloc(sizeof(t_list));
-	newnode->content = data;
-	newnode->next = stack->top;
-	stack->top = newnode;
+	return (get_size_deque(stack->top));
 }
 
-void	*pop_stack(t_stack *stack)
+void	print_stack(t_stack *b)
 {
-	t_list	*node;
-	void	*data;
+	t_dlist *list = b->top->front;
+	while (list != 0)
+	{
+		ft_putnbr_fd(*(int *)(list->data), 1);
+		ft_putstr_fd(" ", 1);
+		list = list->next;
+	}
+	ft_putstr_fd("\n", 1);
+}
 
-	if (is_empty_stack(stack))
-		return (0);
-	node = stack->top;
-	data = node->content;
-	stack->top = node->next;
-	free(node);
-	return (data);
+int	get_top_stack(t_stack *stack)
+{
+	return (*(int *)(stack->top->front->data));
 }

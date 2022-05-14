@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "push_swap.h"
-#include <unistd.h>
 
 static int	is_vaild_num(char *str)
 {
@@ -67,7 +66,7 @@ static int	is_duplicate_arg(int args, char **argc)
 
 static void	error_message(void)
 {
-	write(2,"Error", 5);
+	ft_putstr_fd("Error", 2);
 	exit(1);
 }
 

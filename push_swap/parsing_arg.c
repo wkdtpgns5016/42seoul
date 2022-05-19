@@ -6,7 +6,7 @@
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:33 by sehjang           #+#    #+#             */
-/*   Updated: 2022/05/10 18:54:35 by sehjang          ###   ########.fr       */
+/*   Updated: 2022/05/17 20:40:42 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_deque	*make_deque(int args, char **argc)
 	int		i;
 	int		*arr;
 	int		*data;
-	
+
 	deque = (t_deque *)malloc(sizeof(t_deque));
 	if (deque == 0)
 		return (0);

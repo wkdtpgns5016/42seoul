@@ -17,17 +17,16 @@
 
 typedef struct s_dlist
 {
-	void	*data;
+	void			*data;
 	struct s_dlist	*prev;
 	struct s_dlist	*next;
 }	t_dlist;
 
-typedef	struct s_deque
+typedef struct s_deque
 {
 	t_dlist	*front;
 	t_dlist	*rear;
 }	t_deque;
-
 
 typedef struct s_stack
 {
@@ -43,7 +42,7 @@ void		*delete_front_deque(t_deque *deque);
 void		*delete_rear_deque(t_deque *deque);
 void		check_vaild_arg(int args, char **argc);
 long long	ft_atol(const char *nptr);
-t_stack	*	parsing_arg(int args, char **argc);
+t_stack		*parsing_arg(int args, char **argc);
 int			is_sort_stack(t_stack *stack);
 void		init_stack(t_stack *stack);
 int			is_empty_stack(t_stack *stack);

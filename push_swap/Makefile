@@ -13,8 +13,19 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 NAME = push_swap
-SRCS = push_swap.c \
-		t_stack.c
+SRCS = 	main.c \
+		push_swap.c \
+		push_swap_utils.c \
+		check_vaild_arg.c \
+		dlist_op_utils.c \
+		ft_atol.c \
+		parsing_arg.c \
+		stack_op_push.c \
+		stack_op_revers_rotate.c \
+		stack_op_rotate.c \
+		stack_op_swap.c \
+		stack_op_utils.c
+
 
 OBJS = $(SRCS:.c=.o)
 

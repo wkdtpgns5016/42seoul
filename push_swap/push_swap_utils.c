@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/17 20:39:37 by sehjang           #+#    #+#             */
+/*   Updated: 2022/05/17 20:39:38 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 int	get_chunk(double x)
@@ -48,14 +60,14 @@ int	find_max(t_stack *stack, int max)
 		temp = temp ->next;
 		i++;
 		if (i > size / 2)
-			break;
+			break ;
 	}
 	return (0);
 }
 
 void	rotate_max(t_stack *b)
 {
-	int max;
+	int	max;
 
 	max = get_size_stack(b) - 1;
 	if (find_max(b, max) == 1)

@@ -23,14 +23,15 @@ int	get_case_three_stack(t_stack *a)
 	mid = *(int *)(a->top->front->next->data);
 	if (front > mid && front < rear && mid < rear)
 		return (1);
-	if (front > mid && front > rear && mid > rear)
+	else if (front > mid && front > rear && mid > rear)
 		return (2);
-	if (front > mid && front > rear && mid < rear)
+	else if (front > mid && front > rear && mid < rear)
 		return (3);
-	if (front < mid && front < rear && mid > rear)
+	else if (front < mid && front < rear && mid > rear)
 		return (4);
-	if (front < mid && front > rear && mid > rear)
+	else if (front < mid && front > rear && mid > rear)
 		return (5);
+	return (-1);
 }
 
 void	push_swap_three(t_stack *a)
@@ -66,7 +67,7 @@ void	push_swap_small(t_stack *a, t_stack *b, int size)
 	if (size < 3)
 		sa_stack(a);
 	else if (size == 3)
-		push_swap_three(a, b);
+		push_swap_three(a);
 	else if (size > 3)
 		push_swap_over(a, b);
 }

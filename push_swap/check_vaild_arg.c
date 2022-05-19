@@ -1,9 +1,20 @@
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_vaild_arg.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/17 20:41:54 by sehjang           #+#    #+#             */
+/*   Updated: 2022/05/17 20:41:56 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 static int	is_vaild_num(char *str)
 {
-	int result;
+	int	result;
 
 	result = 0;
 	while (*str == '\t' || *str == '\r' || *str == '\v' || \
@@ -18,7 +29,7 @@ static int	is_vaild_num(char *str)
 	return (result);
 }
 
-static int is_intager_arg(int args, char **argc)
+static int	is_intager_arg(int args, char **argc)
 {
 	int			i;
 	long long	num;
@@ -40,7 +51,7 @@ static int	is_duplicate_arg(int args, char **argc)
 {
 	int	i;
 	int	j;
-	int len;
+	int	len;
 
 	i = 1;
 	while (i < args - 1)
@@ -72,10 +83,10 @@ static void	error_message(void)
 
 void	check_vaild_arg(int args, char **argc)
 {
-	if(args <= 1)
+	if (args <= 1)
 		error_message();
-	if(!is_intager_arg(args, argc))
+	if (!is_intager_arg(args, argc))
 		error_message();
-	if(is_duplicate_arg(args, argc))
+	if (is_duplicate_arg(args, argc))
 		error_message();
 }

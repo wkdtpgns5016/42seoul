@@ -16,9 +16,9 @@ void	swap_stack(t_stack *a)
 {
 	void	*top;
 	void	*prev;
-	
+
 	if (get_size_stack(a) < 2)
-		return;
+		return ;
 	top = delete_front_deque(a->top);
 	prev = delete_front_deque(a->top);
 	add_front_deque(a->top, top);

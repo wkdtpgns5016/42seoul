@@ -12,7 +12,7 @@
 
 #include "push_swap.h"
 
-int	is_sort_stack(t_stack *stack)
+int	is_ascending_order_stack(t_stack *stack)
 {
 	int		max;
 	t_dlist	*list;
@@ -30,6 +30,24 @@ int	is_sort_stack(t_stack *stack)
 	return (1);
 }
 
+int	is_descending_order_stack(t_stack *stack)
+{
+	int		min;
+	t_dlist	*list;
+
+	min = 2147483647;
+	list = stack->top->front;
+	while (list != 0)
+	{
+		if (min > *(int *)(list->data))
+			min = *(int *)(list->data);
+		else
+			return (0);
+		list = list->next;
+	}
+	return (1);
+}
+
 int	main(int args, char **argc)
 {
 	t_stack	*a;
@@ -37,8 +55,10 @@ int	main(int args, char **argc)
 
 	check_vaild_arg(args, argc);
 	a = parsing_arg(args, argc);
+	print_stack(a);
 	b = (t_stack *)malloc(sizeof(t_stack));
 	init_stack(b);
-	if (!is_sort_stack(a))
+	if (!is_ascending_order_stack(a))
 		push_swap(a, b);
+	print_stack(a);
 }

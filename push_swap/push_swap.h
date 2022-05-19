@@ -69,5 +69,8 @@ void		pass_b(t_stack *a, t_stack *b, int num, int chunk);
 int			find_max(t_stack *stack, int max);
 void		rotate_max(t_stack *b);
 void		pass_a(t_stack *a, t_stack *b);
+int			is_descending_order_stack(t_stack *stack);
+void		push_swap_small(t_stack *a, t_stack *b, int size);
+int			find_max(t_stack *stack, int max);
 
 #endif

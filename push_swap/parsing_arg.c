@@ -46,7 +46,7 @@ static int	*rank_arr(int *arr, int args)
 	while (i < args - 1)
 	{
 		j = 0;
-		rank = 0;
+		rank = 1;
 		while (j < args - 1)
 		{
 			if (arr[i] > arr[j])

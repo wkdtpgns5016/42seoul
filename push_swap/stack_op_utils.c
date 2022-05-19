@@ -22,7 +22,8 @@ int	is_empty_stack(t_stack *stack)
 {
 	if (stack->top->front == 0)
 		return (1);
-	else return (0);
+	else
+		return (0);
 }
 
 int	get_size_stack(t_stack *stack)
@@ -32,7 +33,9 @@ int	get_size_stack(t_stack *stack)
 
 void	print_stack(t_stack *b)
 {
-	t_dlist *list = b->top->front;
+	t_dlist	*list;
+
+	list = b->top->front;
 	while (list != 0)
 	{
 		ft_putnbr_fd(*(int *)(list->data), 1);

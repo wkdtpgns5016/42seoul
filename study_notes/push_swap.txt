@@ -23,5 +23,10 @@ push_swap
 		push : 데이터 삽입
 		pop  : 데이터 삭제
 
-push_swap 알고리즘 (모래시계 알고리즘)
+push_swap 알고리즘 
+	(모래시계 알고리즘)
 	https://possible-crepe-bc7.notion.site/push_swap-ac11251f4346486fa76e3c7ff49ca803
+
+	(더블 피벗 퀵소트 정렬 알고리즘)
+	https://intrepidgeeks.com/tutorial/pushswap-complexity
+

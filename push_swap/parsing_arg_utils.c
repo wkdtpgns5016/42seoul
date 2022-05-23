@@ -74,6 +74,7 @@ static void	add_value_deque(t_deque *deque, int args, int *arr)
 		{
 			clear_deque(deque);
 			ft_free(deque);
+			return ;
 		}
 		*data = arr[i];
 		newnode->data = data;

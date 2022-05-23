@@ -11,27 +11,9 @@
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include "libft/libft.h"
 
-void	init_deque(t_deque	*deque)
+void	add_front_deque(t_deque *deque, t_dlist *newnode)
 {
-	deque->front = 0;
-	deque->rear = 0;
-}
-
-int	get_size_deque(t_deque *deque)
-{
-	return (get_size_dlist(deque->front));
-}
-
-void	add_front_deque(t_deque *deque, void *data)
-{
-	t_dlist	*newnode;
-
-	newnode = (t_dlist *)malloc(sizeof(t_dlist));
-	newnode->data = data;
-	newnode->next = 0;
-	newnode->prev = 0;
 	if (deque->front == 0)
 	{
 		deque->front = newnode;
@@ -43,16 +25,10 @@ void	add_front_deque(t_deque *deque, void *data)
 	deque->front = newnode;
 }
 
-void	add_rear_deque(t_deque *deque, void *data)
+void	add_rear_deque(t_deque *deque, t_dlist *newnode)
 {
-	t_dlist	*newnode;
-
-	newnode = (t_dlist *)malloc(sizeof(t_dlist));
-	newnode->data = data;
 	if (deque->rear == 0)
 	{
-		newnode->next = 0;
-		newnode->prev = 0;
 		deque->front = newnode;
 		deque->rear = newnode;
 		return ;
@@ -63,48 +39,44 @@ void	add_rear_deque(t_deque *deque, void *data)
 	newnode->next = 0;
 }
 
-void	*delete_front_deque(t_deque *deque)
+t_dlist	*delete_front_deque(t_deque *deque)
 {
-	void	*data;
 	t_dlist	*node;
 
 	if (deque->front == 0)
 		return (0);
-	data = deque->front->data;
 	if (get_size_dlist(deque->front) == 1)
 	{
 		node = deque->front;
 		deque->front = 0;
 		deque->rear = 0;
-		free(node);
-		return (data);
+		return (node);
 	}
 	deque->front->next->prev = 0;
 	node = deque->front;
 	deque->front = deque->front->next;
-	free(node);
-	return (data);
+	node->next = 0;
+	node->prev = 0;
+	return (node);
 }
 
-void	*delete_rear_deque(t_deque *deque)
+t_dlist	*delete_rear_deque(t_deque *deque)
 {
-	void	*data;
 	t_dlist	*node;
 
 	if (deque->rear == 0)
 		return (0);
-	data = deque->rear->data;
 	if (get_size_dlist(deque->front) == 1)
 	{
 		node = deque->front;
 		deque->front = 0;
 		deque->rear = 0;
-		free(node);
-		return (data);
+		return (node);
 	}
 	deque->rear->prev->next = 0;
 	node = deque->rear;
 	deque->rear = deque->rear->prev;
-	free(node);
-	return (data);
+	node->next = 0;
+	node->prev = 0;
+	return (node);
 }

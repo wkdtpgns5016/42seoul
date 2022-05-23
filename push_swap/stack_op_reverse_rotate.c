@@ -14,12 +14,12 @@
 
 void	reverse_rotate_stack(t_stack *a)
 {
-	void	*data;
+	t_dlist	*node;
 
 	if (get_size_stack(a) < 2)
 		return ;
-	data = delete_rear_deque(a->top);
-	add_front_deque(a->top, data);
+	node = delete_rear_deque(a->top);
+	add_front_deque(a->top, node);
 }
 
 void	rra_stack(t_stack *a)

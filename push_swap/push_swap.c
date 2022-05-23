@@ -20,21 +20,23 @@ void	push_swap(t_stack *a, t_stack *b)
 
 	num = 0;
 	size = get_size_stack(a);
-	if (is_descending_order_stack(a))
+	chunk = get_chunk((double)size);
+	if (size <= 5)
 	{
-		while (get_top_stack(a) != 0)
-			ra_stack(a);
+		push_swap_small(a, b, size);
 		return ;
 	}
-	else
+	if (is_descending_order_stack(a))
 	{
-		if (size <= 5)
+		while (get_size_stack(a) != 0)
+			pb_stack(a, b);
+		while (get_size_stack(b) != 0)
 		{
-			push_swap_small(a, b, size);
-			return ;
+			pa_stack(a, b);
+			ra_stack(a);
 		}
-		chunk = get_chunk((double)size);
-		pass_b(a, b, num, chunk);
-		pass_a(a, b);
+		return ;
 	}
+	pass_b(a, b, num, chunk);
+	pass_a(a, b);
 }

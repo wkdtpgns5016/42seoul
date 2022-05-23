@@ -34,7 +34,7 @@ static int	is_intager_arg(int args, char **argc)
 	int			i;
 	long long	num;
 
-	i = 1;
+	i = 0;
 	while (i < args)
 	{
 		if (!is_vaild_num(argc[i]))
@@ -53,7 +53,7 @@ static int	is_duplicate_arg(int args, char **argc)
 	int	j;
 	int	len;
 
-	i = 1;
+	i = 0;
 	while (i < args - 1)
 	{
 		j = i + 1;
@@ -75,18 +75,16 @@ static int	is_duplicate_arg(int args, char **argc)
 	return (0);
 }
 
-static void	error_message(void)
+void	error_message(void)
 {
 	ft_putstr_fd("Error", 2);
 	exit(1);
 }
 
-void	check_vaild_arg(int args, char **argc)
+void	check_vaild_arg(int size, char **arr)
 {
-	if (args <= 1)
+	if (!is_intager_arg(size, arr))
 		error_message();
-	if (!is_intager_arg(args, argc))
-		error_message();
-	if (is_duplicate_arg(args, argc))
+	if (is_duplicate_arg(size, arr))
 		error_message();
 }

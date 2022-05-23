@@ -16,16 +16,21 @@ NAME = push_swap
 SRCS = 	main.c \
 		push_swap.c \
 		push_swap_utils.c \
+		push_swap_utils2.c \
 		check_vaild_arg.c \
 		dlist_op_utils.c \
+		deque_op_utils.c \
+		deque_op_utils2.c \
+		ft_free.c \
 		ft_atol.c \
+		parsing_arg_utils.c \
 		parsing_arg.c \
 		stack_op_push.c \
-		stack_op_revers_rotate.c \
+		stack_op_reverse_rotate.c \
 		stack_op_rotate.c \
 		stack_op_swap.c \
-		stack_op_utils.c
-
+		stack_op_utils.c \
+		stack_op_utils2.c
 
 OBJS = $(SRCS:.c=.o)
 

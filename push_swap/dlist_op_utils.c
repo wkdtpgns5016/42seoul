@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include "libft/libft.h"
 
 int	get_size_dlist(t_dlist *list)
 {

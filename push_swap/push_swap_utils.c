@@ -69,7 +69,7 @@ void	rotate_max(t_stack *b)
 {
 	int	max;
 
-	max = get_size_stack(b) - 1;
+	max = get_size_stack(b);
 	if (find_max(b, max) == 1)
 	{
 		while (max != get_top_stack(b))

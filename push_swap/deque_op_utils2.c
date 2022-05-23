@@ -1,42 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack_op_rotate.c                                  :+:      :+:    :+:   */
+/*   deque_op_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/17 20:40:12 by sehjang           #+#    #+#             */
-/*   Updated: 2022/05/17 20:40:13 by sehjang          ###   ########.fr       */
+/*   Created: 2022/05/17 20:41:45 by sehjang           #+#    #+#             */
+/*   Updated: 2022/05/17 20:41:45 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	rotate_stack(t_stack *a)
+void	init_deque(t_deque	*deque)
 {
-	t_dlist	*node;
-
-	if (get_size_stack(a) < 2)
-		return ;
-	node = delete_front_deque(a->top);
-	add_rear_deque(a->top, node);
+	deque->front = 0;
+	deque->rear = 0;
 }
 
-void	ra_stack(t_stack *a)
+int	get_size_deque(t_deque *deque)
 {
-	rotate_stack(a);
-	ft_putstr_fd("ra\n", 1);
+	return (get_size_dlist(deque->front));
 }
 
-void	rb_stack(t_stack *b)
+void	clear_deque(t_deque *deque)
 {
-	rotate_stack(b);
-	ft_putstr_fd("rb\n", 1);
-}
+	t_dlist	*ptr;
 
-void	rr_stack(t_stack *a, t_stack *b)
-{
-	rotate_stack(a);
-	rotate_stack(b);
-	ft_putstr_fd("rr\n", 1);
+	while (get_size_deque(deque) != 0)
+	{
+		ptr = delete_front_deque(deque);
+		free(ptr->data);
+		free(ptr);
+	}
 }

@@ -12,53 +12,39 @@
 
 #include "push_swap.h"
 
-int	is_ascending_order_stack(t_stack *stack)
+void	free_ab_stack(t_stack *a, t_stack *b)
 {
-	int		max;
-	t_dlist	*list;
-
-	max = -1;
-	list = stack->top->front;
-	while (list != 0)
-	{
-		if (max < *(int *)(list->data))
-			max = *(int *)(list->data);
-		else
-			return (0);
-		list = list->next;
-	}
-	return (1);
-}
-
-int	is_descending_order_stack(t_stack *stack)
-{
-	int		min;
-	t_dlist	*list;
-
-	min = 2147483647;
-	list = stack->top->front;
-	while (list != 0)
-	{
-		if (min > *(int *)(list->data))
-			min = *(int *)(list->data);
-		else
-			return (0);
-		list = list->next;
-	}
-	return (1);
+	clear_stack(a);
+	clear_stack(b);
+	ft_free(a);
+	ft_free(b);
 }
 
 int	main(int args, char **argc)
 {
 	t_stack	*a;
 	t_stack	*b;
+	int		size;
+	char	**arr;
 
-	check_vaild_arg(args, argc);
-	a = parsing_arg(args, argc);
-	print_stack(a);
+	size = args - 1;
+	arr = argc + 1;
+	if (args <= 1)
+		error_message();
+	else if (args == 2)
+	{
+		size = 0;
+		arr = ft_split(argc[1], ' ');
+		while (arr[size] != 0)
+			size++;
+	}
+	check_vaild_arg(size, arr);
+	a = parsing_arg(size, arr);
 	b = (t_stack *)malloc(sizeof(t_stack));
+	if (a == 0 || b == 0)
+		error_message();
 	init_stack(b);
 	if (!is_ascending_order_stack(a))
 		push_swap(a, b);
-	print_stack(a);
+	free_ab_stack(a, b);
 }

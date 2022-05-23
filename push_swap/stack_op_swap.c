@@ -14,8 +14,8 @@
 
 void	swap_stack(t_stack *a)
 {
-	void	*top;
-	void	*prev;
+	t_dlist	*top;
+	t_dlist	*prev;
 
 	if (get_size_stack(a) < 2)
 		return ;

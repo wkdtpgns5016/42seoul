@@ -1,42 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack_op_rotate.c                                  :+:      :+:    :+:   */
+/*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/17 20:40:12 by sehjang           #+#    #+#             */
-/*   Updated: 2022/05/17 20:40:13 by sehjang          ###   ########.fr       */
+/*   Created: 2022/05/10 17:49:59 by sehjang           #+#    #+#             */
+/*   Updated: 2022/05/10 17:50:00 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	rotate_stack(t_stack *a)
+void	push_swap(t_stack *a, t_stack *b)
 {
-	t_dlist	*node;
+	int	num;
+	int	chunk;
+	int	size;
 
-	if (get_size_stack(a) < 2)
-		return ;
-	node = delete_front_deque(a->top);
-	add_rear_deque(a->top, node);
-}
-
-void	ra_stack(t_stack *a)
-{
-	rotate_stack(a);
-	ft_putstr_fd("ra\n", 1);
-}
-
-void	rb_stack(t_stack *b)
-{
-	rotate_stack(b);
-	ft_putstr_fd("rb\n", 1);
-}
-
-void	rr_stack(t_stack *a, t_stack *b)
-{
-	rotate_stack(a);
-	rotate_stack(b);
-	ft_putstr_fd("rr\n", 1);
+	num = 0;
+	size = get_size_stack(a);
+	if (is_descending_order_stack(a))
+	{
+		while (get_size_stack(a) != 0)
+			pb_stack(a, b);
+		while (get_size_stack(b) != 0)
+		{
+			pa_stack(a, b);
+			ra_stack(a);
+		}
+	}
+	else
+	{
+		if (size <= 5)
+		{
+			push_swap_small(a, b, size);
+			return ;
+		}
+		pass_a(a, b, get_size_stack(a));
+	}
 }

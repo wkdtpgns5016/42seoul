@@ -42,11 +42,11 @@ void		add_rear_deque(t_deque *deque, t_dlist *newnode);
 t_dlist		*delete_front_deque(t_deque *deque);
 t_dlist		*delete_rear_deque(t_deque *deque);
 void		error_message(void);
-void		check_vaild_arg(int args, char **argc);
+int			*check_vaild_arg(int size, char **arr, int flag);
 void		ft_free(void *ptr);
 long long	ft_atol(const char *nptr);
-t_deque		*make_deque(int args, char **argc);
-t_stack		*parsing_arg(int args, char **argc);
+t_deque		*make_deque(int args, int *argc);
+t_stack		*parsing_arg(int args, char **argc, int flag);
 void		init_stack(t_stack *stack);
 int			is_empty_stack(t_stack *stack);
 int			get_size_stack(t_stack *stack);
@@ -78,5 +78,7 @@ void		push_swap_small(t_stack *a, t_stack *b, int size);
 int			find_max(t_stack *stack, int max);
 int			get_index_stack(t_stack *stack, int value);
 void		clear_stack(t_stack *stack);
+int			*convert_int_arg(int args, char **argc);
+void		free_strs(char **argc);
 
 #endif

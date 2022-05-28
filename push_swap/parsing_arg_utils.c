@@ -12,7 +12,7 @@
 
 #include "push_swap.h"
 
-static int	*convert_int_arg(int args, char **argc)
+int	*convert_int_arg(int args, char **argc)
 {
 	int	*arr;
 	int	i;
@@ -59,15 +59,13 @@ static int	*rank_arr(int *arr, int args)
 	return (new_arr);
 }
 
-static int	*make_arr(int args, char **argc)
+static int	*make_arr(int args, int *argc)
 {
-	int	*temp;
 	int	*arr;
 
-	temp = convert_int_arg(args, argc);
-	arr = rank_arr(temp, args);
-	if (temp != 0)
-		ft_free(temp);
+	arr = rank_arr(argc, args);
+	if (argc != 0)
+		ft_free(argc);
 	return (arr);
 }
 
@@ -97,7 +95,7 @@ static void	add_value_deque(t_deque *deque, int args, int *arr)
 	}
 }
 
-t_deque	*make_deque(int args, char **argc)
+t_deque	*make_deque(int args, int *argc)
 {
 	t_deque	*deque;
 	int		*arr;

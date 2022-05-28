@@ -12,14 +12,18 @@
 
 #include "push_swap.h"
 
-t_stack	*parsing_arg(int args, char **argc)
+t_stack	*parsing_arg(int args, char **argc, int flag)
 {
 	t_stack	*stack;
+	int		*arr;
 
+	arr = check_vaild_arg(args, argc, flag);
+	if (arr == 0)
+		return (0);
 	stack = (t_stack *)malloc(sizeof(t_stack));
 	if (stack == 0)
 		return (0);
-	stack->top = make_deque(args, argc);
+	stack->top = make_deque(args, arr);
 	if (stack->top == 0)
 	{
 		ft_free(stack);

@@ -20,3 +20,16 @@ void	ft_free(void *ptr)
 		ptr = 0;
 	}
 }
+
+void	free_strs(char **argc)
+{
+	int	i;
+
+	i = 0;
+	while (argc[i] != 0)
+	{
+		ft_free(argc[i]);
+		i++;
+	}
+	ft_free(argc);
+}

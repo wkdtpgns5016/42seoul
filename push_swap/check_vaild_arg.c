@@ -47,11 +47,10 @@ static int	is_intager_arg(int args, char **argc)
 	return (1);
 }
 
-static int	is_duplicate_arg(int args, char **argc)
+static int	is_duplicate_arg(int args, int *argc)
 {
 	int	i;
 	int	j;
-	int	len;
 
 	i = 0;
 	while (i < args - 1)
@@ -61,11 +60,7 @@ static int	is_duplicate_arg(int args, char **argc)
 		{
 			if (i != j)
 			{
-				if (ft_strlen(argc[i]) > ft_strlen(argc[j]))
-					len = ft_strlen(argc[i]);
-				else
-					len = ft_strlen(argc[j]);
-				if (ft_strncmp(argc[i], argc[j], len) == 0)
+				if (argc[i] == argc[j])
 					return (1);
 			}
 			j++;
@@ -81,10 +76,28 @@ void	error_message(void)
 	exit(1);
 }
 
-void	check_vaild_arg(int size, char **arr)
+int	*check_vaild_arg(int size, char **arr, int flag)
 {
+	int	*new_arr;
+
 	if (!is_intager_arg(size, arr))
+	{
+		if (flag)
+			free_strs(arr);
 		error_message();
-	if (is_duplicate_arg(size, arr))
+	}
+	new_arr = 0;
+	new_arr = convert_int_arg(size, arr);
+	if (new_arr == 0)
+		return (0);
+	if (is_duplicate_arg(size, new_arr))
+	{
+		if (flag)
+			free_strs(arr);
+		ft_free(new_arr);
 		error_message();
+	}
+	if (flag)
+		free_strs(arr);
+	return (new_arr);
 }

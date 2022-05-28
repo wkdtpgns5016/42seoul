@@ -14,21 +14,29 @@
 
 void	free_ab_stack(t_stack *a, t_stack *b)
 {
-	clear_stack(a);
-	clear_stack(b);
-	ft_free(a);
-	ft_free(b);
+	if (a != 0)
+	{
+		clear_stack(a);
+		ft_free(a);
+	}
+	if (b != 0)
+	{
+		clear_stack(b);
+		ft_free(b);
+	}
 }
 
-int	main(int args, char **argc)
+t_stack	*make_a_stack(int args, char **argc)
 {
 	t_stack	*a;
-	t_stack	*b;
 	int		size;
 	char	**arr;
+	int		flag;
 
 	size = args - 1;
 	arr = argc + 1;
+	a = 0;
+	flag = 0;
 	if (args <= 1)
 		error_message();
 	else if (args == 2)
@@ -37,12 +45,24 @@ int	main(int args, char **argc)
 		arr = ft_split(argc[1], ' ');
 		while (arr[size] != 0)
 			size++;
+		flag = 1;
 	}
-	check_vaild_arg(size, arr);
-	a = parsing_arg(size, arr);
+	a = parsing_arg(size, arr, flag);
+	return (a);
+}
+
+int	main(int args, char **argc)
+{
+	t_stack	*a;
+	t_stack	*b;
+
+	a = make_a_stack(args, argc);
 	b = (t_stack *)malloc(sizeof(t_stack));
 	if (a == 0 || b == 0)
+	{
+		free_ab_stack(a, b);
 		error_message();
+	}
 	init_stack(b);
 	if (!is_ascending_order_stack(a))
 		push_swap(a, b);

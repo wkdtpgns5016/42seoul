@@ -17,6 +17,7 @@ SRCS = 	main.c \
 		push_swap.c \
 		push_swap_utils.c \
 		push_swap_utils2.c \
+		push_swap_utils3.c \
 		check_vaild_arg.c \
 		dlist_op_utils.c \
 		deque_op_utils.c \

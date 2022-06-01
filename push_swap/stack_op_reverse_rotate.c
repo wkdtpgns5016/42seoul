@@ -22,21 +22,27 @@ void	reverse_rotate_stack(t_stack *a)
 	add_front_deque(a->top, node);
 }
 
-void	rra_stack(t_stack *a)
+int	rra_stack(t_stack *a, int flag)
 {
 	reverse_rotate_stack(a);
-	ft_putstr_fd("rra\n", 1);
+	if (flag)
+		ft_putstr_fd("rra\n", 1);
+	return (1);
 }
 
-void	rrb_stack(t_stack *b)
+int	rrb_stack(t_stack *b, int flag)
 {
 	reverse_rotate_stack(b);
-	ft_putstr_fd("rrb\n", 1);
+	if (flag)
+		ft_putstr_fd("rrb\n", 1);
+	return (1);
 }
 
-void	rrr_stack(t_stack *a, t_stack *b)
+int	rrr_stack(t_stack *a, t_stack *b, int flag)
 {
 	reverse_rotate_stack(a);
 	reverse_rotate_stack(b);
-	ft_putstr_fd("rrr\n", 1);
+	if (flag)
+		ft_putstr_fd("rrr\n", 1);
+	return (1);
 }

@@ -40,21 +40,21 @@ void	push_swap_three(t_stack *a)
 
 	flag = get_case_three_stack(a);
 	if (flag == 1)
-		sa_stack(a);
+		sa_stack(a, 1);
 	else if (flag == 2)
 	{
-		sa_stack(a);
-		rra_stack(a);
+		sa_stack(a, 1);
+		rra_stack(a, 1);
 	}
 	else if (flag == 3)
-		ra_stack(a);
+		ra_stack(a, 1);
 	else if (flag == 4)
 	{
-		sa_stack(a);
-		ra_stack(a);
+		sa_stack(a, 1);
+		ra_stack(a, 1);
 	}
 	else if (flag == 5)
-		rra_stack(a);
+		rra_stack(a, 1);
 }
 
 void	push_swap_over(t_stack *a, t_stack *b)
@@ -68,28 +68,28 @@ void	push_swap_over(t_stack *a, t_stack *b)
 		{
 			if (get_index_stack(a, 1) == get_size_stack(a) - 1 || \
 			get_index_stack(a, size) == get_size_stack(a) - 1)
-				rra_stack(a);
+				rra_stack(a, 1);
 			else if (get_index_stack(a, 1) == 1 || \
 			get_index_stack(a, size) == 1)
-				sa_stack(a);
+				sa_stack(a, 1);
 			else
-				ra_stack(a);
+				ra_stack(a, 1);
 		}
-		pb_stack(a, b);
+		pb_stack(a, b, 1);
 	}
 	push_swap_three(a);
 	if (get_top_stack(b) == 5)
-		sb_stack(b);
+		sb_stack(b, 1);
 	while (get_size_stack(b) != 0)
-		pa_stack(a, b);
+		pa_stack(a, b, 1);
 	while (get_top_stack(a) != 1)
-		ra_stack(a);
+		ra_stack(a, 1);
 }
 
 void	push_swap_small(t_stack *a, t_stack *b, int size)
 {
 	if (size < 3)
-		sa_stack(a);
+		sa_stack(a ,1);
 	else if (size == 3)
 		push_swap_three(a);
 	else if (size > 3)

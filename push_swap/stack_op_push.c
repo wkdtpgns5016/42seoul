@@ -12,24 +12,28 @@
 
 #include "push_swap.h"
 
-void	pa_stack(t_stack *a, t_stack *b)
+int	pa_stack(t_stack *a, t_stack *b, int flag)
 {
 	t_dlist	*node;
 
 	if (is_empty_stack(b))
-		return ;
+		return (0);
 	node = delete_front_deque(b->top);
 	add_front_deque(a->top, node);
-	ft_putstr_fd("pa\n", 1);
+	if (flag)
+		ft_putstr_fd("pa\n", 1);
+	return (1);
 }
 
-void	pb_stack(t_stack *a, t_stack *b)
+int	pb_stack(t_stack *a, t_stack *b, int flag)
 {
 	t_dlist	*node;
 
 	if (is_empty_stack(a))
-		return ;
+		return (0);
 	node = delete_front_deque(a->top);
 	add_front_deque(b->top, node);
-	ft_putstr_fd("pb\n", 1);
+	if (flag)
+		ft_putstr_fd("pb\n", 1);
+	return (1);
 }

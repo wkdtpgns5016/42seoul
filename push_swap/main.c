@@ -65,6 +65,6 @@ int	main(int args, char **argc)
 	}
 	init_stack(b);
 	if (!is_ascending_order_stack(a))
-		push_swap(a, b);
+		push_swap(a, b, args, argc);
 	free_ab_stack(a, b);
 }

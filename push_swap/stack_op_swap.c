@@ -25,21 +25,27 @@ void	swap_stack(t_stack *a)
 	add_front_deque(a->top, prev);
 }
 
-void	sa_stack(t_stack *a)
+int	sa_stack(t_stack *a, int flag)
 {
 	swap_stack(a);
-	ft_putstr_fd("sa\n", 1);
+	if (flag)
+		ft_putstr_fd("sa\n", 1);
+	return (1);
 }
 
-void	sb_stack(t_stack *b)
+int	sb_stack(t_stack *b, int flag)
 {
 	swap_stack(b);
-	ft_putstr_fd("sb\n", 1);
+	if (flag)
+		ft_putstr_fd("sb\n", 1);
+	return (1);
 }
 
-void	ss_stack(t_stack *a, t_stack *b)
+int	ss_stack(t_stack *a, t_stack *b, int flag)
 {
 	swap_stack(a);
 	swap_stack(b);
-	ft_putstr_fd("ss\n", 1);
+	if (flag)
+		ft_putstr_fd("ss\n", 1);
+	return (1);
 }

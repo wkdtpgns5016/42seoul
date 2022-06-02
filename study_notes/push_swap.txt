@@ -31,7 +31,11 @@ push_swap
 
 덱
 	front rear 모두 입출력이 가능한 자료구조
-
+	-연산
+		add_front : front에 데이터 삽입
+		add_rear : rear에 데이터 삽입
+		delete_front : front에 데이터 삭제
+		delete_rear : rear에 데이터 삭제
 
 exit 함수
 	프로세스 종료 함수

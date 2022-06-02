@@ -89,7 +89,7 @@ void	push_swap_over(t_stack *a, t_stack *b)
 void	push_swap_small(t_stack *a, t_stack *b, int size)
 {
 	if (size < 3)
-		sa_stack(a ,1);
+		sa_stack(a, 1);
 	else if (size == 3)
 		push_swap_three(a);
 	else if (size > 3)

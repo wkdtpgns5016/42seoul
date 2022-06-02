@@ -72,7 +72,7 @@ static int	is_duplicate_arg(int args, int *argc)
 
 void	error_message(void)
 {
-	ft_putstr_fd("Error", 2);
+	ft_putstr_fd("Error\n", 2);
 	exit(1);
 }
 

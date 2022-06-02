@@ -26,6 +26,17 @@ void	free_ab_stack(t_stack *a, t_stack *b)
 	}
 }
 
+static void	check_arr(char **arr)
+{
+	if (arr == 0)
+		error_message();
+	if (arr[0] == 0)
+	{
+		ft_free(arr);
+		error_message();
+	}
+}
+
 t_stack	*make_a_stack(int args, char **argc)
 {
 	t_stack	*a;
@@ -38,11 +49,12 @@ t_stack	*make_a_stack(int args, char **argc)
 	a = 0;
 	flag = 0;
 	if (args <= 1)
-		error_message();
+		exit(1);
 	else if (args == 2)
 	{
 		size = 0;
 		arr = ft_split(argc[1], ' ');
+		check_arr(arr);
 		while (arr[size] != 0)
 			size++;
 		flag = 1;

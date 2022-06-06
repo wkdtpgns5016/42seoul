@@ -17,7 +17,13 @@ NAME = so_long
 
 SRCS = 	src/main.c \
 		src/get_next_line.c \
-		src/get_next_line_utils.c 
+		src/get_next_line_utils.c \
+		src/make_map.c \
+		src/check_map.c \
+		src/make_game.c \
+		src/game_utils.c \
+		src/game_utils2.c \
+		src/player_utils.c
 OBJS = $(SRCS:.c=.o)
 
 HEAD = ./include

@@ -1,1 +1,10 @@
 so_long
+	perror 함수
+
+	strerror 함수
+
+	ber 확장자
+
+	MinilibX, openGL
+
+	

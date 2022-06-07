@@ -67,8 +67,8 @@ void	check_map(t_map *map);
 t_game	*make_game(char *file);
 void	start_game(t_game *game);
 void	set_game(t_game *game);
-void	exit_game(t_game *game);
-void	clear_game(t_game *game);
+int		exit_game(t_game *game);
+int		clear_game(t_game *game);
 void	move_player(t_game *game, int flag);
 
 #endif

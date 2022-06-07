@@ -45,6 +45,7 @@ clean:
 
 fclean: clean
 	$(MAKE) -C ./lib/libft fclean
+	$(MAKE) -C ./lib/mlx fclean
 	rm -f $(NAME)
 
 re: 

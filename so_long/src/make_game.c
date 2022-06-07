@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_game.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/07 16:08:43 by sehjang           #+#    #+#             */
+/*   Updated: 2022/06/07 16:08:43 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/so_long.h"
 
 static t_img	*read_img(void *mlx)
@@ -9,16 +21,19 @@ static t_img	*read_img(void *mlx)
 	img = (t_img *)malloc(sizeof(t_img));
 	if (img == 0)
 		return (0);
-	img->player = mlx_xpm_file_to_image(mlx, "./sources/img/character.xpm", \
+	img->player = mlx_xpm_file_to_image(mlx, "./resources/img/character.xpm", \
 	&img_width, &img_height);
-	img->item = mlx_xpm_file_to_image(mlx, "./sources/img/item.xpm", \
+	img->item = mlx_xpm_file_to_image(mlx, "./resources/img/item.xpm", \
 	&img_width, &img_height);
-	img->door = mlx_xpm_file_to_image(mlx, "./sources/img/door.xpm", \
+	img->door = mlx_xpm_file_to_image(mlx, "./resources/img/door.xpm", \
 	&img_width, &img_height);
-	img->grass = mlx_xpm_file_to_image(mlx, "./sources/img/grass.xpm", \
+	img->grass = mlx_xpm_file_to_image(mlx, "./resources/img/grass.xpm", \
 	&img_width, &img_height);
-	img->wall = mlx_xpm_file_to_image(mlx, "./sources/img/wall.xpm", \
+	img->wall = mlx_xpm_file_to_image(mlx, "./resources/img/wall.xpm", \
 	&img_width, &img_height);
+	if (img->player == 0 || img->item == 0 || img->door == 0 || img->grass == 0 \
+	|| img->wall == 0)
+		error_message("Error\nImage file not found\n");
 	return (img);
 }
 

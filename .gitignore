@@ -60,6 +60,7 @@ libft-unit-test/
 libft-war-machine/
 Libfttest/
 gnlTester/
+push_swap_tester/
 
 # Mac Finder .DS_store
 .DS_store

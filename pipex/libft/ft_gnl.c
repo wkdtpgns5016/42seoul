@@ -1,6 +1,18 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_gnl.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/17 17:31:42 by sehjang           #+#    #+#             */
+/*   Updated: 2022/06/17 17:31:43 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static char	*ft_strjoin(char *s1, char *s2)
+#include "libft.h"
+
+static char	*ft_strjoin_null(char *s1, char *s2)
 {
 	int		i;
 	int		j;
@@ -27,7 +39,7 @@ static char	*ft_strjoin(char *s1, char *s2)
 	return (new);
 }
 
-char	*get_backup(char *backup)
+static char	*get_backup(char *backup)
 {
 	char	*new;
 	int		i;
@@ -52,7 +64,7 @@ char	*get_backup(char *backup)
 	return (new);
 }
 
-char	*get_line(char *backup)
+static char	*get_line(char *backup)
 {
 	char	*line;
 	int		i;
@@ -98,7 +110,7 @@ char	*get_next_line(int fd)
 			return (0);
 		}
 		buffer[bytes] = '\0';
-		backup = ft_strjoin(backup, buffer);
+		backup = ft_strjoin_null(backup, buffer);
 	}
 	line = get_line(backup);
 	backup = get_backup(backup);

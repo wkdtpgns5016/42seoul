@@ -15,11 +15,12 @@ CFLAGS = -Wall -Werror -Wextra
 
 NAME = pipex
 
-SRCS = 	srcs/pipex.c 
+SRCS = 	srcs/pipex.c \
+		srcs/pipex_utils.c
 OBJS = $(SRCS:.c=.o)
 
 HEAD = ./include
-LIBFT = -Llibs/libft -lft
+LIBFT = -Llibft -lft
 
 all: $(NAME)
 
@@ -27,17 +28,17 @@ all: $(NAME)
 	$(CC) $(CFLAGS) -c -I $(HEAD) $< -o $@
 
 $(LIBFT):
-	$(MAKE) -C ./libs/libft bonus
+	$(MAKE) -C ./libft bonus
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) -o $(NAME) $(OBJS) $(LIBFT)
 
 clean:
-	$(MAKE) -C ./libs/libft clean
+	$(MAKE) -C ./libft clean
 	rm -f $(OBJS)
 
 fclean: clean
-	$(MAKE) -C ./libs/libft fclean
+	$(MAKE) -C ./libft fclean
 	rm -f $(NAME)
 
 re: 

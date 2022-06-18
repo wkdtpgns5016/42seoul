@@ -17,8 +17,9 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <fcntl.h>
 
 char	**find_path(char **envp, char *key);
-char	*find_cmd(char **envp, char **cmd_arg);
-
+char	*find_cmd(char **cmd_arg, char **envp);
+void	execute_cmd(char *cmd, char **envp);
 #endif

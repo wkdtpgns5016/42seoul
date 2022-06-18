@@ -37,7 +37,7 @@ char	**find_path(char **envp, char *key)
 	return (arr);
 }
 
-char	*find_cmd(char **envp, char **cmd_arg)
+char	*find_cmd(char **cmd_arg, char **envp)
 {
 	int		i;
 	char	*cmd;
@@ -66,4 +66,20 @@ char	*find_cmd(char **envp, char **cmd_arg)
 	return (cmd);
 }
 
+void	execute_cmd(char *cmd, char **envp)
+{
+	char	**cmd_arg;
+	char	*cmd_path;
 
+	cmd_arg = ft_split(cmd, ' ');
+	if (cmd_arg == 0)
+		return ;
+	cmd_path = find_cmd(cmd_arg, envp);
+	if (cmd_path == 0)
+	{
+		// cmd_arg free
+		return ;
+	}
+	if (execve(cmd_path, cmd_arg, envp) == -1)
+		return ;
+}

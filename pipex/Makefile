@@ -16,7 +16,8 @@ CFLAGS = -Wall -Werror -Wextra
 NAME = pipex
 
 SRCS = 	srcs/pipex.c \
-		srcs/pipex_utils.c
+		srcs/pipex_utils.c \
+		srcs/ft_free.c
 OBJS = $(SRCS:.c=.o)
 
 HEAD = ./include

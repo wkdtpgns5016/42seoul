@@ -34,22 +34,25 @@ void	fork_process(char *cmd, char **envp)
 		close(fd[1]);
 		dup2(fd[0], 0);
 		waitpid(pid, &status, 0);
+		printf("%d %d\n", WIFEXITED(status), WEXITSTATUS(status));
 	}
 }
 
 void	pipex(char **av, char **envp)
 {
-	int	in;
-	int	out;
+	int	infile_fd;
+	int	outfile_fd;
 
-	in = open(av[1], O_RDONLY, 0777);
-	out = open (av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	infile_fd = open(av[1], O_RDONLY, 0777);
+	outfile_fd = open (av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	dup2(infile_fd, 0);
 	fork_process(av[2], envp);
-	fork_process(av[3], envp);
+	dup2(outfile_fd, 1);
+	execute_cmd(av[3], envp);
 }
 
 int	main(int ac, char **av, char **envp)
-{
+{	
 	if (ac == 5)
 	{
 		pipex(av, envp);

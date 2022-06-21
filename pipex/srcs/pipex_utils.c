@@ -62,7 +62,7 @@ char	*find_cmd(char **cmd_arg, char **envp)
 		free(cmd);
 		i++;
 	}
-	//path free 해줄것
+	ft_free_arr(&path);
 	return (cmd);
 }
 
@@ -77,7 +77,7 @@ void	execute_cmd(char *cmd, char **envp)
 	cmd_path = find_cmd(cmd_arg, envp);
 	if (cmd_path == 0)
 	{
-		// cmd_arg free
+		ft_free_arr(&cmd_arg);
 		return ;
 	}
 	if (execve(cmd_path, cmd_arg, envp) == -1)

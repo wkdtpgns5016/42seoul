@@ -61,6 +61,7 @@ libft-war-machine/
 Libfttest/
 gnlTester/
 push_swap_tester/
+pipex-tester/
 
 # Mac Finder .DS_store
 .DS_store

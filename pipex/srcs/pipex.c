@@ -19,10 +19,10 @@ void	fork_process(char *cmd, char **envp)
 	int		status;
 
 	if (pipe(fd) == -1)
-		return ;
+		ft_error("Pipe error\n", 1);
 	pid = fork();
 	if (pid == -1)
-		return ;
+		ft_error("Fork error\n", 1);
 	else if (pid == 0)
 	{
 		close(fd[0]);
@@ -33,8 +33,7 @@ void	fork_process(char *cmd, char **envp)
 	{
 		close(fd[1]);
 		dup2(fd[0], 0);
-		waitpid(pid, &status, 0);
-		printf("%d %d\n", WIFEXITED(status), WEXITSTATUS(status));
+		waitpid(pid, &status, WNOWAIT);
 	}
 }
 
@@ -43,8 +42,12 @@ void	pipex(char **av, char **envp)
 	int	infile_fd;
 	int	outfile_fd;
 
-	infile_fd = open(av[1], O_RDONLY, 0777);
-	outfile_fd = open (av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	infile_fd = open(av[1], O_RDONLY);
+	if (infile_fd < 0)
+		perror("Infile Error\n");
+	outfile_fd = open (av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (outfile_fd < 0)
+		ft_error("Outfile Error\n", 1);
 	dup2(infile_fd, 0);
 	fork_process(av[2], envp);
 	dup2(outfile_fd, 1);
@@ -57,4 +60,6 @@ int	main(int ac, char **av, char **envp)
 	{
 		pipex(av, envp);
 	}
+	else
+		ft_error("Argument Error\n", 1);
 }

@@ -92,4 +92,23 @@ pipex
 		WIFSTOPPED(status) : 반환의 원인이 된 자식프로세스가 현재 정지되어 있다면 참을 반환한다. 
 		WSTOPSIG(status) : 자식을 정지하도록 야기한 신호의 숫자를 반환한다. 
 		WIFSTOPPED가 non-zero 일경우에만 사용할수 있다.
-	
+
+		options
+			WEXITED - 종료한 자식을 기다린다.
+			WSTOPPED - 시그널 전달로 정지된 자식을 기다린다.
+			WCONTINUED - (앞서 정지되었다가) SIGCONT 전달로 재개된 자식을 기다린다.
+
+			options에서 추가로 다음 플래그들을 OR 할 수 있다.
+
+			WNOHANG - waitpid()에서와 같음.
+			WNOWAIT - 자식을 기다릴 수 있는 상태로 남겨둔다. 이후에 wait 호출을 다시 사용해 자식 상태 정보를 얻어올 수 있다.
+
+	exit code 
+		0 - 성공
+		1 - 일반적인 에러
+		2 - builtin shell command 에러
+		126 - command는 존재하지만 실행 불가
+		127 - command not found
+		128 - not used on shell
+		128+N - signal N 으로 종료된 경우에만
+		255 - 범위 밖의 경우

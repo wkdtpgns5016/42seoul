@@ -12,6 +12,12 @@
 
 #include "../include/pipex.h"
 
+void	ft_error(char *str, int status)
+{
+	perror(str);
+	exit(status);
+}
+
 char	**find_path(char **envp, char *key)
 {
 	char	**arr;
@@ -33,7 +39,7 @@ char	**find_path(char **envp, char *key)
 	arr = ft_split(path, ':');
 	if (arr == 0)
 		return (0);
-	free(path);
+	ft_free((void **)&path);
 	return (arr);
 }
 
@@ -54,12 +60,12 @@ char	*find_cmd(char **cmd_arg, char **envp)
 		if (temp == 0)
 			return (0);
 		cmd = ft_strjoin(temp, cmd_arg[0]);
-		free(temp);
+		ft_free((void **)&temp);
 		if (cmd == 0)
 			return (0);
 		if (access(cmd, X_OK) == 0)
 			break ;
-		free(cmd);
+		ft_free((void **)&cmd);
 		i++;
 	}
 	ft_free_arr(&path);
@@ -74,12 +80,15 @@ void	execute_cmd(char *cmd, char **envp)
 	cmd_arg = ft_split(cmd, ' ');
 	if (cmd_arg == 0)
 		return ;
-	cmd_path = find_cmd(cmd_arg, envp);
+	if (access(*cmd_arg, X_OK) == 0)
+		cmd_path = ft_strdup(*cmd_arg);
+	else
+		cmd_path = find_cmd(cmd_arg, envp);
 	if (cmd_path == 0)
 	{
 		ft_free_arr(&cmd_arg);
-		return ;
+		ft_error("command not found\n", 127);
 	}
 	if (execve(cmd_path, cmd_arg, envp) == -1)
-		return ;
+		ft_error("Execve error\n", 1);
 }

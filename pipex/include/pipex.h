@@ -23,4 +23,7 @@ char	**find_path(char **envp, char *key);
 char	*find_cmd(char **cmd_arg, char **envp);
 void	execute_cmd(char *cmd, char **envp);
 void	ft_free_arr(char ***arr);
+void	ft_free(void **ptr);
+void	ft_error(char *str, int status);
+
 #endif

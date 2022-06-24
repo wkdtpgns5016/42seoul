@@ -37,10 +37,31 @@ void	fork_process(char *cmd, char **envp)
 	}
 }
 
-void	pipex(char **av, char **envp)
+int	last_process(char *cmd, char **envp)
+{
+	pid_t	pid;
+	int		status;
+
+	status = 0;
+	pid = fork();
+	if (pid == -1)
+		ft_error("Fork error\n", 1);
+	else if (pid == 0)
+	{
+		execute_cmd(cmd, envp);
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, WNOWAIT);
+	}
+	return (status);
+}
+
+int	pipex(char **av, char **envp)
 {
 	int	infile_fd;
 	int	outfile_fd;
+	int	status;
 
 	infile_fd = open(av[1], O_RDONLY);
 	if (infile_fd < 0)
@@ -51,14 +72,19 @@ void	pipex(char **av, char **envp)
 	dup2(infile_fd, 0);
 	fork_process(av[2], envp);
 	dup2(outfile_fd, 1);
-	execute_cmd(av[3], envp);
+	//execute_cmd(av[3], envp);
+	status = last_process(av[3], envp);
+	return (status);
 }
 
 int	main(int ac, char **av, char **envp)
-{	
+{
+	int	status;
+
 	if (ac == 5)
 	{
-		pipex(av, envp);
+		status = pipex(av, envp);
+		exit(status);
 	}
 	else
 		ft_error("Argument Error\n", 1);

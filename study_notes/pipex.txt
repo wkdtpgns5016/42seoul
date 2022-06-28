@@ -2,9 +2,8 @@ pipex
 	다이렉션
 		https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=minki0127&logNo=220683488997
 		
-
 	파이프라인
-
+		https://reakwon.tistory.com/80
 
 	int access(const char *pathname, int mode)
 		프로세스가 지정한 파일이 존재하는지 해당 권한이 가능한 지 확인하는 함수
@@ -20,6 +19,7 @@ pipex
 				   F_OK : 파일 존재
 
 	int dup(int fd)
+		https://reakwon.tistory.com/104
 		파일 디스크럽터 복사 함수
 
 		헤더 : unistd.h
@@ -28,6 +28,7 @@ pipex
 			  -1 : 오류
 
 	int dup2(int fd, int fd2)
+		https://reakwon.tistory.com/104
 		fd2에 fd를 복제하는 함수 (열려있으면 닫고 복제함)
 
 		헤더 : unistd.h
@@ -51,7 +52,6 @@ pipex
 		반환 : 자식 프로세스 id 반환, 자식은 0을 반환
 
 	int pipe(int fd[2])
-		https://reakwon.tistory.com/80
 		https://nomad-programmer.tistory.com/110
 		파이프 함수
 

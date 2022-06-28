@@ -25,5 +25,6 @@ void	execute_cmd(char *cmd, char **envp);
 void	ft_free_arr(char ***arr);
 void	ft_free(void **ptr);
 void	ft_error(char *str, int status);
+int		pipex(int ac, char **av, char **envp);
 
 #endif

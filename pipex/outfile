@@ -1,0 +1,6 @@
+Makefile
+include
+libft
+outfile
+pipex
+srcs

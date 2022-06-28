@@ -87,8 +87,8 @@ void	execute_cmd(char *cmd, char **envp)
 	if (cmd_path == 0)
 	{
 		ft_free_arr(&cmd_arg);
-		ft_error("command not found\n", 127);
+		ft_error("command not found", 127);
 	}
 	if (execve(cmd_path, cmd_arg, envp) == -1)
-		ft_error("Execve error\n", 1);
+		ft_error("Execve error", 1);
 }

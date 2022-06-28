@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/17 14:34:30 by sehjang           #+#    #+#             */
-/*   Updated: 2022/06/17 14:34:31 by sehjang          ###   ########.fr       */
+/*   Created: 2022/06/28 17:29:14 by sehjang           #+#    #+#             */
+/*   Updated: 2022/06/28 17:29:15 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,22 @@ int	pipex(int ac, char **av, char **envp)
 {
 	int	infile_fd;
 	int	outfile_fd;
-	int	stdin_fd;
-	int	stdout_fd;
 	int	status;
+	int	i;
 
-	stdin_fd = dup(STDIN_FILENO);
-	stdout_fd = dup(STDOUT_FILENO);
 	infile_fd = open(av[1], O_RDONLY);
 	if (infile_fd < 0)
 		perror("Infile Error");
 	outfile_fd = open (av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (outfile_fd < 0)
 		ft_error("Outfile Error", 1);
-	dup2(infile_fd, STDIN_FILENO);
-	child_process(av[2], envp);
-	dup2(outfile_fd, STDOUT_FILENO);
+	dup2(infile_fd, 0);
+	i = 2;
+	while (i < ac - 2)
+		child_process(av[i++], envp);
+	dup2(outfile_fd, 1);
 	status = last_process(av[ac - 2], envp);
 	close(infile_fd);
 	close(outfile_fd);
-	dup2(stdin_fd, STDIN_FILENO);
-	dup2(stdout_fd, STDOUT_FILENO);
 	return (status);
 }

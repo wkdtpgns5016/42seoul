@@ -1,39 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/28 17:28:48 by sehjang           #+#    #+#             */
-/*   Updated: 2022/06/28 17:28:50 by sehjang          ###   ########.fr       */
+/*   Created: 2022/06/28 17:29:01 by sehjang           #+#    #+#             */
+/*   Updated: 2022/06/28 17:29:02 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	ft_free(void **ptr)
+int	main(int ac, char **av, char **envp)
 {
-	if (*ptr != 0)
-	{
-		free(*ptr);
-		*ptr = 0;
-	}
-}
+	int	status;
 
-void	ft_free_arr(char ***arr)
-{
-	int	i;
-
-	i = 0;
-	if (*arr != 0)
+	if (ac >= 5)
 	{
-		while ((*arr)[i] != 0)
-		{
-			if ((*arr)[i] != 0)
-				ft_free((void *)&((*arr)[i]));
-			i++;
-		}
-		ft_free((void *)arr);
+		status = pipex(ac, av, envp);
+		exit(status);
 	}
+	else
+		ft_error("Argument Error", 1);
 }

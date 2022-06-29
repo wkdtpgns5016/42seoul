@@ -20,34 +20,22 @@ SRCS = 	srcs/pipex.c \
 		srcs/ft_free.c \
 		srcs/main.c
 
-SRCS_BONUS = srcs/pipex_bonus.c \
-		srcs/pipex_utils.c \
-		srcs/ft_free.c \
-		srcs/main.c
-
 OBJS = $(SRCS:.c=.o)
-OBJS_BONUS = $(SRCS_BONUS:.c=.o)
-
-ifdef WITH_BONUS
-	OBJECTS = $(OBJS_BONUS)
-else
-	OBJECTS = $(OBJS)
-endif
 
 HEAD = ./include
 
 all: $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c -I $(HEAD) $< -o $@
+	$(CC) -g $(CFLAGS) -c -I $(HEAD) $< -o $@
 
-$(NAME): $(OBJECTS)
+$(NAME): $(OBJS)
 	$(MAKE) -C ./libft bonus
-	$(CC) -o $(NAME) $(OBJECTS) -Llibft -lft
+	$(CC) -g -o $(NAME) $(OBJS) -Llibft -lft
 
 clean:
 	$(MAKE) -C ./libft clean
-	rm -f $(OBJS) $(OBJS_BONUS)
+	rm -f $(OBJS)
 
 fclean: clean
 	$(MAKE) -C ./libft fclean
@@ -58,6 +46,6 @@ re:
 	$(MAKE) all
 
 bonus:
-	$(MAKE) WITH_BONUS=1 all
+	$(MAKE) all
 
 .PHONY = all clean fclean re bonus

@@ -99,6 +99,7 @@ int	execute_cmds(int ac, char **av, char **envp, int open_fd[2])
 	dup2(open_fd[1], 1);
 	status = last_process(av[ac - 2], envp);
 	close_fd(open_fd, pipe_list, i, backup_fd);
+	ft_free(&pipe_list);
 	return (status);
 }
 

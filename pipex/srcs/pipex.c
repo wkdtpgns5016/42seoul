@@ -12,7 +12,7 @@
 
 #include "../include/pipex.h"
 
-int	child_process(char *cmd, char **envp)
+void	child_process(char *cmd, char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -32,9 +32,8 @@ int	child_process(char *cmd, char **envp)
 	{
 		close(fd[1]);
 		dup2(fd[0], 0);
-		waitpid(pid, 0, WNOHANG);
+		waitpid(pid, 0, WNOWAIT);
 	}
-	return (fd[0]);
 }
 
 int	last_process(char *cmd, char **envp)
@@ -57,49 +56,34 @@ int	last_process(char *cmd, char **envp)
 	return (WEXITSTATUS(status));
 }
 
-void	close_fd(int open_fd[2], int *pipe_list, int list_size, int backup[2])
+void	close_fd(int open_fd[2], int backup[2])
 {
 	int	i;
 
 	i = 0;
-	close(open_fd[0]);
-	close(open_fd[1]);
-	while (i < list_size)
-	{
-		close(pipe_list[i]);
-		i++;
-	}
 	dup2(backup[0], 0);
 	dup2(backup[1], 1);
+	close(open_fd[0]);
+	close(open_fd[1]);
 	close(backup[0]);
 	close(backup[1]);
 }
 
 int	execute_cmds(int ac, char **av, char **envp, int open_fd[2])
 {
-	int		i;
 	int		j;
 	int		status;
-	int		*pipe_list;
 	int		backup_fd[2];
 
-	pipe_list = (int *)malloc(sizeof(int ) * (ac - 4));
-	if (pipe_list == 0)
-		ft_error("Error", 1);
 	backup_fd[0] = dup(0);
 	backup_fd[1] = dup(1);
 	dup2(open_fd[0], 0);
-	i = 0;
 	j = 2;
 	while (j < ac - 2)
-	{
-		pipe_list[i] = child_process(av[j++], envp);
-		i++;
-	}
+		child_process(av[j++], envp);
 	dup2(open_fd[1], 1);
 	status = last_process(av[ac - 2], envp);
-	close_fd(open_fd, pipe_list, i, backup_fd);
-	ft_free(&pipe_list);
+	close_fd(open_fd, backup_fd);
 	return (status);
 }
 

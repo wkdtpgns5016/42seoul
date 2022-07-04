@@ -15,12 +15,22 @@ CFLAGS = -Wall -Werror -Wextra
 
 NAME = pipex
 
-SRCS = 	srcs/pipex.c \
-		srcs/pipex_utils.c \
-		srcs/ft_free.c \
-		srcs/main.c
+SRCS = 	srcs/pipex_utils.c \
+		srcs/pipex_utils2.c \
+		srcs/ft_free.c
+
+SRCS_MANDATORY = srcs/pipex.c
+SRCS_BONUS = srcs/pipex_bonus.c
 
 OBJS = $(SRCS:.c=.o)
+OBJS_MANDATORY = $(SRCS_MANDATORY:.c=.o)
+OBJS_BONUS = $(SRCS_BONUS:.c=.o)
+
+ifdef WITH_BONUS
+	OBJS += $(OBJS_BONUS)
+else
+	OBJS += $(OBJS_MANDATORY)
+endif
 
 HEAD = ./include
 
@@ -35,7 +45,7 @@ $(NAME): $(OBJS)
 
 clean:
 	$(MAKE) -C ./libft clean
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(OBJS_BONUS)
 
 fclean: clean
 	$(MAKE) -C ./libft fclean
@@ -46,6 +56,6 @@ re:
 	$(MAKE) all
 
 bonus:
-	$(MAKE) all
+	$(MAKE) WITH_BONUS=1 all
 
 .PHONY = all clean fclean re bonus

@@ -5,6 +5,11 @@ pipex
 	파이프라인
 		https://reakwon.tistory.com/80
 
+	비트연산
+		https://dojang.io/mod/page/view.php?id=173
+		https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=yuyyulee&logNo=221114544260
+		https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=yuyyulee&logNo=221079465686
+
 	int access(const char *pathname, int mode)
 		프로세스가 지정한 파일이 존재하는지 해당 권한이 가능한 지 확인하는 함수
 
@@ -84,6 +89,9 @@ pipex
 			  options : wait 옵션 (WNOHANG - 부모 프로세스가 기다리지 않게 해주는 옵션 / 0 - 일반 wait 함수와 동일하게 동작)
 		반환 : 종료된 자식 프로세스의 pid, 실패시 EOF 리턴
 
+		status 인자
+			https://codetravel.tistory.com/42
+			
 		WIFEXITED(status) : 자식이 정상적으로 종료되었다면 non-zero 이다. 
 		WEXITSTATUS(status) : exit()를 호출하기 위한 인자나 return 값이 설정되고 종료된 자식의 반환 코드의 최하위 8비트를 평가한다. 
 		이 매크로는 정상종료 - WIFEXITED(status) - 일때만 평가된다. 

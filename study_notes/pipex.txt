@@ -120,3 +120,8 @@ pipex
 		128 - not used on shell
 		128+N - signal N 으로 종료된 경우에만
 		255 - 범위 밖의 경우
+
+	infile 에러처리
+		< infile cmd1 | cmd2 > outfile 의 경우
+		infile 에러 발생시 cmd1는 실행하지 않고
+		cmd2만 표준입력으로 eof를 넘겨받아 실행 후 outfile로 리다이렉션 처리가 됨.

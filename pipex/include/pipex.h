@@ -31,5 +31,4 @@ void	child_process(char *cmd, char **envp);
 int		last_process(char *cmd, char **envp);
 void	close_fd(int open_fd[2], int backup[2]);
 
-
 #endif

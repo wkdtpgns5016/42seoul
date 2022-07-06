@@ -32,6 +32,7 @@ int	execute_cmds(int ac, char **av, char **envp, int open_fd[2])
 
 int	pipex(int ac, char **av, char **envp)
 {
+	int		status;
 	int		open_fd[2];
 
 	open_fd[0] = open(av[1], O_RDONLY);
@@ -40,7 +41,8 @@ int	pipex(int ac, char **av, char **envp)
 	open_fd[1] = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (open_fd[1] < 0)
 		ft_error("Outfile Error", 1);
-	return (execute_cmds(ac, av, envp, open_fd));
+	status = execute_cmds(ac, av, envp, open_fd);
+	return (status);
 }
 
 int	main(int ac, char **av, char **envp)

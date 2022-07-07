@@ -18,17 +18,10 @@ void	ft_error(char *str, int status)
 	exit(status);
 }
 
-void	close_fd(int open_fd[2], int backup[2])
+void	set_info(t_info *info, char *cmd, char **envp)
 {
-	int	i;
-
-	i = 0;
-	dup2(backup[0], 0);
-	dup2(backup[1], 1);
-	close(open_fd[0]);
-	close(open_fd[1]);
-	close(backup[0]);
-	close(backup[1]);
+	info->cmd = cmd;
+	info->envp = envp;
 }
 
 char	**find_path(char **envp, char *key)

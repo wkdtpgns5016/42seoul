@@ -12,23 +12,49 @@
 
 #include "../include/pipex.h"
 
-int	execute_cmds(int ac, char **av, char **envp, int open_fd[2])
+void	mid_process(t_info info)
+{
+	pid_t	pid;
+	int		fd[2];
+
+	if (pipe(fd) == -1)
+		ft_error("Pipe error", 1);
+	pid = fork();
+	if (pid == -1)
+		ft_error("Fork error", 1);
+	else if (pid == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], 1);
+		execute_cmd(info.cmd, info.envp);
+	}
+	else if (pid > 0)
+	{
+		close(fd[1]);
+		dup2(fd[0], 0);
+		waitpid(pid, 0, WNOWAIT);
+	}
+}
+
+int	execute_cmds(int ac, char **av, char **envp, int flag)
 {
 	int		j;
 	int		status;
-	int		backup_fd[2];
+	int		backup_fd;
+	t_info	info;
 
-	backup_fd[0] = dup(0);
-	backup_fd[1] = dup(1);
 	j = 2;
-	dup2(open_fd[0], 0);
 	if (ft_strncmp(av[1], "here_doc", ft_strlen(av[1])) == 0)
 		j++;
+	set_info(&info, av[j++], envp);
+	backup_fd = first_process(info, av[1]);
 	while (j < ac - 2)
-		child_process(av[j++], envp);
-	dup2(open_fd[1], 1);
-	status = last_process(av[ac - 2], envp);
-	close_fd(open_fd, backup_fd);
+	{
+		set_info(&info, av[j++], envp);
+		mid_process(info);
+	}
+	set_info(&info, av[ac - 2], envp);
+	status = last_process(info, av[ac - 1], backup_fd, flag);
 	return (status);
 }
 
@@ -43,6 +69,8 @@ void	get_heredoc(char *limiter)
 	if (check == 0)
 		ft_error("Error", 1);
 	fd = open("here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+		ft_error("Error", 1);
 	while (1)
 	{
 		ft_putstr_fd(">", 1);
@@ -60,7 +88,6 @@ void	get_heredoc(char *limiter)
 
 int	pipex(int ac, char **av, char **envp)
 {
-	int		open_fd[2];
 	int		status;
 	int		here_doc;
 	int		flag;
@@ -74,13 +101,7 @@ int	pipex(int ac, char **av, char **envp)
 		get_heredoc(av[2]);
 		flag = O_WRONLY | O_CREAT | O_APPEND;
 	}
-	open_fd[0] = open(av[1], O_RDONLY);
-	if (open_fd[0] < 0)
-		perror("Infile Error");
-	open_fd[1] = open(av[ac - 1], flag, 0644);
-	if (open_fd[1] < 0)
-		ft_error("Outfile Error", 1);
-	status = execute_cmds(ac, av, envp, open_fd);
+	status = execute_cmds(ac, av, envp, flag);
 	if (here_doc)
 		unlink("./here_doc");
 	return (status);

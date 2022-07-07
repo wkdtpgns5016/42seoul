@@ -12,36 +12,18 @@
 
 #include "../include/pipex.h"
 
-int	execute_cmds(int ac, char **av, char **envp, int open_fd[2])
-{
-	int		j;
-	int		status;
-	int		backup_fd[2];
-
-	backup_fd[0] = dup(0);
-	backup_fd[1] = dup(1);
-	dup2(open_fd[0], 0);
-	j = 2;
-	while (j < ac - 2)
-		child_process(av[j++], envp);
-	dup2(open_fd[1], 1);
-	status = last_process(av[ac - 2], envp);
-	close_fd(open_fd, backup_fd);
-	return (status);
-}
-
 int	pipex(int ac, char **av, char **envp)
 {
 	int		status;
-	int		open_fd[2];
+	int		backup_fd;
+	int		flag;
+	t_info	info;
 
-	open_fd[0] = open(av[1], O_RDONLY);
-	if (open_fd[0] < 0)
-		perror("Infile Error");
-	open_fd[1] = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (open_fd[1] < 0)
-		ft_error("Outfile Error", 1);
-	status = execute_cmds(ac, av, envp, open_fd);
+	flag = O_WRONLY | O_CREAT | O_TRUNC;
+	set_info(&info, av[ac - 3], envp);
+	backup_fd = first_process(info, av[1]);
+	set_info(&info, av[ac - 2], envp);
+	status = last_process(info, av[ac - 1], backup_fd, flag);
 	return (status);
 }
 

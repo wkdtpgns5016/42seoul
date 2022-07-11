@@ -1,0 +1,118 @@
+philosophers
+
+철학자 식사 문제
+	https://ko.wikipedia.org/wiki/식사하는_철학자들_문제
+	
+	각 프로그램은 같은 옵션을 가져야 합니다 : 
+		철학자의 수 (number_of_philosophers): 
+			테이블에 앉아 있는 철학자의 수와 포크의 수
+
+		철학자의 수명 (time_to_die): 
+			밀리초 단위로, 철학자가 마지막으로 밥을 먹은 지 'time_to_die' 시간만큼이 지나거나, 
+			프로그램 시작 후 'time_to_die' 시간만큼이 지나면 해당 철학자는 사망합니다.
+
+		밥을 먹는데 걸리는 시간 (time_to_eat) : 
+			밀리초 단위로, 철학자가 밥을 먹는 데 걸리는 시간입니다. 
+			해당 시간동안, 철학자는 두 개의 포크를 소유하고 있어야 합니다.
+
+		잠자는 시간 (time_to_sleep) : 
+			밀리초 단위로, 잠을 자는 데 소모되는 시간입니다.
+
+		각 철학자가 최소한 밥을 먹어야 하는 횟수 (number_of_times_each_philosopher_must_eat) : 
+			해당 인자값은 선택사항입니다. 모든 철학자가 'number_of_times_each_philosopher_must_eat' 횟수만큼 밥을 먹었다면, 
+			시뮬레이션이 종료됩니다. 해당 값이 명시되어 있지 않다면, 철학자가 한 명이라도 사망할 때까지 시뮬레이션은 계속됩니다.
+
+	초기 아이디어
+		1. 철학자가 포크를 든다 (포크가 없다면 기다린다)
+		2. 철학자가 밥을 먹는다
+		3. 철학자가 포크를 내려논다
+		4. 철학자가 잠을 잔다
+		5. 철학자가 생각을 한다
+
+스레드
+
+뮤택스
+
+사용가능함수
+int usleep (useconds_t microseconds);
+	일정시간 동안 대기하는 함수
+
+	헤더 : unistd.h
+	인자 : microseconds - 대기할 시간(ms)
+	반환 : 성공 0, 실패 -1
+
+int gettimeofday(struct timeval *restrict tp, void *restrict tzp);
+	현재시간을 반환하는 함수
+
+	헤더 : #include <sys/time.h>
+	인자 : 
+		struct timeval {
+            time_t       tv_sec;   /* seconds since Jan. 1, 1970 */
+            suseconds_t  tv_usec;  /* and microseconds */
+    	};
+
+    	struct timezone {
+             int     tz_minuteswest; /* of Greenwich */
+             int     tz_dsttime;     /* type of dst correction to apply */
+    	};
+		현재 timezone 구조체는 사용되지 않고 있으며, 앞으로도 지원되지 않을 것이다. 간혹 커널 소스등에서 이 필드가 사용되는 경우가 있는데, 
+		모든 경우에 버그로 판단되어서 무시한다. 복잡하게 생각할 필요 없이 tz은 NULL을 사용하도록 한다.
+	반환 : 성공 0, 실패 -1
+
+int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);
+	스레드 생성 함수
+
+	헤더 : pthread.h
+	인자 : thread - 쓰레드가 성공적으로 생성되었을때 생성된 쓰레드를 식별하기 위해서 사용되는 쓰레드 식별자
+		  attr   - 쓰레드 특성을 지정하기 위해서 사용하며, 기본 쓰레드 특성을 이용하고자 할경우에 NULL 을 사용
+		  start_routine - 분기시켜서 실행할 쓰레드 함수
+		  arg -  start_routine 쓰레드 함수의 매개변수
+	반환 : 성공 0, 실패 errno
+
+int pthread_detach(pthread_t thread);
+	특정 쓰레드를 분리시키는 함수
+	일반적으로 쓰레드를 pthread_create() 를 사용하여 생성하면, 쓰레드가 종료되더라도 사용했던 모든 자원이 해제되지 않음 
+	반면 pthread_join() 을 사용하여 종료될때까지 기다렸다가 종료시점이 되면, 자원이 반납됨 
+	pthread_detach() 함수는 pthread_join()을 사용하지 않더라도,  쓰레드 종료될때 모든 자원을 해제됨
+
+	헤더 : pthread.h
+	인자 : thread - 분리시킬 쓰레드 식별자
+	반환 : 성공 0, 실패 errno
+
+int pthread_join(pthread_t thread, void **value_ptr);
+	특정 쓰레드가 종료하기를 기다렸다가, 쓰레그가 종료된 이후 다음 진행
+	join된 쓰레드 (종료된 쓰레드)는 모든 자원을 반납
+	
+	헤더 : pthread.h
+	인자 : thread - 기다릴 쓰레드 식별자
+		  ptr    - 쓰레드의 리턴값
+	반환 : 성공 0, 실패 errno
+
+int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+	뮤택스 객체를 초기화 하는 함수
+
+	헤더 : pthread.h
+	인자 : mutex - 초기화 시킬 뮤텍스 객체
+		  attr  - mutex 특성을 변경할수 있다. 기본 mutex 특성을 이용하기 원한다면 NULL을 사용
+	반환 : 성공 0, 실패 errno
+
+int pthread_mutex_destroy(pthread_mutex_t *mutex);
+	뮤텍스 객체를 삭제하고 자원을 되돌려줌
+
+	헤더 : pthread.h
+	인자 : mutex - 삭제시킬 뮤텍스 객체
+	반환 : 성공 0, 실패 errno
+
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+	뮤텍스 잠금을 해주는 함수
+
+	헤더 : pthread.h
+	인자 : mutex - 잠금할 뮤텍스 객체
+	반환 : 성공 0, 실패 errno
+
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+	뮤텍스 잠금을 되돌려주는 함수
+
+	헤더 : pthread.h
+	인자 : mutex - 잠금을 풀어줄 뮤텍스 객체
+	반환 : 성공 0, 실패 errno

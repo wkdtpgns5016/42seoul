@@ -17,8 +17,16 @@ NAME = philo
 
 SRCS = 
 
-SRCS_MANDATORY = srcs/philo.c
-SRCS_BONUS = srcs/philo.c
+SRCS_MANDATORY = srcs/ft_free.c \
+				 srcs/monitor.c \
+				 srcs/main.c \
+				 srcs/philo.c \
+				 srcs/philo_utils.c \
+				 srcs/philo_action.c \
+				 srcs/philo_action2.c \
+				 srcs/parsing.c \
+				 srcs/utils.c 
+SRCS_BONUS = 
 
 OBJS = $(SRCS:.c=.o)
 OBJS_MANDATORY = $(SRCS_MANDATORY:.c=.o)
@@ -30,7 +38,7 @@ else
 	OBJS += $(OBJS_MANDATORY)
 endif
 
-HEAD = ./include
+HEAD = ./philo/include
 
 all: $(NAME)
 

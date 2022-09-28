@@ -1,93 +1,78 @@
 #include "../include/philo.h"
 
-int	put_down_fork(t_table *table)
+int	put_down_fork(t_philo *philo)
 {
-	pthread_mutex_unlock((table->fork[table->left_fork - 1]));
-	pthread_mutex_unlock((table->fork[table->right_fork - 1]));
-	pthread_mutex_lock(table->monitor->flag_mutex);
-	if (table->monitor->dead_flag)
-	{
-		pthread_mutex_unlock(table->monitor->flag_mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(table->monitor->flag_mutex);
-	gettimeofday(&(table->starve_time), NULL);
-	table->monitor->time[table->info.num_of_philo] = 0;
+	pthread_mutex_unlock(philo->fork[philo->left_fork]);
+	pthread_mutex_unlock(philo->fork[philo->right_fork]);
 	return (0);
 }
 
-int	pick_up_fork(t_table *table)
+int	pick_up_fork(t_philo *philo)
 {
-	int	time;
+	uint64_t	time;
 
-	if (table->philo_num % 2 == 0)
+	if (philo->philo_num % 2 == 0)
 	{
-		pthread_mutex_lock((table->fork[table->left_fork - 1]));
-		pthread_mutex_lock((table->fork[table->right_fork - 1]));
+		pthread_mutex_lock(philo->fork[philo->left_fork]);
+		pthread_mutex_lock(philo->fork[philo->right_fork]);
 	}
 	else
 	{
-		pthread_mutex_lock((table->fork[table->right_fork - 1]));
-		pthread_mutex_lock((table->fork[table->left_fork - 1]));
+		pthread_mutex_lock(philo->fork[philo->right_fork]);
+		pthread_mutex_lock(philo->fork[philo->left_fork]);
 	}
-	pthread_mutex_lock(table->monitor->flag_mutex);
-	if (table->monitor->dead_flag)
+	if (check_dead(philo))
 	{
-		pthread_mutex_unlock(table->monitor->flag_mutex);
+		put_down_fork(philo);
 		return (1);
 	}
-	pthread_mutex_unlock(table->monitor->flag_mutex);
-	time = calc_time(table, table->time);
-	print_message("is has taken a fork", table->philo_num, time);
+	pthread_mutex_lock(philo->time_mutex);
+	time = calc_ms(philo->timestamp);
+	print_message("is has taken a fork", philo->philo_num + 1, time);
+	pthread_mutex_unlock(philo->time_mutex);
 	return (0);
 }
 
-int	eating(t_table *table)
+int	eating(t_philo *philo)
 {
-	int	time;
+	uint64_t	time;
 
-	pthread_mutex_lock(table->monitor->flag_mutex);
-	if (table->monitor->dead_flag)
-	{
-		pthread_mutex_unlock(table->monitor->flag_mutex);
+	if (check_dead(philo))
 		return (1);
-	}
-	pthread_mutex_unlock(table->monitor->flag_mutex);
-	time = calc_time(table, table->time);
-	print_message("is eating", table->philo_num, time);
-	usleep(table->info.time_to_eat * 1000);
+	pthread_mutex_lock(philo->time_mutex);
+	time = calc_ms(philo->timestamp);
+	print_message("is eating", philo->philo_num + 1, time);
+	pthread_mutex_unlock(philo->time_mutex);
+	ft_sleep(philo->info.time_to_eat * 1000);
+	pthread_mutex_lock(philo->starve_mutex);
+	gettimeofday(&(philo->starve_time), NULL);
+	pthread_mutex_unlock(philo->starve_mutex);
 	return (0);
 }
 
-int	sleeping(t_table *table)
+int	sleeping(t_philo *philo)
 {
-	int	time;
+	uint64_t	time;
 
-	pthread_mutex_lock(table->monitor->flag_mutex);
-	if (table->monitor->dead_flag)
-	{
-		pthread_mutex_unlock(table->monitor->flag_mutex);
+	if (check_dead(philo))
 		return (1);
-	}
-	pthread_mutex_unlock(table->monitor->flag_mutex);
-	time = calc_time(table, table->time);
-	print_message("is sleeping", table->philo_num, time);
-	usleep(table->info.time_to_sleep * 1000);
+	pthread_mutex_lock(philo->time_mutex);
+	time = calc_ms(philo->timestamp);
+	print_message("is sleeping", philo->philo_num + 1, time);
+	pthread_mutex_unlock(philo->time_mutex);
+	ft_sleep(philo->info.time_to_sleep * 1000);
 	return (0);
 }
 
-int	thinking(t_table *table)
+int	thinking(t_philo *philo)
 {
-	int	time;
+	uint64_t	time;
 
-	pthread_mutex_lock(table->monitor->flag_mutex);
-	if (table->monitor->dead_flag)
-	{
-		pthread_mutex_unlock(table->monitor->flag_mutex);
+	if (check_dead(philo))
 		return (1);
-	}
-	pthread_mutex_unlock(table->monitor->flag_mutex);
-	time = calc_time(table, table->time);
-	print_message("is thinking", table->philo_num, time);
+	pthread_mutex_lock(philo->time_mutex);
+	time = calc_ms(philo->timestamp);
+	print_message("is thinking", philo->philo_num + 1, time);
+	pthread_mutex_unlock(philo->time_mutex);
 	return (0);
 }

@@ -43,14 +43,12 @@ pthread_mutex_t	**set_fork(int num_of_philo)
 	return (fork);
 }
 
-t_table	set_table(int ac, char **av)
+t_time	*set_time(void)
 {
-	t_table	table;
+	t_time	*time;
 
-	table.info = set_info(ac, av);
-	table.fork = set_fork(table.info.num_of_philo);
-	table.philo_num = 0;
-	table.time_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(table.time_mutex, NULL);
-	return (table);
+	time = (t_time *)malloc(sizeof(t_time));
+	time->time_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(time->time_mutex, NULL);
+	return (time);
 }

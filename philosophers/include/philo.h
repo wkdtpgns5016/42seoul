@@ -16,53 +16,71 @@ typedef struct s_info
 	int				goal;
 }	t_info;
 
+typedef	struct s_time
+{
+	struct timeval	*timestamp;
+	pthread_mutex_t	*time_mutex;
+}	t_time;
+
+typedef struct s_philo
+{
+	int				read;
+	int				*dead_flag;
+	int				left_fork;
+	int				right_fork;
+	int				philo_num;
+	pthread_mutex_t	**fork;
+	pthread_t		*philo;
+	struct timeval	starve_time;
+	struct timeval	timestamp;
+	pthread_mutex_t	*time_mutex;
+	pthread_mutex_t	*starve_mutex;
+	pthread_mutex_t	*flag_mutex;
+	t_info			info;
+}	t_philo;
+
 typedef struct s_monitor
 {
 	pthread_t		*monitor;
-	pthread_t		**philos;
-	pthread_mutex_t	*flag_mutex;
-	int				dead_flag;
-	int				*time;
-	int				status;
+	t_philo			**philos;
 }	t_monitor;
 
 typedef struct s_table
 {
 	t_info			info;
 	int				philo_num;
-	int				left_fork;
-	int				right_fork;
 	struct timeval	time;
 	struct timeval	starve_time;
 	pthread_mutex_t	*time_mutex;
-	pthread_mutex_t	**fork;
 	t_monitor		*monitor;
 }	t_table;
 
 t_info			set_info(int ac, char **av);
 pthread_mutex_t	**set_fork(int num_of_philo);
 t_table			set_table(int ac, char **av);
+t_time			*set_time(void);
+uint64_t		calc_ms(struct timeval time);
 
 int				ft_atoi(const char *nptr);
-void			print_message(char *str, int philo_num, int time);
+void			print_message(char *str, int philo_num, uint64_t time);
+void			ft_sleep(int us);
 
 int				get_right_fork(int philo_num);
 int				get_left_fork(int philo_num, int total_philo);
-int				calc_time(t_table *table, struct timeval start);
-int				check_dead(t_table *table, int start, int end);
 
-pthread_t		**set_philo(t_table table);
-void			create_philos(pthread_t **philos, t_table table);
+t_philo			*set_philo(pthread_mutex_t **fork, int num, t_info info, t_time *time);
+void			create_philo_thread(t_monitor monitor, t_info info);
 void			*action(void *data);
 
-int				pick_up_fork(t_table *table);
-int				put_down_fork(t_table *table);
-int				eating(t_table *table);
-int				sleeping(t_table *table);
-int				thinking(t_table *table);
-void			dead(t_table *table);
+int				pick_up_fork(t_philo *table);
+int				put_down_fork(t_philo *table);
+int				eating(t_philo *table);
+int				sleeping(t_philo *table);
+int				thinking(t_philo *table);
+void			dead(t_philo *table, uint64_t time);
+int				check_dead(t_philo *philo);
 
-t_monitor		set_monitor(pthread_t **philos);
+t_monitor		set_monitor(pthread_mutex_t **fork, t_info info);
 void			*monitor_philo(void *data);
 
 #endif

@@ -1,10 +1,21 @@
 #include "../include/philo.h"
 
-void	dead(t_table *table)
+int	check_dead(t_philo *philo)
 {
-	int	time;
+	pthread_mutex_lock(philo->flag_mutex);
+	if (*philo->dead_flag)
+	{
+		pthread_mutex_unlock(philo->flag_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(philo->flag_mutex);
+	return (0);
+}
 
-	time = calc_time(table, table->time);
-	print_message("is dead", table->philo_num, time);
-	table->monitor->dead_flag = 1;
+void	dead(t_philo *philo, uint64_t time)
+{
+	pthread_mutex_lock(philo->flag_mutex);
+	print_message("is dead", philo->philo_num + 1, time);
+	*philo->dead_flag = 1;
+	pthread_mutex_unlock(philo->flag_mutex);
 }

@@ -25,7 +25,20 @@ int	ft_atoi(const char *nptr)
 	return (mark * num);
 }
 
-void	print_message(char *str, int philo_num, int time)
+void	print_message(char *str, int philo_num, uint64_t time)
 {
-	printf("%d %d %s\n", time, philo_num, str);
+	printf("%lld %d %s\n", (time / 1000), philo_num, str);
+}
+
+void	ft_sleep(int us)
+{
+	struct timeval	start;
+	uint64_t		time;
+
+	gettimeofday(&start, NULL);
+	time = calc_ms(start);
+	while (time < (uint64_t)(us))
+	{
+		time = calc_ms(start);
+	}
 }

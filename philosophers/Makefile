@@ -43,10 +43,10 @@ HEAD = ./philo/include
 all: $(NAME)
 
 %.o: %.c
-	$(CC) -g $(CFLAGS) -c -I $(HEAD) $< -o $@
+	$(CC) -g -fsanitize=thread $(CFLAGS) -c -I $(HEAD) $< -o $@
 
 $(NAME): $(OBJS)
-	$(CC) -g -o $(NAME) $(OBJS)
+	$(CC) -g -fsanitize=thread -o $(NAME) $(OBJS)
 
 clean:
 	rm -f $(OBJS) $(OBJS_BONUS)

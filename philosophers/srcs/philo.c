@@ -3,73 +3,59 @@
 
 void	*action(void *data)
 {
-	t_table			*table;
+	t_philo			*philo;
+	struct timeval	starve_time;
 
-	table = (t_table *)data;
-	gettimeofday(&(table->starve_time), NULL);
+	philo = (t_philo *)data;
+	gettimeofday(&(starve_time), NULL);
+	philo->starve_time = starve_time;
+	if (philo->philo_num % 2 == 0)
+		ft_sleep((philo->info.time_to_eat / 2) * 1000);
 	while (1)
 	{
-		if (pick_up_fork(table))
+		if (pick_up_fork(philo))
 			break ;
-		if (eating(table))
+		if (eating(philo))
 			break ;
-		if (put_down_fork(table))
+		if (put_down_fork(philo))
 			break ;
-		if (sleeping(table))
+		if (sleeping(philo))
 			break ;
-		if (thinking(table))
+		if (thinking(philo))
 			break ;
 	}
 	return (0);
 }
 
-t_table	*make_table(t_table table)
+void	create_philo_thread(t_monitor monitor, t_info info)
 {
-	t_table	*new;
+	int	total;
+	int	i;
 
-	new = (t_table *)malloc(sizeof(t_table) * table.info.num_of_philo);
-	new->fork = table.fork;
-	new->info = table.info;
-	new->time_mutex = table.time_mutex;
-	new->time = table.time;
-	new->monitor = table.monitor;
-	return (new);
-}
-
-void	create_philos(pthread_t **philos, t_table table)
-{
-	int			i;
-	int			num_of_philo;
-	t_table		*new;
-
+	total = info.num_of_philo;
 	i = 0;
-	num_of_philo = table.info.num_of_philo;
-	gettimeofday(&table.time, NULL);
-	while (i < num_of_philo)
+	while (i < total)
 	{
-		new = make_table(table);
-		new->philo_num = i + 1;
-		new->left_fork = get_left_fork(new->philo_num, num_of_philo);
-		new->right_fork = get_right_fork(new->philo_num);
-		pthread_create(philos[i], NULL, action, (void *)new);
-		pthread_create(table.monitor->monitor, NULL, monitor_philo, (void *)new);
+		pthread_create(monitor.philos[i]->philo, NULL, action, (void *)monitor.philos[i]);
 		i++;
 	}
 }
 
-pthread_t	**set_philo(t_table table)
+t_philo	*set_philo(pthread_mutex_t **fork, int num, t_info info, t_time *time)
 {
-	pthread_t	**philos;
-	int			num_of_philo;
-	int			i;
+	t_philo	*philo;
 
-	num_of_philo = table.info.num_of_philo;
-	i = 0;
-	philos = (pthread_t **)malloc(sizeof(pthread_t *) * num_of_philo);
-	while (i < num_of_philo)
-	{
-		philos[i] = (pthread_t *)malloc(sizeof(pthread_t));
-		i++;
-	}
-	return (philos);
+	philo = (t_philo *)malloc(sizeof(t_philo));
+	philo->dead_flag = 0;
+	philo->fork = fork;
+	philo->philo_num = num;
+	philo->left_fork = get_left_fork(num, info.num_of_philo);
+	philo->right_fork = get_right_fork(num);
+	philo->philo = (pthread_t *)malloc(sizeof(pthread_t));
+	philo->timestamp = *(time->timestamp);
+	philo->time_mutex = time->time_mutex;
+	philo->starve_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(philo->starve_mutex, NULL);
+	philo->info = info;
+	return (philo);
 }

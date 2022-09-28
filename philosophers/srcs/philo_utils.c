@@ -3,8 +3,8 @@
 
 int	get_left_fork(int philo_num, int total_philo)
 {
-	if (philo_num == 1)
-		return (total_philo);
+	if (philo_num == 0)
+		return (total_philo - 1);
 	else
 		return (philo_num - 1);
 }
@@ -14,22 +14,13 @@ int	get_right_fork(int philo_num)
 	return (philo_num);
 }
 
-int	calc_time(t_table *table, struct timeval start)
+uint64_t	calc_ms(struct timeval time)
 {
-	int				time;
+	uint64_t		ms;
 	struct timeval	end;
 
 	gettimeofday(&end, NULL);
-	pthread_mutex_lock(table->time_mutex);
-	time = (end.tv_sec - start.tv_sec) * 1000;
-	time += ((end.tv_usec - start.tv_usec) / 1000);
-	pthread_mutex_unlock(table->time_mutex);
-	return (time);
-}
-
-int	check_dead(t_table *table, int start, int end)
-{
-	if (end - start > table->info.time_to_die)
-		return (1);
-	return (0);
+	ms = (end.tv_sec - time.tv_sec) * 1000 * 1000;
+	ms += (end.tv_usec - time.tv_usec);
+	return (ms);
 }

@@ -3,7 +3,7 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+         #
+#    By: sehjang <sehjang@student.42seoul.kr>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/10 17:49:11 by sehjang           #+#    #+#              #
 #    Updated: 2022/05/10 17:49:12 by sehjang          ###   ########.fr        #
@@ -21,7 +21,6 @@ SRCS_MANDATORY = srcs/ft_free.c \
 				 srcs/monitor.c \
 				 srcs/main.c \
 				 srcs/philo.c \
-				 srcs/philo_utils.c \
 				 srcs/philo_action.c \
 				 srcs/philo_action2.c \
 				 srcs/parsing.c \

@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/30 07:40:26 by sehjang           #+#    #+#             */
+/*   Updated: 2022/09/30 07:40:28 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/philo.h"
 
@@ -8,6 +19,7 @@ t_info	set_info(int ac, char **av)
 	int		num;
 
 	i = 1;
+	info.goal = -1;
 	while (i < ac)
 	{
 		num = ft_atoi(av[i]);
@@ -23,6 +35,7 @@ t_info	set_info(int ac, char **av)
 			info.goal = num;
 		i++;
 	}
+	info.start_time = get_time();
 	return (info);
 }
 
@@ -43,12 +56,16 @@ pthread_mutex_t	**set_fork(int num_of_philo)
 	return (fork);
 }
 
-t_time	*set_time(void)
+t_table	*set_table(pthread_mutex_t **fork)
 {
-	t_time	*time;
+	t_table	*table;
 
-	time = (t_time *)malloc(sizeof(t_time));
-	time->time_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(time->time_mutex, NULL);
-	return (time);
+	table = (t_table *)malloc(sizeof(t_table));
+	table->print_able = 1;
+	table->dead_flag = 0;
+	table->fork = fork;
+	table->flag_mutex = make_mutex();
+	table->print_mutex = make_mutex();
+	table->start_time = get_time();
+	return (table);
 }

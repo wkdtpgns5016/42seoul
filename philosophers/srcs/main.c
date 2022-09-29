@@ -6,7 +6,7 @@
 /*   By: sehjang <sehjang@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/12 15:56:24 by sehjang           #+#    #+#             */
-/*   Updated: 2022/07/12 15:56:25 by sehjang          ###   ########.fr       */
+/*   Updated: 2022/09/30 07:39:20 by sehjang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,18 @@ int	main(int ac, char **av)
 	t_monitor		monitor;
 	pthread_mutex_t	**fork;
 	t_info			info;
+	t_table			*table;
 	int				i;
 
+	if (check_arg(ac, av))
+	{
+		printf("Error\n");
+		exit(1);
+	}
 	info = set_info(ac, av);
 	fork = set_fork(info.num_of_philo);
-	monitor = set_monitor(fork, info);
+	table = set_table(fork);
+	monitor = set_monitor(&info, table);
 	create_philo_thread(monitor, info);
 	pthread_create(monitor.monitor, NULL, monitor_philo, (void *)&monitor);
 	i = 0;

@@ -24,3 +24,11 @@ uint64_t	calc_ms(struct timeval time)
 	ms += (end.tv_usec - time.tv_usec);
 	return (ms);
 }
+
+uint64_t	get_time(void)
+{
+	struct timeval	end;
+
+	gettimeofday(&end, NULL);
+	return (end.tv_sec * 1000000 + end.tv_usec);
+}

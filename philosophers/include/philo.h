@@ -29,12 +29,12 @@ typedef struct s_philo
 	int				left_fork;
 	int				right_fork;
 	int				philo_num;
+	uint64_t		last_eat_time;
 	pthread_mutex_t	**fork;
 	pthread_t		*philo;
-	struct timeval	starve_time;
 	struct timeval	timestamp;
-	pthread_mutex_t	*time_mutex;
-	pthread_mutex_t	*starve_mutex;
+	pthread_mutex_t	*print_mutex;
+	pthread_mutex_t	*last_eat_mutex;
 	pthread_mutex_t	*flag_mutex;
 	t_info			info;
 }	t_philo;
@@ -82,5 +82,6 @@ int				check_dead(t_philo *philo);
 
 t_monitor		set_monitor(pthread_mutex_t **fork, t_info info);
 void			*monitor_philo(void *data);
+uint64_t		get_time(void);
 
 #endif

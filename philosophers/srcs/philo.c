@@ -4,11 +4,11 @@
 void	*action(void *data)
 {
 	t_philo			*philo;
-	struct timeval	starve_time;
 
 	philo = (t_philo *)data;
-	gettimeofday(&(starve_time), NULL);
-	philo->starve_time = starve_time;
+	pthread_mutex_lock(philo->last_eat_mutex);
+	philo->last_eat_time = get_time();
+	pthread_mutex_unlock(philo->last_eat_mutex);
 	if (philo->philo_num % 2 == 0)
 		ft_sleep((philo->info.time_to_eat / 2) * 1000);
 	while (1)
@@ -53,9 +53,9 @@ t_philo	*set_philo(pthread_mutex_t **fork, int num, t_info info, t_time *time)
 	philo->right_fork = get_right_fork(num);
 	philo->philo = (pthread_t *)malloc(sizeof(pthread_t));
 	philo->timestamp = *(time->timestamp);
-	philo->time_mutex = time->time_mutex;
-	philo->starve_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(philo->starve_mutex, NULL);
+	philo->print_mutex = time->time_mutex;
+	philo->last_eat_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(philo->last_eat_mutex, NULL);
 	philo->info = info;
 	return (philo);
 }

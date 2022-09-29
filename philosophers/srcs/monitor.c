@@ -4,7 +4,7 @@
 void	*monitor_philo(void *data)
 {
 	int			i;
-	int			time;
+	uint64_t	time;
 	t_monitor	*monitor;
 	t_philo		**philos;
 	t_info		info;
@@ -17,16 +17,21 @@ void	*monitor_philo(void *data)
 		i = 0;
 		while (i < info.num_of_philo)
 		{
-			pthread_mutex_lock(philos[i]->time_mutex);
-			time = calc_ms(philos[i]->starve_time);
-			if (time > info.time_to_die * 1000)
+			pthread_mutex_lock(philos[i]->print_mutex);
+			pthread_mutex_lock(philos[i]->last_eat_mutex);
+			time = get_time() - philos[i]->last_eat_time;
+			if (time > (uint64_t)(info.time_to_die * 1000))
 			{
 				dead(philos[i], time);
-				pthread_mutex_unlock(philos[i]->time_mutex);
+				pthread_mutex_unlock(philos[i]->last_eat_mutex);
+				pthread_mutex_unlock(philos[i]->print_mutex);
 				break ;
 			}
 			else
-				pthread_mutex_unlock(philos[i]->time_mutex);
+			{
+				pthread_mutex_unlock(philos[i]->last_eat_mutex);
+				pthread_mutex_unlock(philos[i]->print_mutex);
+			}
 			i++;
 		}
 	}

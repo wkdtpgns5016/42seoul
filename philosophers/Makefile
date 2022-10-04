@@ -10,15 +10,14 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Werror -Wextra
 
 NAME = philo
 
 SRCS = 
 
-SRCS_MANDATORY = srcs/ft_free.c \
-				 srcs/monitor.c \
+SRCS_MANDATORY = srcs/monitor.c \
 				 srcs/main.c \
 				 srcs/philo.c \
 				 srcs/philo_action.c \

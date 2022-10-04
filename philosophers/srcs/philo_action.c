@@ -21,23 +21,30 @@ int	put_down_fork(t_philo *philo)
 
 int	pick_up_fork(t_philo *philo)
 {
-	uint64_t	time;
-
-	if (philo->philo_num % 2 == 0)
+	if (philo->info->num_of_philo == 1)
 	{
-		pthread_mutex_lock(philo->table->fork[philo->left_fork]);
 		pthread_mutex_lock(philo->table->fork[philo->right_fork]);
+		print_philo(philo, "is has taken a fork");
+		while (check_dead(philo) != 1)
+			;
 	}
 	else
 	{
-		pthread_mutex_lock(philo->table->fork[philo->right_fork]);
-		pthread_mutex_lock(philo->table->fork[philo->left_fork]);
+		if (philo->philo_num % 2 == 0)
+		{
+			pthread_mutex_lock(philo->table->fork[philo->right_fork]);
+			print_philo(philo, "is has taken a fork");
+			pthread_mutex_lock(philo->table->fork[philo->left_fork]);
+			print_philo(philo, "is has taken a fork");
+		}
+		else
+		{
+			pthread_mutex_lock(philo->table->fork[philo->left_fork]);
+			print_philo(philo, "is has taken a fork");
+			pthread_mutex_lock(philo->table->fork[philo->right_fork]);
+			print_philo(philo, "is has taken a fork");
+		}
 	}
-	pthread_mutex_lock(philo->table->print_mutex);
-	time = get_time() - philo->info->start_time;
-	if (philo->table->print_able)
-		print_message("is has taken a fork", philo->philo_num + 1, time);
-	pthread_mutex_unlock(philo->table->print_mutex);
 	return (0);
 }
 
@@ -60,25 +67,13 @@ int	eating(t_philo *philo)
 
 int	sleeping(t_philo *philo)
 {
-	uint64_t	time;
-
-	pthread_mutex_lock(philo->table->print_mutex);
-	time = get_time() - philo->info->start_time;
-	if (philo->table->print_able)
-		print_message("is sleeping", philo->philo_num + 1, time);
-	pthread_mutex_unlock(philo->table->print_mutex);
+	print_philo(philo, "is sleeping");
 	ft_sleep(philo->info->time_to_sleep * 1000);
 	return (0);
 }
 
 int	thinking(t_philo *philo)
 {
-	uint64_t	time;
-
-	pthread_mutex_lock(philo->table->print_mutex);
-	time = get_time() - philo->info->start_time;
-	if (philo->table->print_able)
-		print_message("is thinking", philo->philo_num + 1, time);
-	pthread_mutex_unlock(philo->table->print_mutex);
+	print_philo(philo, "is thinking");
 	return (0);
 }

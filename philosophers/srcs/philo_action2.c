@@ -12,6 +12,17 @@
 
 #include "../include/philo.h"
 
+void	print_philo(t_philo *philo, char *msg)
+{
+	uint64_t	time;
+
+	pthread_mutex_lock(philo->table->print_mutex);
+	time = get_time() - philo->info->start_time;
+	if (philo->table->print_able)
+		print_message(msg, philo->philo_num + 1, time);
+	pthread_mutex_unlock(philo->table->print_mutex);
+}
+
 int	check_dead(t_philo *philo)
 {
 	pthread_mutex_lock(philo->table->flag_mutex);

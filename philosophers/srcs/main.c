@@ -25,7 +25,7 @@ int	check_arg(int ac, char **av)
 		num = ft_atoi(av[i]);
 		if (num <= 0)
 			return (1);
-		if (i == 1 && num < 2)
+		if (i == 1 && num < 1)
 			return (1);
 		i++;
 	}

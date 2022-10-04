@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sehjang <sehjang@student.42seoul.kr>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/04 14:09:46 by sehjang           #+#    #+#             */
+/*   Updated: 2022/10/04 14:09:50 by sehjang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -71,6 +83,7 @@ int				sleeping(t_philo *table);
 int				thinking(t_philo *table);
 void			dead(t_philo *table, uint64_t time);
 int				check_dead(t_philo *philo);
+void			print_philo(t_philo *philo, char *msg);
 
 t_monitor		set_monitor(t_info *info, t_table *table);
 void			*monitor_philo(void *data);

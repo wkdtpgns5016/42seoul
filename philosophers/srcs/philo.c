@@ -33,7 +33,7 @@ void	*action(void *data)
 	pthread_mutex_lock(philo->last_eat_mutex);
 	philo->last_eat_time = get_time();
 	pthread_mutex_unlock(philo->last_eat_mutex);
-	if (philo->philo_num % 2 == 0)
+	if (philo->philo_num % 2 != 0)
 		ft_sleep((philo->info->time_to_eat / 2) * 1000);
 	while (check_dead(philo) == 0)
 	{
@@ -42,6 +42,7 @@ void	*action(void *data)
 		put_down_fork(philo);
 		sleeping(philo);
 		thinking(philo);
+		usleep(500);
 	}
 	return (0);
 }

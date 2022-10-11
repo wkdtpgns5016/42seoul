@@ -13,14 +13,17 @@
 CC = c++
 CFLAGS = -Wall -Werror -Wextra -std=c++98
 
-SRCS = megaphone.cpp
+SRCS = main.cpp \
+	   Contact.cpp \
+	   PhoneBook.cpp
+
 OBJS = $(SRCS:.cpp=.o)
 NAME = a.out
 HEAD = .
 
 all: $(NAME)
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) $(CFLAGS) -c -I $(HEAD) $< -o $@
 
 $(NAME): $(OBJS)

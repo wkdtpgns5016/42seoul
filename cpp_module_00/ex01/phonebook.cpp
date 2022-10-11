@@ -1,44 +1,45 @@
-#include "phonebook.hpp"
+#include "PhoneBook.hpp"
 
-void    print_phone_book(PhoneBook phoneBook)
+int PhoneBook::get_index_empty_contact()
 {
     int i = 0;
-    const char *s;
-    std::string str = phoneBook.first_name + "|" + phoneBook.name + "|" + phoneBook.nickname + "|" + phoneBook.phone_number + "|" + phoneBook.secret;
 
-    if (str.length() > 10)
-    {
-        s = str.c_str();
-        while (i < 9)
-            std::cout << s[i++];
-        std::cout << "." << std::endl;
+    while (i < 8) {
+        if (this->contact[i].get_index() < 0)
+            return (i);
+        i++;
     }
+    return (-1);
 }
 
-int    process_command(PhoneBook *phoneBooks, std::string str, int *exit_code)
+void    PhoneBook::del_contacts() {
+    int i = 0;
+
+    contact[i].init_contact();
+    i++;
+    while (i < 8) {
+        
+    }
+    
+}
+void    PhoneBook::command_add(std::string first_name, std::string last_name, std::string nickname)
 {
-    if (str.compare("ADD") == 0)
-    {
+    int index;
+    
+    index = get_index_empty_contact();
+    if (index >= 0)
+        this->contact[index].change_contact(index, first_name, last_name, nickname);
+    else {
 
     }
-    else if (str.compare("SEARCH") == 0)
-    {
-
-    }
-    else if (str.compare("EXIT") == 0)
-        *exit_code = 0;
 }
-
-int main(int ac, char **av) 
+void    PhoneBook::command_search()
 {
-    PhoneBook   phoneBooks[8];
-    std::string command;
-    int         exit_flag = 1;
+    int i = 0;
 
-    while (!exit_flag)
-    {
-        std::cin >> command;
-        exit_flag = process_command(phoneBooks, command, &exit_flag);
+    while (i < 8 && this->contact[i].get_index() > 0) {
+        this->contact[i].print_contact();
+        i++;
     }
-    return 0;
 }
+void    PhoneBook::command_exit() { exit(0); }

@@ -22,7 +22,7 @@ philosophers
 			해당 인자값은 선택사항입니다. 모든 철학자가 'number_of_times_each_philosopher_must_eat' 횟수만큼 밥을 먹었다면, 
 			시뮬레이션이 종료됩니다. 해당 값이 명시되어 있지 않다면, 철학자가 한 명이라도 사망할 때까지 시뮬레이션은 계속됩니다.
 
-context swiching
+컨텍스트 스위칭(context swiching)
 	https://applefarm.tistory.com/105
 
 	멀티프로세스 환경에서 CPU가 어떤 하나의 프로세스를 실행하고 있는 상태에서 인터럽트 요청에 의해 

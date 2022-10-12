@@ -1,63 +1,52 @@
 #include "PhoneBook.hpp"
 
-std::string	*get_info(void)
+std::string get_info(std::string info)
 {
 	std::string str;
-	std::string info[3];
 	
 	str = "";
-	while (str.compare(""))
+	while (str.compare("") == 0)
 	{
-		std::cout << "Frist name: ";
+		std::cout << info;
 		std::cin >> str;
-		info[0] = str;
 	}
-	str = "";
-	while (str.compare(""))
-	{
-		std::cout << "Last name: ";
-		std::cin >> str;
-		info[1] = str;
-	}
-	str = "";
-	while (str.compare(""))
-	{
-		std::cout << "Nickname: ";
-		std::cin >> str;
-		info[2] = str;
-	}
-	return (info);
+	return (str);
 }
 
-void	process(PhoneBook phoneBook, std::string command)
+void	process(PhoneBook *phoneBook, std::string command, int *exit)
 {
-	std::string *info;
+	std::string first;
+	std::string last;
+	std::string nick;
 
-	if (command.compare("ADD"))
+	if (command.compare("ADD") == 0)
 	{
-		info = get_info();
-		phoneBook.command_add(info[0], info[1], info[2]);
+		first = get_info("Frist Name: ");
+		last = get_info("Last Name: ");
+		nick = get_info("Nick Name: ");
+		phoneBook->command_add(first, last, nick);
 	}
-	else if (command.compare("SEARCH"))
+	else if (command.compare("SEARCH") == 0)
 	{
-		phoneBook.command_search();
+		phoneBook->command_search();
 	}
-	else if (command.compare("EXIT"))
+	else if (command.compare("EXIT") == 0)
 	{
-		phoneBook.command_exit();
+		*exit = 0;
 	}
 }
 
-int main(int ac, char **av) 
+int main(void) 
 {
     PhoneBook   phoneBooks;
     std::string command;
     int         exit_flag = 1;
 
-    while (!exit_flag)
+    while (exit_flag)
     {
+		std::cout << "COMMAND: ";
         std::cin >> command;
-		process(phoneBooks, command);
+		process(&phoneBooks, command, &exit_flag);
     }
     return 0;
 }

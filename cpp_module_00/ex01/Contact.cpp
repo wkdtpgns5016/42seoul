@@ -2,10 +2,7 @@
 
 Contact::Contact()
 {
-    set_index(-1);
-    set_first_name("");
-    set_last_name("");
-    set_nickname("");
+    init_contact();
 }
 
 void    Contact::change_contact(int index, std::string first_name, std::string last_name, std::string nickname)
@@ -28,17 +25,20 @@ void    Contact::print_contact()
 {
     int i = 0;
     const char *s;
-    std::string str = get_index() + "|" + get_frist_name() + "|" + get_last_name() + "|" + get_nickname();
 
-    if (str.length() > 10)
+    std::string str = get_frist_name() + "|" + get_last_name() + "|" + get_nickname();
+    std::cout << get_index() << "|";
+    if (str.length() > 8)
     {
         s = str.c_str();
-        while (i < 9)
+        while (i < 7)
             std::cout << s[i++];
         std::cout << "." << std::endl;
     }
     else
+    {
         std::cout << str << std::endl;
+    }
 }
 
 int Contact::get_index() { return this->index; }

@@ -13,7 +13,6 @@ public:
     void    del_contacts();
     void    command_add(std::string first_name, std::string last_name, std::string nickname);
     void    command_search();
-    void    command_exit();
 };
 
 #endif

@@ -9,7 +9,7 @@ int PhoneBook::get_index_empty_contact()
             return (i);
         i++;
     }
-    return (-1);
+    return (i);
 }
 
 void    PhoneBook::del_contacts() {

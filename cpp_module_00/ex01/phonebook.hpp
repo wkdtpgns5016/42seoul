@@ -11,8 +11,8 @@ private:
 public:
     int get_index_empty_contact();
     void    del_contacts();
-    void    command_add(std::string first_name, std::string last_name, std::string nickname);
-    void    command_search();
+    int    command_add(std::string first_name, std::string last_name, std::string nickname, std::string phone_number, std::string darkest_secret);
+    int    command_search();
 };
 
 #endif

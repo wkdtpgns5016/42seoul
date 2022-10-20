@@ -4,36 +4,56 @@ std::string get_info(std::string info)
 {
 	std::string str;
 	
-	str = "";
-	while (str.compare("") == 0)
+	while (1)
 	{
 		std::cout << info;
-		std::cin >> str;
+		std::getline(std::cin, str);
+		if (std::cin.eof())
+			break ;
+		if (str.empty())
+			continue ;
+		else break ;
 	}
 	return (str);
 }
 
-void	process(PhoneBook *phoneBook, std::string command, int *exit)
+int	process(PhoneBook *phoneBook, std::string command, int *exit)
 {
 	std::string first;
 	std::string last;
 	std::string nick;
+	std::string phone;
+	std::string secret;
 
 	if (command.compare("ADD") == 0)
 	{
 		first = get_info("Frist Name: ");
+		if (first.empty())
+			return 1;
 		last = get_info("Last Name: ");
+		if (last.empty())
+			return 1;
 		nick = get_info("Nick Name: ");
-		phoneBook->command_add(first, last, nick);
+		if (nick.empty())
+			return 1;
+		phone = get_info("Phone Number: ");
+		if (phone.empty())
+			return 1;
+		secret = get_info("Darkest Secret: ");
+		if (secret.empty())
+			return 1;
+		return phoneBook->command_add(first, last, nick, phone, secret);
 	}
 	else if (command.compare("SEARCH") == 0)
 	{
-		phoneBook->command_search();
+		return phoneBook->command_search();
 	}
 	else if (command.compare("EXIT") == 0)
 	{
 		*exit = 0;
+		return 0;
 	}
+	return 0;
 }
 
 int main(void) 
@@ -45,8 +65,17 @@ int main(void)
     while (exit_flag)
     {
 		std::cout << "COMMAND: ";
-        std::cin >> command;
-		process(&phoneBooks, command, &exit_flag);
+		std::getline(std::cin, command);
+		if (std::cin.eof())
+		{
+			std::cout << std::endl;
+			break ;
+		}
+		if (process(&phoneBooks, command, &exit_flag))
+		{
+			std::cout << std::endl;
+			break ;
+		}
     }
     return 0;
 }

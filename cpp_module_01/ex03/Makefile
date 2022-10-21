@@ -18,7 +18,7 @@ NAME = a.out
 SRCS = main.cpp \
 	   HumanA.cpp \
 	   HumanB.cpp \
-	   Weapon.cpp \
+	   Weapon.cpp 
 OBJS = $(SRCS:.cpp=.o)
 HEAD = .
 

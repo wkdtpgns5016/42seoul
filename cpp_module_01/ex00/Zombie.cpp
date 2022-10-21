@@ -4,10 +4,6 @@ void	Zombie::setName(std::string name) {
 	this->name = name;
 }
 
-Zombie::Zombie() {
-	this->setName(NULL);
-}
-
 Zombie::Zombie(std::string name) {
 	this->setName(name);
 }

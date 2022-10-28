@@ -2,7 +2,6 @@
 
 void    print_upper(char *str)
 {
-    std::string str1 = str;
     while (*str != 0)
     {
         std::cout << (char)toupper(*str);

@@ -1,14 +1,14 @@
-this is test file.
-this is test file.
-this is test file.
-this is test file.
+this is tEst filE.
+this is tEst filE.
+this is tEst filE.
+this is tEst filE.
 
-Create a program that takes three parameters in the following order: a filename and
-two strings, SS1 and s2.
-It will open the file <filename> and copies its content into a new file
-<filename>.replace, replacing every occurrence of SS1 with s2.
-Using C file manipulation functions is forbidden and will be considered cheating. All
-the member functions of the class std::string are allowed, except replace. Use them
-wisely!
-Of course, handle unexpected inputs and errors. You have to create and turn in your
-own tests to ensure your program works as expected.
+CrEatE a program that takEs thrEE paramEtErs in thE following ordEr: a filEnamE and
+two strings, s1 and s2.
+It will opEn thE filE <filEnamE> and copiEs its contEnt into a nEw filE
+<filEnamE>.rEplacE, rEplacing EvEry occurrEncE of s1 with s2.
+Using C filE manipulation functions is forbiddEn and will bE considErEd chEating. All
+thE mEmbEr functions of thE class std::string arE allowEd, ExcEpt rEplacE. UsE thEm
+wisEly!
+Of coursE, handlE unExpEctEd inputs and Errors. You havE to crEatE and turn in your
+own tEsts to EnsurE your program works as ExpEctEd.

@@ -32,16 +32,18 @@ Harl::Harl()
 	this->msg_level[3] = "ERROR";
 }
 
+
 int	Harl::get_index_level(std::string level)
 {
-	int i;
+	int i = 0;
+	int flag = 1;
 
-	for (i=0; i<4; i++)
+	while (flag != 0 && i < 4)
 	{
-		if (this->msg_level[i].compare(level) == 0)
-			break;
+		flag = this->msg_level[i].compare(level);
+		i++;
 	}
-	return (i);
+	return (i - 1);
 }
 
 void Harl::complain(std::string level)
@@ -54,11 +56,22 @@ void Harl::complain(std::string level)
 	f[2] = &Harl::warning;
 	f[3] = &Harl::error;
 	idx = get_index_level(level);
-	if (idx >= 4)
+	while (idx >= 4)
 		return ;
-	while (idx < 4)
-	{
-		(this->*f[idx++])();
+	switch (idx) {
+	case 0:
+		(this->*f[0])();
 		std::cout << std::endl;
+	case 1:
+		(this->*f[1])();
+		std::cout << std::endl;
+	case 2:
+		(this->*f[2])();
+		std::cout << std::endl;
+	case 3:
+		(this->*f[3])();
+		std::cout << std::endl;
+	default:
+		break;
 	}
 }

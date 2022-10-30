@@ -9,12 +9,12 @@ class Fixed {
 		static const int fractional_bits = 8;
 	
 	public:
-		Fixed &operator=(Fixed &fixed);
 		Fixed();
 		Fixed(const Fixed &fixed);
 		~Fixed();
 		int getRawBits(void) const;
 		void setRawBits(int const raw);
+		Fixed &operator=(const Fixed &fixed);
 };
 
 #endif

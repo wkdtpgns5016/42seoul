@@ -66,6 +66,11 @@ int main(int ac, char **av)
 		exit(1);
 	}
 	content = read_file_into_string(av[1]);
+	if (content.empty())
+	{
+		std::cout << "Error: file is empty\n";
+		exit(1);
+	}
 	replace = convert_s1_to_s2(content, av[2], av[3]);
 	write_string_to_file(av[1], replace);
 	return (0);

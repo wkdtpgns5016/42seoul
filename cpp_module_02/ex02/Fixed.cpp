@@ -1,8 +1,7 @@
 #include "Fixed.hpp"
 
-Fixed::Fixed()
+Fixed::Fixed() : raw_bits(0)
 {
-	this->raw_bits = 0;
 }
 
 Fixed::Fixed(const Fixed &fixed) : raw_bits(fixed.getRawBits())
@@ -13,7 +12,7 @@ Fixed::Fixed(const int raw_bits) : raw_bits(raw_bits << this->fractional_bits)
 {
 }
 
-Fixed::Fixed(const float raw_bits) : raw_bits(static_cast<int>(roundf(raw_bits * (1 << this->fractional_bits))))
+Fixed::Fixed(const float raw_bits) : raw_bits((int)(roundf(raw_bits * (1 << this->fractional_bits))))
 {
 }
 
@@ -33,7 +32,7 @@ void Fixed::setRawBits(int const raw)
 
 float Fixed::toFloat( void ) const
 {
-	return (static_cast<float>(this->raw_bits) / (1 << this->fractional_bits));
+	return ((float)(this->raw_bits) / (1 << this->fractional_bits));
 }
 
 int Fixed::toInt( void ) const

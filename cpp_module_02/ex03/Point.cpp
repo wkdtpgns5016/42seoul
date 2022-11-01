@@ -2,7 +2,10 @@
 
 Point::Point() : x(0), y(0)
 {
+}
 
+Point::Point(const Fixed x, const Fixed y) : x(x), y(y)
+{
 }
 
 Point::Point(const Point& point)
@@ -13,13 +16,13 @@ Point::Point(const Point& point)
 
 Point::~Point()
 {
-
 }
 
 Point& Point::operator= (const Point& point)
 {
-	this->x = point.x;
-	this->y = point.y;
+	this->x = point.getX();
+	this->y = point.getY();
+	return (*this);
 }
 
 Fixed Point::getX(void) const
@@ -30,4 +33,9 @@ Fixed Point::getX(void) const
 Fixed Point::getY(void) const
 {
 	return (this->y);
+}
+
+std::ostream& operator<<(std::ostream& o, const Point& p)
+{
+	return (o << "(" << p.getX().toFloat() << ", " << p.getY().toFloat() << ")");
 }

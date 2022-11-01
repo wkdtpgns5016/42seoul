@@ -1,9 +1,8 @@
 #include "Fixed.hpp"
 
-Fixed::Fixed()
+Fixed::Fixed() : raw_bits(0)
 {
 	std::cout << "Default constructor called" << "\n";
-	this->raw_bits = 0;
 }
 
 Fixed::Fixed(const Fixed &fixed) : raw_bits(fixed.getRawBits())

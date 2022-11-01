@@ -1,8 +1,8 @@
-#include "ClapTrap.hpp"
+#include "ScavTrap.hpp"
 #include <iostream>
 
 int main( void ) {
-	ClapTrap A = ClapTrap("A");
+	 A = ClapTrap("A");
 	ClapTrap B = ClapTrap("B");
 
 	A.setAttackDamage(5);

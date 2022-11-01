@@ -16,7 +16,9 @@ CFLAGS = -g -Wall -Werror -Wextra -std=c++98
 NAME = a.out
 
 SRCS = main.cpp \
-	   Fixed.cpp 
+	   Fixed.cpp \
+	   Point.cpp \
+	   bsq.cpp 
 OBJS = $(SRCS:.cpp=.o)
 HEAD = .
 

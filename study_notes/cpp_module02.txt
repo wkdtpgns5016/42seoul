@@ -1,3 +1,34 @@
 cpp_module02
 
-Orthodox Canonical Form,
+Orthodox Canonical Form
+	아래 4가지 규칙을 사용하지 않더라고 규정대로 클래스를 작성해야한다.
+
+	1.디폴트 생성자(Default constructor)
+	2.복사 생성자(Copy constructor)
+	3.할당 연산자 오버로딩(Copy assignment operator)
+	4.소멸자(Destructor)
+
+맴버변수 초기화 리스트
+	https://blockdmask.tistory.com/510
+
+
+삼각형 내부 판별
+	삼각형의 세 꼭지점이 A,B,C이고 어떤 점 P가 삼각형의 내부인지는 PA x PC , PC x PB, PB x PA (x는 외적을 뜻합니다.)을 
+	각각 구해서 Z component값의 부호가 모두 동일하면 삼각형의 내부이고 그렇지 않으면 삼각형의 외부. (0인 경우는 삼각형의 경계)
+	풀이하면 아래 3개의 식의 값을 구한 후 각 값의 부호가 모두 동일하면 삼각형 내부.
+	[식1] (Xa-Xp)(Yc-Yp)-(Xc-Xp)(Ya-Yp)
+	[식2] (Xc-Xp)(Yb-Yp)-(Xb-Xp)(Yc-Yp)
+	[식3] (Xb-Xp)(Ya-Yp)-(Xa-Xp)(Yb-Yp)
+
+고정소수점
+	https://developer-eun-diary.tistory.com/9
+	https://bab2min.tistory.com/183
+	부호비트, 지수부, 가수부로 구성
+
+	고정 소수점 장점
+		1. 변환하기 쉬움
+		2. 고정 소수점으로 저장된 변수들끼리의 계산 과정이 쉬움
+
+	고정 소수점 단점
+		1. 비트 수 대비 표현 가능한 수의 범위 좁음
+		2. 표현 가능한 수가 적어 정밀도 역시 낮음

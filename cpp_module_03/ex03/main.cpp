@@ -1,9 +1,9 @@
-#include "ScavTrap.hpp"
+#include "FragTrap.hpp"
 #include <iostream>
 
 int main( void ) {
-	ScavTrap A = ScavTrap("A");
-	ScavTrap B = ScavTrap("B");
+	FragTrap A = FragTrap("A");
+	FragTrap B = FragTrap("B");
 
 	A.attack("B");
 	B.takeDamage(A.getAttackDamage());
@@ -12,6 +12,6 @@ int main( void ) {
 	A.attack("B");
 	B.takeDamage(A.getAttackDamage());
 	B.attack("A");
-	A.guardGate();
+	A.highFivesGuys();
 	return 0;
 }

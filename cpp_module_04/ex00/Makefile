@@ -16,10 +16,11 @@ CFLAGS = -g -Wall -Werror -Wextra -std=c++98 -Wno-shadow -Wshadow
 NAME = a.out
 
 SRCS = main.cpp \
-	   ClapTrap.cpp \
-	   ScavTrap.cpp \
-	   FragTrap.cpp \
-	   DiamondTrap.cpp
+	   Animal.cpp \
+	   Dog.cpp \
+	   Cat.cpp \
+	   WrongAnimal.cpp \
+	   WrongCat.cpp
 OBJS = $(SRCS:.cpp=.o)
 HEAD = .
 

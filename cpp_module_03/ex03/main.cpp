@@ -1,9 +1,9 @@
-#include "FragTrap.hpp"
+#include "DiamondTrap.hpp"
 #include <iostream>
 
 int main( void ) {
-	FragTrap A = FragTrap("A");
-	FragTrap B = FragTrap("B");
+	DiamondTrap A = DiamondTrap("A");
+	DiamondTrap B = DiamondTrap("B");
 
 	A.attack("B");
 	B.takeDamage(A.getAttackDamage());
@@ -13,5 +13,6 @@ int main( void ) {
 	B.takeDamage(A.getAttackDamage());
 	B.attack("A");
 	A.highFivesGuys();
+	A.whoAmI();
 	return 0;
 }

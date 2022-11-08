@@ -11,6 +11,7 @@ int main( void ) {
 	B.setAttackDamage(3);
 	B.attack("A");
 	A.takeDamage(3);
+	A.beRepaired(3);
 	A.attack("B");
 	B.takeDamage(5);
 	

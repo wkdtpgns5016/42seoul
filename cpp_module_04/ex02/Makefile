@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC = c++
-CFLAGS = -g -Wall -Werror -Wextra -std=c++98 -Wno-shadow -Wshadow
+CFLAGS = -g -Wall -Werror -Wextra -std=c++98
 
 NAME = a.out
 

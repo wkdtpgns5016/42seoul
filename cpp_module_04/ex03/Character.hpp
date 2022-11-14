@@ -13,7 +13,7 @@ class Character : public ICharacter
 		Character();
 		Character(const Character& character);
 		Character(std::string const & name);
-		~Character();
+		virtual ~Character();
 		Character& operator=(const Character& character);
 
 		AMateria* getInventory(int idx) const;

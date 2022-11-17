@@ -13,9 +13,10 @@
 CC = c++
 CFLAGS = -g -Wall -Werror -Wextra -std=c++98 
 
-NAME = convert
+NAME = a.out
 
-SRCS = main.cpp 
+SRCS = main.cpp \
+	   Serialization.cpp
 OBJS = $(SRCS:.cpp=.o)
 HEAD = .
 

@@ -15,7 +15,8 @@ CFLAGS = -g -Wall -Werror -Wextra -std=c++98
 
 NAME = convert
 
-SRCS = main.cpp 
+SRCS = main.cpp \
+	   Conversion.cpp
 OBJS = $(SRCS:.cpp=.o)
 HEAD = .
 

@@ -18,4 +18,6 @@ class Array
 		unsigned int size() const;
 };
 
+#include "Array.tpp"
+
 #endif

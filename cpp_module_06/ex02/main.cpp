@@ -88,6 +88,7 @@ int main()
 		Base& bRef = *bPtr;
 		identify(bPtr);
 		identify(bRef);
+		delete bPtr;
 		std::cout << std::endl;
 	}
 	return (0);

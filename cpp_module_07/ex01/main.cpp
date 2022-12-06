@@ -8,7 +8,7 @@ void iter(const T arr[], int size, void (*f)(const T& t))
 }
 
 template <typename T>
-void print(const T& t)
+void printT(const T& t)
 {
 	std::cout << t << " ";
 }
@@ -17,21 +17,21 @@ int main()
 {
 	std::cout << "================int=================" << std::endl;
 	int arr[] = {0, 1, 2, 3, 4, 5};
-	iter(arr, 5, print<int>);
+	iter(arr, 5, printT<int>);
 	std::cout << std::endl;
 
 	std::cout << "================double==============" << std::endl;
 	double arr2[] = {0.1, 1.1, 2.1, 3.1, 4.1, 5.1};
-	iter(arr2, 5, print<double>);
+	iter(arr2, 5, printT<double>);
 	std::cout << std::endl;
 
 	std::cout << "================char================" << std::endl;
 	char arr3[] = {'a', 'b', 'c', 'd', 'e', 'f'};
-	iter(arr3, 5, print<char>);
+	iter(arr3, 5, printT<char>);
 	std::cout << std::endl;
 
 	std::cout << "================string===============" << std::endl;
 	std::string arr4[] = {"one", "two", "three", "four", "five"};
-	iter(arr4, 5, print<std::string>);
+	iter(arr4, 5, printT<std::string>);
 	std::cout << std::endl;
 }

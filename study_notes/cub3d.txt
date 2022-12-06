@@ -1,0 +1,10 @@
+cub3d
+
+raycasting - https://365kim.tistory.com/42
+
+ray tracing
+광원을 실시간으로 추적하여 빛의 굴절 및 반사 등을 계산하여 렌더링을 진행
+
+아핀 텍스처 매핑
+선형 보간법을 활용하여 텍스처를 매핑
+

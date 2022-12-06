@@ -6,11 +6,13 @@
 #include <string>
 #include <cstdlib>
 #include <iomanip>
+#include <cmath>
 
 class Conversion
 {
 	private:
 		std::string _value;
+		double _doubleValue;
 		
 	public:
 		Conversion();

@@ -13,7 +13,7 @@ Array<T>::Array(unsigned int n) : _size(n), _data(new T[n])
 }
 
 template <typename T>
-Array<T>::Array(const Array& array) : _size(array._size), _data(new T[array._size])
+Array<T>::Array(const Array<T>& array) : _size(array._size), _data(new T[array._size])
 {
 	for (unsigned int i=0; i<array._size; i++)
 		this->_data[i] = array._data[i];
@@ -26,7 +26,7 @@ Array<T>::~Array()
 }
 
 template <typename T>
-const Array& Array<T>::operator=(const Array& array)
+const Array<T>& Array<T>::operator=(const Array<T>& array)
 {
 	if (this != &array)
 	{

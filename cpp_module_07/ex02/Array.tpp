@@ -35,7 +35,7 @@ const Array<T>& Array<T>::operator=(const Array<T>& array)
 		for (unsigned int i=0; i<array._size; i++)
 			this->_data[i] = array._data[i];
 	}
-	(*this);
+	return (*this);
 }
 
 template <typename T>
@@ -43,7 +43,10 @@ T& Array<T>::operator[](unsigned int idx)
 {
 	if (idx >= 0 && idx < this->_size)
 	{
-		return (this->_data[idx]);
+		if (this->_data == NULL)
+			throw std::exception("This array is empty.");
+		else
+			return (this->_data[idx]);
 	}
 	else
 		throw std::out_of_range("out_of_range");

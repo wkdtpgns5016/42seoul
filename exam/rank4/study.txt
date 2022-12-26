@@ -1,0 +1,28 @@
+필요한 헤더파일
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <string.h>
+
+
+필요한 구조체
+	양방향 리스트 : t_list
+		명령어 토큰 - char **args
+		길이 - int length
+		타입 - int type
+		파이프 - int pipe[2];
+		이전 주소 - struct s_list *prev;
+		다음 주소 - struct s_list *next;
+
+필요한 함수
+	ft_strlen : 문자열 길이 함수
+	ft_strdup : 문자열 복제 함수
+	show_error : 에러 처리 함수
+	exit_fatal : 페이탈 에러 처리 함수
+	exit_fatal_ptr : 페이탈 포인터 에러 처리 함수
+	add_arg : 명령어 토큰 추가 함수
+	list_push : next에 새로운 노드 추가 함수
+	list_rewind : 이전 노드로 이동 함수
+	list_clear : 리스트 비우는 함수
+	parse_arg : 데이터 파싱 함수
+	exec_cmds : 리스트 돌면서 명령어 수행 함수
+	exec_cmd : pipe, fork 수행 함수

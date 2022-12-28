@@ -23,8 +23,11 @@ MateriaSource::~MateriaSource()
 
 MateriaSource& MateriaSource::operator=(const MateriaSource& materiaSource)
 {
-	for (int idx=0; idx<4; idx++)
-		this->_aMateria[idx] = materiaSource.getAMateria(idx);
+	if (this != &materiaSource)
+	{
+		for (int idx=0; idx<4; idx++)
+			this->_aMateria[idx] = materiaSource.getAMateria(idx);
+	}
 	return (*this);
 }
 

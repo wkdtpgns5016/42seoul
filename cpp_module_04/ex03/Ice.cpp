@@ -17,7 +17,10 @@ Ice::~Ice()
 
 Ice& Ice::operator=(const Ice& ice)
 {
-	this->_type = ice.getType();
+	if (this != &ice)
+	{
+		this->_type = ice.getType();
+	}
 	return (*this);
 }
 

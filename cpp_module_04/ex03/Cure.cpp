@@ -17,7 +17,10 @@ Cure::~Cure()
 
 Cure& Cure::operator=(const Cure& cure)
 {
-	this->_type = cure.getType();
+	if (this != &cure)
+	{
+		this->_type = cure.getType();
+	}
 	return (*this);
 }
 

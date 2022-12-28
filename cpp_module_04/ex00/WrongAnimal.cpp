@@ -18,8 +18,11 @@ WrongAnimal::~WrongAnimal()
 
 WrongAnimal& WrongAnimal::operator=(const WrongAnimal& wrongAnimal)
 {
-	this->_type = wrongAnimal.getType();
-	std::cout << "WrongAnimal's Copy assignment operator called." << std::endl;
+	if (this != &wrongAnimal)
+	{
+		this->_type = wrongAnimal.getType();
+		std::cout << "WrongAnimal's Copy assignment operator called." << std::endl;
+	}
 	return (*this);
 }
 

@@ -32,9 +32,12 @@ Character::~Character()
 
 Character& Character::operator=(const Character& character)
 {
-	this->_name = character.getName();
-	for (int i=0; i<4; i++)
-		this->_inventory[i] = character.getInventory(i);
+	if (this != &character)
+	{
+		this->_name = character.getName();
+		for (int i=0; i<4; i++)
+			this->_inventory[i] = character.getInventory(i);
+	}
 	return (*this);
 }
 

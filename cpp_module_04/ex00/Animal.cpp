@@ -18,8 +18,11 @@ Animal::~Animal()
 
 Animal& Animal::operator=(const Animal& animal)
 {
-	this->_type = animal.getType();
-	std::cout << "Animal's Copy assignment operator called." << std::endl;
+	if (this != &animal)
+	{
+		this->_type = animal.getType();
+		std::cout << "Animal's Copy assignment operator called." << std::endl;
+	}
 	return (*this);
 }
 

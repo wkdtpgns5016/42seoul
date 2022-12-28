@@ -19,8 +19,11 @@ WrongCat::~WrongCat()
 
 WrongCat& WrongCat::operator=(const WrongCat& wrongCat)
 {
-	this->_type = wrongCat.getType();
-	std::cout << "WrongCat's Copy assignment operator called." << std::endl;
+	if (this != &wrongCat)
+	{
+		this->_type = wrongCat.getType();
+		std::cout << "WrongCat's Copy assignment operator called." << std::endl;
+	}
 	return (*this);
 }
 

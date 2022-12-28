@@ -22,7 +22,10 @@ AMateria::~AMateria()
 
 AMateria& AMateria::operator=(const AMateria& aMateria)
 {
-	this->_type = aMateria.getType();
+	if (this != &aMateria)
+	{
+		this->_type = aMateria.getType();
+	}
 	return (*this);
 }
 

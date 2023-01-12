@@ -69,3 +69,9 @@ Docker
      Docker compose는 start, stop, status, 실행 중의 컨테이너의 로그 출력, 약간의 커맨드의 실행이과 같은 기능도 가지고 있다.
 
     docker-compose.ym 파일에 기재되어 있는 내용은 기본적으로 docker build, docker run 커맨드 지정하는 것이 가능한 옵션이 되지만, Docker compose의 yaml 파일로써 기술하는 것으로 여러 개의 컨테이너로부터 만들어진 서비스를 조감하여 보는 것도 가능해져, 보존성의 수고를 가볍게 한다.
+
+2023-01-12 : docker compose 작성
+    1. mariadb 컴포즈 세팅
+    2. wordpress 컴포즈 세팅
+        1) wp-config 세팅 다시 해야함
+

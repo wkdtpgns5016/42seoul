@@ -1,0 +1,12 @@
+FROM debian:buster
+EXPOSE 3306
+
+RUN	apt-get -y update &&\
+    apt-get -y upgrade &&\
+    apt-get -y install mariadb-server\
+    vim
+
+COPY /conf/50-server.cnf /etc/mysql/50-server.cnf
+COPY /tools/setup.sh setup.sh
+
+ENTRYPOINT [ "bash", "setup.sh" ]

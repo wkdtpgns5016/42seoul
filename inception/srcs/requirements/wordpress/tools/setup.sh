@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sleep 5
 cp /var/www/html/wp-config-sample.php \
     /var/www/html/wp-config.php
     
@@ -11,4 +11,18 @@ sed -i 's/localhost/mariadb:3306/gi' /var/www/html/wp-config.php
 cd /var/www/html
 wp config shuffle-salts --allow-root
 cd /
+if ! wp core is-installed --allow-root --path=/var/www/html; then
+    wp core install --url=$WORDPRESS_URL \
+                --title=inception \
+                --admin_user=$WORDPRESS_ADMIN_USER \
+                --admin_password=$WORDPRESS_ADMIN_PASSWORD \
+                --admin_email=$WORDPRESS_ADMIN_EMAIL \
+                --allow-root \
+                --path=/var/www/html
+    wp user create $WORDPRESS_USER_ID $WORDPRESS_USER_EMAIL \
+                --user_pass=$WORDPRESS_USER_PASSWORD \
+                --allow-root \
+                --path=/var/www/html
+fi
+
 service php7.3-fpm start | php-fpm7.3 -F

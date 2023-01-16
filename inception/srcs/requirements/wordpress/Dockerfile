@@ -37,4 +37,4 @@ RUN curl -O \
 
 # wp-config 설정 및 php-fpm 서비스 시작
 COPY /tools/setup.sh setup.sh
-# ENTRYPOINT [ "bash", "/setup.sh" ]
+ENTRYPOINT [ "bash", "setup.sh" ]

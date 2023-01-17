@@ -27,7 +27,7 @@ server {
         listen 443 ssl default_server;
         listen [::]:443 ssl default_server;
 
-        ssl_protocols  TLSv1.2 TLSv1.3;
+        ssl_protocols   TLSv1.3;
     
         ssl_certificate /etc/ssl/certs/server.crt;
         ssl_certificate_key /etc/ssl/private/server_pkey.pem;
@@ -51,14 +51,14 @@ server {
         root /var/www/html;
 
         # Add index.php to the list if you are using PHP
-        index index.html index.htm index.nginx-debian.html index.php;
+        index index.html index.htm index.php;
 
         server_name sehjang.42.fr;
 
         location / {
                 # First attempt to serve request as file, then
                 # as directory, then fall back to displaying a 404.
-                try_files $uri $uri/ =404;
+                try_files $uri $uri/ /index.php;
         }
 
         # pass PHP scripts to FastCGI server

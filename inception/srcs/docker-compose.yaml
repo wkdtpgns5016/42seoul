@@ -29,7 +29,7 @@ services:
         tty: true
         volumes:
             - mariadb_data:/var/lib/mysql
-        restart: on-failure
+        restart: always
 
     wordpress:
         depends_on:
@@ -47,7 +47,7 @@ services:
         tty: true
         volumes:
             - wordpress_data:/var/www/html
-        restart: on-failure
+        restart: always
 
     nginx:
         depends_on:
@@ -63,7 +63,7 @@ services:
         tty: true
         volumes:
             - wordpress_data:/var/www/html
-        restart: on-failure
+        restart: always
 
 networks:
     inception:

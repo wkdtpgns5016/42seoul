@@ -1,6 +1,9 @@
 FROM debian:buster
 EXPOSE 9000
 
+RUN mkdir -p /var/www/html
+VOLUME [ "/var/www/html" ]
+
 # wordpress에 필요한 패키지 설치
 RUN apt-get update -y && \
     apt-get upgrade -y && \
@@ -15,15 +18,6 @@ RUN apt-get update -y && \
     php-xml \
     sendmail \
     vim
-
-# wordpress 설치
-RUN wget https://wordpress.org/latest.tar.gz && \
-    tar -xvf latest.tar.gz
-
-RUN mkdir -p /var/www/html/ && \
-    mv /wordpress/* /var/www/html/ && \
-    chown -R www-data:www-data /var/www/html && \
-    rm -r /wordpress latest.tar.gz
 
 # www.conf 설정
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf

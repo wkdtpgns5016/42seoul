@@ -1,0 +1,110 @@
+이 프로젝트에서는 C++ 표준 템플릿 라이브러리의 몇 가지 컨테이너 유형을 구현합니다.
+당신은 각 표준 컨테이너의 구조를 참고해야 합니다. 정교회 양식의 일부가 누락된 경우, 이 양식을 구현하지 마십시오.
+C++98 표준을 준수해야 하므로 컨테이너의 이후 기능은 구현해서는 안 되지만 모든 C++98 기능(사용되지 않는 기능도 포함)이 필요합니다.
+
+다음 컨테이너를 구현하고 Makefile과 함께 필요한 <container>.hpp 파일을 제출합니다:
+
+• vector
+벡터 <boole> 전문화를 할 필요는 없습니다.
+• map
+• stack
+벡터 클래스를 기본 기본 컨테이너로 사용합니다. 그래도 그렇겠지
+STL을 포함한 다른 컨테이너와 호환됩니다.
+
+스택(80/100) 없이 이 과제를 통과할 수 있습니다
+하지만 보너스 파트를 하려면 3가지를 구현해야 합니다
+필수 컨테이너: 벡터, 맵 및 스택.
+
+또한 다음을 구현해야 합니다:
+• std::iterator_traits
+• std::reverse_iterator
+• std::enable_if
+    네, C++11이지만 C++98 방식으로 구현할 수 있을 것입니다.
+    SFINAE를 찾을 수 있도록 요청합니다.
+• std::is_integral
+• std::equal and/or std::lexicographical_compare
+• std::pair
+• std::make_pair
+
+Requirements
+• 네임스페이스는 ft여야 합니다.
+• 컨테이너에 사용되는 각 내부 데이터 구조는 논리적이고 정당해야 합니다. 즉, 맵에 단순 배열을 사용하는 것은 좋지 않습니다.
+• 표준 컨테이너에 제공된 것보다 더 많은 공용 기능을 구현할 수 없습니다. 다른 모든 것은 비공개이거나 보호되어야 합니다. 각각의 공공 기능이나 변수는 정당화되어야 한다.
+• 표준 컨테이너의 모든 부재 기능, 비부재 기능 및 과부하가 예상됩니다.
+• 원래 이름을 따라야 합니다. 세부 사항을 처리합니다.
+• 컨테이너에 반복기 시스템이 있는 경우 이를 구현해야 합니다.
+• std::allocator를 사용해야 합니다.
+• non-member overloads를 들어 키워드 friend가 허용됩니다. friend의 각 사용은 정당화되어야 하며 평가 중에 점검될 것이다.
+• 물론 std::map::value_messages의 구현에는 키워드 friend가 허용됩니다.
+
+Testing
+• 당신은 또한 당신의 방어를 위해 최소한 main.cpp의 테스트를 제공해야 한다. 예로 제시된 본론보다 더 멀리 가야 합니다!
+• 동일한 테스트를 실행하는 두 개의 이진 파일을 생성해야 합니다. 하나는 컨테이너만 있는 것이고 다른 하나는 STL 컨테이너만 있는 것입니다.
+• 출력과 성능/타이밍을 비교합니다(용기 속도가 최대 20배 느릴 수 있음).
+• ft::<container>를 사용하여 컨테이너를 테스트합니다.
+
+================================================================================
+iterator : https://cplusplus.com/reference/iterator/
+    iterator
+    • 반복자(iterator)란 STL 컨테이너에 저장된 요소를 반복적으로 순회하여, 각각의 요소에 대한 접근을 제공하는 객체
+    • iterator 요구사항
+        1) 가리키는 요소의 값에 접근할 수 있어야 합니다. 따라서 참조 연산자(*)가 정의되어야 합니다.
+        2) 반복자 사이의 대입 연산, 비교 연산이 가능해야 합니다. 따라서 대입, 관계 연산자가 정의되어야 합니다.
+        3) 가리키는 요소의 주변 요소로 이동할 수 있어야 합니다. 따라서 증가 연산자(++)가 정의되어야 합니다.
+
+    iterator tag
+    • input_iterator_tag
+    • output_iterator_tag
+    • forward_iterator_tag
+    • bidirectional_iterator_tag
+    • random_access_iterator_tag
+    • contiguous_iterator_tag
+
+    iterator function
+    • advance - 지정된 위치 수만큼 반복기를 증가
+        template <class InputIterator, class Distance>
+        void advance(InputIterator& InIt, Distance Off);
+        매개변수
+            InIt : 입력 반복기에 대해 증가하고 요구 사항을 충족해야 하는 반복기
+            Off : 반복기의 차이 형식으로 변환할 수 있고 반복기의 위치를 증가시킬 횟수를 지정하는 정수 계열 형식
+    • distance - 두 반복기에 의해 주소가 지정된 위치 사이의 간격의 수를 결정
+        template <class InputIterator>
+        typename iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last);
+        매개 변수
+            first : 두 번째로부터의 거리를 결정해야 하는 첫 번째 반복기입니다.
+            last : 첫 번째로부터의 거리를 결정해야 하는 두 번째 반복기입니다.
+
+traits : http://egloos.zum.com/sweeper/v/3007176
+    traits(특상정보) 클래스
+    • 특성정보(traits) 클래스는 컴파일 도중에 어떤 주어진 타입의 정보를 얻을 수 있게 하는 객체를 지칭하는 개념
+    • 특성정보는 관례적으로 아래와 같은 항목들을 충족해야 함
+        1) 일반적으로 특성정보는 구조체로 구현하나, 이를 특성정보(traits) 클래스라 부른다.
+        2) 특성정보는 기본제공 타입에 대해서 쓸 수 있어야 한다.
+    
+    iterator_traits 클래스
+
+allocator : https://wikidocs.net/29955 , https://woo-dev.tistory.com/51
+    Allocator
+    • 유연한 메모리 관리를 위한 클래스
+    • 일반적으로 표준 라이브러리의 컨테이너를 구현할때 많이 사용
+    • new 연산자는 클래스가 할당과 동시에 초기화를 진행하지만 
+      allocator의 멤버 함수를 이용하면 메모리의 할당은 되었지만 
+      초기화 되지 않은 상태의 메모리의 시작 주소를 얻을 수 있다.
+      원래 초기화되지 않은 메모리 공간에 객체를 직접 할당할 수 없다. 
+      하지만 해당 클래스의 멤버 함수 또는 관련 함수가 초기화 되지 않은 공간에 
+      객체를 저장할 수 있도록 한다.
+    • 할당받은 메모리에 객체를 생성 후 메모리 해제(deallocate)없이 생성한 객체들을 
+      소멸(destroy)시킬 수 있다. 즉 메모리의 재할당 없이 그 공간을 allocate 했던 
+      초기 상태로 만들 수 있다.
+
+vector : https://cplusplus.com/reference/vector/vector/
+    Vector
+    • 크기가 변경될 수 있는 배열을 나타내는 시퀀스 컨테이너
+    • 기존 배열과의 차이점 - 벡터는 스토리지를 관리하고 효율적으로 동적으로 확장하는 기능 대신 더 많은 메모리를 사용
+    • 다른 동적 시퀀스 컨테이너( deques , list 및 forward_lists )와 비교할 때 
+      벡터는 요소에 접근하는 데 매우 효율적이며(배열과 마찬가지로) 요소를 끝에서 추가하거나 제거하는 데 상대적으로 효율적
+    • 끝 이외의 위치에서 요소를 삽입하거나 제거하는 작업의 경우 다른 작업보다 성능이 떨어지고 
+      list 및 forward_lists 보다 일관성이 떨어지는 반복자와 참조가 존재
+    
+    Vector 구현 사항
+    • 

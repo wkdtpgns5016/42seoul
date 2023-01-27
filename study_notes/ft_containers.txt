@@ -44,6 +44,14 @@ Testing
 • ft::<container>를 사용하여 컨테이너를 테스트합니다.
 
 ================================================================================
+컨테이너
+    • 시퀀스 컨테이너
+        1) 동일한 유형의 유한한 객체 집합을 엄밀하게 선형 배열로 구성하는 컨테이너
+        2) vector, list, deque
+        3)  기본 시퀀스 종류(또는 사용자가 정의할 수 있는 다른 종류의 시퀀스)에서 
+            스택이나 큐와 같은 추상적인 데이터 유형을 쉽게 구성할 수 있는 컨테이너 어댑터를 제공
+
+    
 iterator : https://cplusplus.com/reference/iterator/
     iterator
     • 반복자(iterator)란 STL 컨테이너에 저장된 요소를 반복적으로 순회하여, 각각의 요소에 대한 접근을 제공하는 객체
@@ -108,3 +116,6 @@ vector : https://cplusplus.com/reference/vector/vector/
     
     Vector 구현 사항
     • 
+
+    Vector_base 사용이유
+    • https://42born2code.slack.com/archives/CU6MU5TB7/p1633424864272900

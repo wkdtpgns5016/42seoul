@@ -139,7 +139,30 @@ vector : https://cplusplus.com/reference/vector/vector/
       list 및 forward_lists 보다 일관성이 떨어지는 반복자와 참조가 존재
     
     Vector 구현 사항
-    • 생성자
+    • 생성자 및 소멸자, 대입 연산자
+    • 이터레이터
+    • 원소 접근
+    • 원소 수정
+        1) insert() 재할당 발생 시 메모리 증가 공식
+            1.기존 capacity를 2배로 하여 재할당 진행
+            2.2배가 부족하면 그냥 기존 capacity + 넣을 원소 개수로 재할당 진행
+        2) push_back() 재할당 발생 시 메모리 증가 공식
+            new_capacity = capacity + (capacity / 2)
+    • 비교 연산자
 
     Vector_base 사용이유
     • https://42born2code.slack.com/archives/CU6MU5TB7/p1633424864272900
+
+    Vector 메모리 할당 방식 - https://ssinyoung.tistory.com/45
+    • vector의 원소 삽입 작동 방식
+        1) 원소가 가득 차면 메모리는 capacity 보다 더 큰 새 메모리를 요청
+        2) 새 메모리에 전부 원소 복사
+        3) 새로운 원소 삽입
+        4) 이전 메모리 해제
+    • vector의 capacity 값은 처음에 초기화한 size와 같은 값으로 설정된다.
+      vector의 원소를 추가할 때마다 size가 capacity를 초과하게 되면, 메모리의 재할당과 복사가 발생한다.
+
+exception safety guarantees
+    • no-throw guarantee : exception이 던져지지않는 함수
+    • strong guarantee : resource leak, 상태변화가 모두 없는 경우
+    • basic guarantee : resource leak은 없지만, 상태변화가 있을 수 있음

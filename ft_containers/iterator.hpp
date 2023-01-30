@@ -7,11 +7,7 @@ namespace ft
 {
 
 /* Iterator */
-template <class Category, 
-          class T,
-          class Distance = ptrdiff_t,
-          class Pointer = T*,
-          class Reference = T&> 
+template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&> 
 struct iterator 
 {
     typedef T         value_type;
@@ -102,7 +98,7 @@ class reverse_iterator : public iterator<typename iterator_traits<Iterator>::ite
 
     pointer operator->()const 
     { 
-        return &(operator*()) 
+        return &(operator*());
     }
     
     reverse_iterator& operator++()
@@ -129,25 +125,25 @@ class reverse_iterator : public iterator<typename iterator_traits<Iterator>::ite
         ++current;
         return (tmp);
     }
-    reverse_iterator operator+ (difference_type n) const
+    reverse_iterator operator+ (const difference_type n) const
     {
         return (reverse_iterator(current - n));
     }
-    reverse_iterator& operator+=(difference_type n)
+    reverse_iterator& operator+=(const difference_type n)
     {
         current -= n;
         return (*this);
     }
-    reverse_iterator operator- (difference_type n) const
+    reverse_iterator operator- (const difference_type n) const
     {
         return (reverse_iterator(current + n));
     }
-    reverse_iterator& operator-=(difference_type n)
+    reverse_iterator& operator-=(const difference_type n)
     {
         current += n;
         return (*this);
     }
-    reference operator[](difference_type n) const
+    reference operator[](const difference_type n) const
     {
         return (current[-n - 1]);
     }
@@ -213,24 +209,26 @@ reverse_iterator<Iterator> operator+(
 
 template<class Iterator>
 class random_access_iterator : public iterator<typename iterator_traits<Iterator>::iterator_category,
-                                               typename iterator_traits<Iterator>::value_type,
-                                               typename iterator_traits<Iterator>::difference_type,
-                                               typename iterator_traits<Iterator>::pointer,
-                                               typename iterator_traits<Iterator>::reference>
+                                            typename iterator_traits<Iterator>::value_type,
+                                            typename iterator_traits<Iterator>::difference_type,
+                                            typename iterator_traits<Iterator>::pointer,
+                                            typename iterator_traits<Iterator>::reference>
 {
     protected:
     Iterator current;
 
     public:
-    typedef typename iterator_traits<_Iterator>::difference_type    difference_type;
-    typedef typename iterator_traits<_Iterator>::reference          reference;
-    typedef typename iterator_traits<_Iterator>::pointer            pointer;
+    typedef typename iterator_traits<Iterator>::difference_type    difference_type;
+    typedef typename iterator_traits<Iterator>::reference          reference;
+    typedef typename iterator_traits<Iterator>::pointer            pointer;
 
     random_access_iterator() : current(Iterator()) { }
+    random_access_iterator(const Iterator& i) : current(i) { }
     template<typename Iter>
     random_access_iterator(const random_access_iterator<Iter>& i) : current(i.base()) { }
     ~random_access_iterator() { }
 
+    Iterator base() const { return (current); }
     reference operator*() const { return *current; }
     pointer operator->() const { return current; }
 
@@ -239,25 +237,25 @@ class random_access_iterator : public iterator<typename iterator_traits<Iterator
     random_access_iterator& operator--() { --current; return *this; }
     random_access_iterator operator--(int) { return random_access_iterator(current--); }
 
-    random_access_iterator operator+ (difference_type& n) const
+    random_access_iterator operator+ (const difference_type& n) const
     {
-        return (reverse_iterator(current + n));
+        return (random_access_iterator(current + n));
     }
-    random_access_iterator& operator+=(difference_type& n)
+    random_access_iterator& operator+=(const difference_type& n)
     {
         current += n;
         return (*this);
     }
-    random_access_iterator operator- (difference_type& n) const
+    random_access_iterator operator- (const difference_type& n) const
     {
-        return (reverse_iterator(current - n));
+        return (random_access_iterator(current - n));
     }
-    random_access_iterator& operator-=(difference_type& n)
+    random_access_iterator& operator-=(const difference_type& n)
     {
         current -= n;
         return (*this);
     }
-    reference operator[](difference_type& n) const
+    reference operator[](const difference_type& n) const
     {
         return (current[n]);
     }
@@ -319,7 +317,7 @@ typename random_access_iterator<Iterator>::difference_type operator+(
     typename random_access_iterator<Iterator>::difference_type n, 
     const random_access_iterator<Iterator>& x)
 {
-    return (reverse_iterator<Iterator> (x.base() + n));
+    return (random_access_iterator<Iterator> (x.base() + n));
 }
 
 template<class InputIterator>  
@@ -328,7 +326,7 @@ typename iterator_traits<InputIterator>::difference_type distance(
 {
     return (_distance(first, 
                       last, 
-                      typename iterator_traits<InputIterator>::iterator_cagegory()));
+                      typename iterator_traits<InputIterator>::iterator_category()));        
 }
 
 template<class InputIterator>  

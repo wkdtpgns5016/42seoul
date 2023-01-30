@@ -2,6 +2,7 @@
 #define VECTOR_HPP
 
 #include <memory>
+#include <iterator>
 #include "iterator.hpp"
 
 namespace ft
@@ -34,46 +35,117 @@ class vector
 
     public:
         vector (const allocator_type& alloc = allocator_type())
-                : m_start(0), m_finish(0), m_end_of_storage(0) { }
+                : m_start(0), m_finish(0), m_end_of_storage(0), m_data_allocator(alloc) { }
         vector (size_type n, 
                 const value_type& val = value_type(), 
                 const allocator_type& alloc = allocator_type())
+                : m_start(0), m_finish(0), m_end_of_storage(0), m_data_allocator(alloc)
         {
-            this->m_start = m_data_allocator.allocate(n);
-            this->m_finish = m_start;
-            this->m_end_of_storage = m_start + n;
+            m_start = m_data_allocator.allocate(n);
+            m_end_of_storage = m_start + n;
+            m_finish = std::uninitialized_fill_n(m_start, n, val);
         }
         template <class InputIterator>
         vector (InputIterator first,
                 InputIterator last,
-                const allocator_type& alloc = allocator_type());
+                const allocator_type& alloc = allocator_type())
+                : m_start(0), m_finish(0), m_end_of_storage(0), m_data_allocator(alloc)
+        {
+            size_type n = ft::distance(first, last);
+            m_start = m_data_allocator.allocate(n);
+            m_end_of_storage = m_start + n;
+            m_finish = uninitialized_copy(first, last, m_start);
+        }
 
-        vector(const vector<T,Allocator>& x);
-        ~vector();
-        vector<T,Allocator>& operator=(const vector<T,Allocator>& x);
+        vector(const vector<T,Allocator>& x)
+        {
+            size_type n = x.size();
+            m_data_allocator = x.get_allocator();
+            m_start = m_data_allocator.allocate(n);
+            m_end_of_storage = m_start + n;
+            m_finish = uninitialized_copy(x.begin(), x.end(), m_start);
+        }
+        ~vector()
+        {
+            size_type capa = capacity();
+            clear();
+            m_data_allocator.deallocate(m_start, capa);
+        }
+        vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
+        {
+            if (this == x) return (*this);
+            size_type n = x.size();
+            m_data_allocator = x.get_allocator();
+
+            m_start = m_data_allocator.allocate(n);
+            m_end_of_storage = m_start + n;
+            m_finish = uninitialized_copy(x.begin(), x.end(), m_start);
+        }
         
         template <class InputIterator>
         void assign(InputIterator first, InputIterator last);
         void assign(size_type n, const T& u);
-        allocator_type get_allocator() const;
+        allocator_type get_allocator() const
+        {
+            return (m_data_allocator);
+        }
 
         // iterators:
-        iterator begin();
-        const_iterator begin() const;
-        iterator end();
-        const_iterator end() const;
-        reverse_iterator rbegin();
-        const_reverse_iterator rbegin() const;
-        reverse_iterator rend();
-        const_reverse_iterator rend() const;
+        iterator begin()
+        {
+            return (iterator(m_start));
+        }
+        const_iterator begin() const
+        {
+            return (const_iterator(m_strat));
+        }
+        iterator end()
+        {
+            return (iterator(m_finish));
+        }
+        const_iterator end() const
+        {
+            return (const_iterator(m_finish));
+        }
+        reverse_iterator rbegin()
+        {
+            return (reverse_iterator(m_finish));
+        }
+        const_reverse_iterator rbegin() const
+        {
+            return (const_reverse_iterator(m_finish));
+        }
+        reverse_iterator rend()
+        {
+            return (reverse_iterator(m_start));
+        }
+        const_reverse_iterator rend() const
+        {
+            return (reverse_iterator(m_start));
+        }
 
         // 23.2.4.2 capacity:
-        size_type size() const;
-        size_type max_size() const;
+        size_type size() const
+        {
+            return (ft::distance(begin(), end()));
+        }
+        size_type max_size() const
+        {
+            return ((SIZE_MAX) / sizeof(value_type));
+        }
         void resize(size_type sz, T c = T());
-        size_type capacity() const;
-        bool empty() const;
-        void reserve(size_type n);
+        size_type capacity() const
+        {
+            return (m_end_of_storage - m_start);
+        }
+        bool empty() const
+        {
+            return (m_start == m_finish);
+        }
+        void reserve(size_type n)
+        {
+
+        }
 
         // element access:
         reference operator[](size_type n);
@@ -96,7 +168,12 @@ class vector
         iterator erase(iterator position);
         iterator erase(iterator first, iterator last);
         void swap(vector<T,Allocator>&);
-        void clear();
+        void clear()
+        {
+
+        }
+
+    protected:
 };
 
 template <class T, class Allocator>

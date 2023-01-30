@@ -50,7 +50,6 @@ Testing
         2) vector, list, deque
         3)  기본 시퀀스 종류(또는 사용자가 정의할 수 있는 다른 종류의 시퀀스)에서 
             스택이나 큐와 같은 추상적인 데이터 유형을 쉽게 구성할 수 있는 컨테이너 어댑터를 제공
-
     
 iterator : https://cplusplus.com/reference/iterator/
     iterator
@@ -60,13 +59,32 @@ iterator : https://cplusplus.com/reference/iterator/
         2) 반복자 사이의 대입 연산, 비교 연산이 가능해야 합니다. 따라서 대입, 관계 연산자가 정의되어야 합니다.
         3) 가리키는 요소의 주변 요소로 이동할 수 있어야 합니다. 따라서 증가 연산자(++)가 정의되어야 합니다.
 
-    iterator tag
+    iterator tag - http://www.tcpschool.com/cpp/cpp_iterator_category
     • input_iterator_tag
+        입력 반복자(input iterator)는 가장 단순한 형태의 반복자로, 컨테이너로부터 값을 읽는 데 사용
+        입력 반복자를 사용하면 컨테이너로부터 값을 읽을 수는 있지만, 프로그램이 그 값을 변경불가
+        따라서 이 반복자는 읽기 전용 알고리즘에 사용
+        입력 반복자는 증가 연산자(++)를 사용하여 순방향으로만 이동
+        또한, 참조 연산자(*)를 사용하여 반복해서 요소를 참조가능
+
     • output_iterator_tag
+        출력 반복자(output iterator)는 입력 반복자와는 반대로 컨테이너의 값을 변경하는 데 사용
+        출력 반복자를 사용하면 컨테이너의 값을 변경할 수는 있지만, 프로그램에서 값을 읽을 수는 없음
+        따라서 이 반복자는 쓰기 전용 알고리즘에 사용
+        출력 반복자는 증가 연산자(++)를 사용하여 순방향으로만 이동
+        또한, 참조 연산자(*)를 사용하여 단 한 번만 요소에 값을 쓰기 가능
+
     • forward_iterator_tag
+        순방향 반복자는 입력 반복자와 출력 반복자의 기능을 모두 포함
+
     • bidirectional_iterator_tag
+        양방향 반복자는 증가 연산자(++)를 사용하면 순방향으로, 감소 연산자(--)를 사용하면 역방향으로도 이동 가능
+
     • random_access_iterator_tag
-    • contiguous_iterator_tag
+        임의 접근 반복자는 양방향 반복자의 모든 기능을 포함
+        첨자 연산자([])를 통해 임의의 요소에 접근 가능
+        요소의 순서를 결정하기 위해 관계 연산자를 사용
+        기존의 일반 포인터가 하는 거의 모든 일을 할 수 있음 (비교, 산술, 산술대입)
 
     iterator function
     • advance - 지정된 위치 수만큼 반복기를 증가
@@ -79,8 +97,8 @@ iterator : https://cplusplus.com/reference/iterator/
         template <class InputIterator>
         typename iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last);
         매개 변수
-            first : 두 번째로부터의 거리를 결정해야 하는 첫 번째 반복기입니다.
-            last : 첫 번째로부터의 거리를 결정해야 하는 두 번째 반복기입니다.
+            first : 두 번째로부터의 거리를 결정해야 하는 첫 번째 반복기
+            last : 첫 번째로부터의 거리를 결정해야 하는 두 번째 반복기
 
 traits : http://egloos.zum.com/sweeper/v/3007176
     traits(특상정보) 클래스
@@ -88,8 +106,6 @@ traits : http://egloos.zum.com/sweeper/v/3007176
     • 특성정보는 관례적으로 아래와 같은 항목들을 충족해야 함
         1) 일반적으로 특성정보는 구조체로 구현하나, 이를 특성정보(traits) 클래스라 부른다.
         2) 특성정보는 기본제공 타입에 대해서 쓸 수 있어야 한다.
-    
-    iterator_traits 클래스
 
 allocator : https://wikidocs.net/29955 , https://woo-dev.tistory.com/51
     Allocator
@@ -105,6 +121,14 @@ allocator : https://wikidocs.net/29955 , https://woo-dev.tistory.com/51
       소멸(destroy)시킬 수 있다. 즉 메모리의 재할당 없이 그 공간을 allocate 했던 
       초기 상태로 만들 수 있다.
 
+    Allocator 관련 함수
+    • allocate() : 초기화되지 않은 메모리 공간을 할당하여 그 시작 주소를 반환하는 함수
+    • deallocate() : 메모리 공간을 해제하는 함수
+    • construct() : 초기화되지 않은 공간에 요소를 저장하는 함수
+    • destroy() : 객체를 소멸시키는 함수
+    • uninitialized_copy() : [first, last) 범위의 요소들을 out이 가리키는 위치에 순서대로 복사
+    • uninitialized_fill() : [first, last) 범위의 각 모든 요소에 val을 저장
+
 vector : https://cplusplus.com/reference/vector/vector/
     Vector
     • 크기가 변경될 수 있는 배열을 나타내는 시퀀스 컨테이너
@@ -115,7 +139,7 @@ vector : https://cplusplus.com/reference/vector/vector/
       list 및 forward_lists 보다 일관성이 떨어지는 반복자와 참조가 존재
     
     Vector 구현 사항
-    • 
+    • 생성자
 
     Vector_base 사용이유
     • https://42born2code.slack.com/archives/CU6MU5TB7/p1633424864272900

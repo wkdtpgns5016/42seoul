@@ -139,7 +139,8 @@ vector : https://cplusplus.com/reference/vector/vector/
       list 및 forward_lists 보다 일관성이 떨어지는 반복자와 참조가 존재
     
     Vector 구현 사항
-    • 생성자 및 소멸자, 대입 연산자
+    • 생성자 및 소멸자, 대입 연산자, assign
+        1) assgin() : vec 원소 초기화 후, 재 할당
     • 이터레이터
     • 원소 접근
     • 원소 수정
@@ -148,6 +149,9 @@ vector : https://cplusplus.com/reference/vector/vector/
             2.2배가 부족하면 그냥 기존 capacity + 넣을 원소 개수로 재할당 진행
         2) push_back() 재할당 발생 시 메모리 증가 공식
             new_capacity = capacity + (capacity / 2)
+        3) erase
+            1. position : 맨끝이 아니면 제거 후, 원소 재배치
+            2. iterator : last가 맨끝이 아니면 제거 후, 원소 재배치
     • 비교 연산자
 
     Vector_base 사용이유

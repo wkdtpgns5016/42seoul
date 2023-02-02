@@ -2,8 +2,10 @@
 #define VECTOR_HPP
 
 #include <memory>
-#include "iterator.hpp"
 #include <exception>
+#include <algorithm>
+#include "iterator.hpp"
+#include "utils.hpp"
 
 namespace ft
 {
@@ -79,12 +81,27 @@ class vector
         vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
         {
             if (this == x) return (*this);
-            size_type n = x.capacity();
-            m_data_allocator = x.get_allocator();
-
-            m_start = m_data_allocator.allocate(n);
-            m_end_of_storage = m_start + n;
-            m_finish = std::uninitialized_copy(x.begin(), x.end(), m_start);
+            size_type n = x.size();
+            if (n > capacity())
+            {
+                pointer temp = allocate_copy(n, x.begin(), x.end());
+                destroy_element(m_start, m_finish);
+                m_data_allocator.deallocate(m_start, m_end_of_storage - m_start);
+                m_start = temp;
+                m_end_of_storage = m_start + n;
+            }
+            else if (n < = capacity() && n > size())
+            {
+                relocate(x.begin(), x.begin() + size(), m_start);
+                std::uninitialized_copy(x.begin() + size(), x.end(), m_finish);
+            }
+            else
+            {
+                iterator iter(relocate(x.begin(), x.end(), begin()));
+                destroy_element(iter, end());
+            }
+            m_finish = m_start + n;
+            return (*this);
         }
         
         template <class InputIterator>
@@ -236,7 +253,7 @@ class vector
                 destroy_element(m_start, m_finish);
                 m_start = temp;
                 m_finish = temp + size + 1;
-                m_data_allocator.construct(m_finish, x);
+                m_data_allocator.construct(m_finish - 1, x);
                 m_end_of_storage = m_start + new_capacity;
             }
             else
@@ -252,37 +269,58 @@ class vector
             m_finish--;
         }
         
-        iterator insert(iterator position, const T& x)
-        {
-            if (capacity() < size() + 1)
-            {
-                pointer temp;
-                pointer temp_finish;
-                size_type size = size();
-                size_type new_capacity = capacity() * 2;
-                temp = allocate_copy(new_capacity, begin(), end());
-                if (!temp)
-                    return
-                m_data_allocator.deallocate(m_start, capacity());
-                destroy_element(begin(), end());
-                m_start = temp;
-                m_finish = temp + size;
-                m_end_of_storage = temp + new_capacity;
-            }
-            pointer back = end();
-            while (--back != position - 1)
-                back + 1 = *back;
-            m_finish = std::uninitialized_fill_n(position, 1, x);
-        }
+        iterator insert(iterator position, const T& x);
         void insert(iterator position, size_type n, const T& x);
         template <class InputIterator>
         void insert(iterator position, InputIterator first, InputIterator last);
-        iterator erase(iterator position);
-        iterator erase(iterator first, iterator last);
-        void swap(vector<T,Allocator>&);
-        void clear();
+
+        iterator erase(iterator position)
+        {
+            if (position + 1 != end())
+            {
+                relocate(position + 1, end(), position);
+            }
+            m_finish--;
+            m_data_allocator.destroy(m_finish);
+            return (position);
+        }
+
+        iterator erase(iterator first, iterator last)
+        {
+            iterator iter(relocate(last, end(), first));
+            size_type n = ft::distance(first, last);
+            destroy_element(iter, end());
+            m_finish = m_finish - n;
+            return (first);
+        }
+
+        void swap(vector<T,Allocator>& x)
+        {
+            std::swap(m_start, x.m_start);
+            std::swap(m_finish, x.m_finish);
+            std::swap(m_end_of_storage, x.m_end_of_storage);
+        }
+        
+        void clear()
+        {
+            erase(begin(), end());
+        }
 
     protected:
+        template <class InputIterator>
+        InputIterator relocate(InputIterator first, InputIterator last, InputIterator position)
+        {
+            InputIterator temp = position;
+            size_type n = ft::distance(first, last);
+            while (first != last)
+            {
+                *temp = *first;
+                temp++;
+                first++;
+            }
+            return (position + n);
+        }
+
         template <class InputIterator>
         pointer allocate_copy(size_type n, InputIterator first, InputIterator last)
         {
@@ -299,33 +337,57 @@ class vector
             return (result);
         }
         
-        template <class Tp>
-        void destroy_element(Tp first, Tp last)
+        template <class InputIterator>
+        void destroy_element(InputIterator first, InputIterator last)
         {
             while (first != last)
             {
-                m_data_allocator.destroy(first);
+                m_data_allocator.destroy(&(*first));
                 first++;
             }
         }
 };
 
 template <class T, class Allocator>
-bool operator==(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+bool operator==(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+{
+    if (x.size() == y.size())
+        return (ft::equal(x.begin(), x.end(), y.begin()));
+    return (false);
+}
+
 template <class T, class Allocator>
-bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+{
+    return (ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()));
+}
 template <class T, class Allocator>
-bool operator!=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+bool operator!=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+{
+    return (!x == y);
+}
 template <class T, class Allocator>
-bool operator> (const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+bool operator> (const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+{
+    return (y < x);
+}
 template <class T, class Allocator>
-bool operator>=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+bool operator>=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+{
+    return (!(x < y));
+}
 template <class T, class Allocator>
-bool operator<=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
+bool operator<=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+{
+    return (!(y < x));
+}
 
 // specialized algorithms:
 template <class T, class Allocator>
-void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
+void swap(vector<T,Allocator>& x, vector<T,Allocator>& y)
+{
+    x.swap(y);
+}
 }
 
 #endif

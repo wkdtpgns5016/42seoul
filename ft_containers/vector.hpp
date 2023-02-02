@@ -2,7 +2,6 @@
 #define VECTOR_HPP
 
 #include <memory>
-#include <iterator>
 #include "iterator.hpp"
 #include <exception>
 
@@ -73,7 +72,7 @@ class vector
 
         ~vector()
         {
-            // clear(); 원소 destory
+            destroy_element(m_start, m_finish);
             m_data_allocator.deallocate(m_start, capacity());
         }
 
@@ -163,11 +162,11 @@ class vector
 
         void reserve(size_type n)
         {
-            size_type size = size();
+            size_type size = this->size();
             if (n > capacity())
             {
-                pointer temp = allocate_capy(n, begin(), end());
-                clear();
+                pointer temp = allocate_copy(n, begin(), end());
+                destroy_element(m_start, m_finish);
                 m_data_allocator.deallocate(m_start, capacity());
                 m_start = temp;
                 m_finish = temp + size;
@@ -226,23 +225,23 @@ class vector
             if (size() == capacity())
             {
                 pointer temp;
-                size_type size = size();
+                size_type size = this->size();
                 size_type new_capacity;
                 if (capacity() < 3)
                     new_capacity = 1;
                 else
                     new_capacity = capacity() + capacity() / 2;
-                temp = allocate_capy(new_capacity, begin(), end());
+                temp = allocate_copy(new_capacity, begin(), end());
                 m_data_allocator.deallocate(m_start, capacity());
-                clear();
+                destroy_element(m_start, m_finish);
                 m_start = temp;
                 m_finish = temp + size + 1;
-                m_data_allocator.construct(end() - 1, x);
+                m_data_allocator.construct(m_finish, x);
                 m_end_of_storage = m_start + new_capacity;
             }
             else
             {
-                m_data_allocator.construct(end(), x);
+                m_data_allocator.construct(m_finish, x);
                 m_finish++;
             }
         }
@@ -261,11 +260,11 @@ class vector
                 pointer temp_finish;
                 size_type size = size();
                 size_type new_capacity = capacity() * 2;
-                temp = allocate_capy(new_capacity, begin(), end());
+                temp = allocate_copy(new_capacity, begin(), end());
                 if (!temp)
                     return
                 m_data_allocator.deallocate(m_start, capacity());
-                clear();
+                destroy_element(begin(), end());
                 m_start = temp;
                 m_finish = temp + size;
                 m_end_of_storage = temp + new_capacity;
@@ -285,7 +284,7 @@ class vector
 
     protected:
         template <class InputIterator>
-        pointer allocate_capy(size_type n, InputIterator first, InputIterator last)
+        pointer allocate_copy(size_type n, InputIterator first, InputIterator last)
         {
             pointer result = m_data_allocator.allocate(n); 
             try
@@ -298,6 +297,16 @@ class vector
                 throw ;
             }
             return (result);
+        }
+        
+        template <class Tp>
+        void destroy_element(Tp first, Tp last)
+        {
+            while (first != last)
+            {
+                m_data_allocator.destroy(first);
+                first++;
+            }
         }
 };
 

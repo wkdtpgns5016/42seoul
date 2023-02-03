@@ -140,7 +140,7 @@ vector : https://cplusplus.com/reference/vector/vector/
     
     Vector 구현 사항
     • 생성자 및 소멸자, 대입 연산자, assign
-        1) assgin() : vec 원소 초기화 후, 재 할당
+        1) assgin() : vec 원소 초기화 후, insert
     • 이터레이터
     • 원소 접근
     • 원소 수정
@@ -170,3 +170,16 @@ exception safety guarantees
     • no-throw guarantee : exception이 던져지지않는 함수
     • strong guarantee : resource leak, 상태변화가 모두 없는 경우
     • basic guarantee : resource leak은 없지만, 상태변화가 있을 수 있음
+
+type_traits
+    https://modoocode.com/255
+    enable_if
+    • 잘못된 인자 치환을 방지하기 위해 enable_if::type이 true일 경우 인자가 치환 되며, 
+        false 인 경우, 인자 인스턴스가 실패하기 때문에 해당 템플릿 함수 매칭이 되지 않는다.
+
+    is_integral
+    • integral_constant를 상속 받아 인자가 정수일 경우 value_type이 true로 초기화 되는 클래스
+
+    SFINAE
+    • 템플릿 인자 치환에 실패할 경우 (위 같은 경우) 컴파일러는 이 오류를 무시하고, 그냥 오버로딩 후보에서 제외하면 된다 라고 명시되어 있음
+    C++ 에선 흔히 이를 치환 실패는 오류가 아니다 - Substitution Failure Is Not An Error 혹은 줄여서 SFINAE

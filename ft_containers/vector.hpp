@@ -5,7 +5,8 @@
 #include <exception>
 #include <algorithm>
 #include "iterator.hpp"
-#include "utils.hpp"
+#include "algorithm.hpp"
+#include "type_traits.hpp"
 
 namespace ft
 {
@@ -30,11 +31,11 @@ class vector
         typedef typename allocator_type::size_type          size_type;
 
     protected:
-        // member val
-        allocator_type  m_data_allocator;   
+        // member val 
         T*              m_start;
         T*              m_finish;
         T*              m_end_of_storage;
+        allocator_type  m_data_allocator;  
 
     public:
         // Constructs and Destroys
@@ -51,10 +52,10 @@ class vector
             m_finish = std::uninitialized_fill_n(m_start, n, val);
         }
 
-        template <class InputIterator>
-        vector (InputIterator first,
-                InputIterator last,
-                const allocator_type& alloc = allocator_type())
+        template <typename InputIterator>
+        vector (InputIterator first, InputIterator last,
+                const allocator_type& alloc = allocator_type(),
+                typename ft::enable_if<!(ft::is_integral<InputIterator>::value)>::type* = 0)
                 : m_start(0), m_finish(0), m_end_of_storage(0), m_data_allocator(alloc)
         {
             size_type n = ft::distance(first, last);
@@ -80,7 +81,7 @@ class vector
 
         vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
         {
-            if (this == x) return (*this);
+            if (this == &x) return (*this);
             size_type n = x.size();
             if (n > capacity())
             {
@@ -90,10 +91,9 @@ class vector
                 m_start = temp;
                 m_end_of_storage = m_start + n;
             }
-            else if (n < = capacity() && n > size())
+            else if (n <= capacity() && n > size())
             {
-                relocate(x.begin(), x.begin() + size(), m_start);
-                std::uninitialized_copy(x.begin() + size(), x.end(), m_finish);
+                relocate(x.begin(), x.end(), begin());
             }
             else
             {
@@ -105,8 +105,17 @@ class vector
         }
         
         template <class InputIterator>
-        void assign(InputIterator first, InputIterator last);
-        void assign(size_type n, const T& u);
+        void assign(InputIterator first, InputIterator last)
+        {
+            clear();
+            insert(begin(), first, last);
+        }
+
+        void assign(size_type n, const T& u)
+        {
+            clear();
+            insert(begin(), n, u);
+        }
 
         allocator_type get_allocator() const
         {
@@ -165,7 +174,25 @@ class vector
             return ((SIZE_MAX) / sizeof(value_type));
         }
 
-        void resize (size_type n, value_type val = value_type());
+        void resize (size_type n, value_type val = value_type())
+        {
+            if (n > capacity())
+            {
+                pointer temp;
+                size_type size = this->size();
+                temp = allocate_copy(n, begin(), end());
+                std::uninitialized_fill_n(temp + size, n - size, val);
+                m_data_allocator.deallocate(m_start, capacity());
+                destroy_element(m_start, m_finish);
+                m_start = temp;
+                m_end_of_storage = m_start + n;
+            }
+            else if (n <= capacity() && n > size())
+                std::uninitialized_fill_n(m_finish, n, val);
+            else
+                destroy_element(begin() + n, end());
+            m_finish = m_start + n;
+        }
     
         size_type capacity() const
         {
@@ -265,14 +292,94 @@ class vector
 
         void pop_back()
         {
-            m_data_allocator.destory(end() - 1);
+            m_data_allocator.destroy(m_finish - 1);
             m_finish--;
         }
         
-        iterator insert(iterator position, const T& x);
-        void insert(iterator position, size_type n, const T& x);
+        iterator insert(iterator position, const T& x)
+        {
+            size_type add_size = ft::distance(begin(), position);
+            if (size() + 1 <= capacity())
+            {
+                relocate_insert(position, end(), position + 1);
+                m_data_allocator.construct(m_start + add_size, x);
+                m_finish++;
+                return (position);
+            }
+            pointer temp;
+            size_type size = this->size();
+            size_type new_capacity = capacity() * 2;
+            if (new_capacity == 0)
+                new_capacity++;
+            temp = allocate_copy(new_capacity, begin(), end());
+            m_data_allocator.deallocate(m_start, capacity());
+            destroy_element(m_start, m_finish);
+            m_start = temp;
+            m_finish = m_start + size;
+            m_end_of_storage = m_start + new_capacity;
+            relocate_insert(begin() + add_size, end(), begin() + add_size + 1);
+            m_data_allocator.construct(m_start + add_size, x);
+            m_finish++;
+            return (m_start + add_size);
+        }
+
+        void insert(iterator position, size_type n, const T& x)
+        {
+            size_type add_size = ft::distance(begin(), position);
+            if (size() + n <= capacity())
+            {
+                relocate_insert(position, end(), position + n);
+                std::uninitialized_fill_n(m_start + add_size, n, x);
+                m_finish += n;
+                return ;
+            }
+            pointer temp;
+            size_type size = this->size();
+            size_type new_capacity = capacity() * 2;
+            if (size + n > new_capacity)
+                new_capacity = capacity() + n;
+            temp = allocate_copy(new_capacity, begin(), end());
+            m_data_allocator.deallocate(m_start, capacity());
+            destroy_element(m_start, m_finish);
+            m_start = temp;
+            m_finish = m_start + size;
+            m_end_of_storage = m_start + new_capacity;
+            relocate_insert(begin() + add_size, end(), begin() + add_size + n);
+            std::uninitialized_fill_n(m_start + add_size, n, x);
+            m_finish += n;
+            return ;
+        }
+
         template <class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last);
+        void insert(iterator position, 
+                    InputIterator first, InputIterator last,
+                    typename ft::enable_if<!(ft::is_integral<InputIterator>::value)>::type* = 0)
+        {
+            size_type add_size = ft::distance(begin(), position);
+            size_type n = ft::distance(first, last);
+            if (size() + n <= capacity())
+            {
+                relocate_insert(position, end(), position + n);
+                std::uninitialized_copy(first, last, m_start + add_size);
+                m_finish += n;
+                return ;
+            }
+            pointer temp;
+            size_type size = this->size();
+            size_type new_capacity = capacity() * 2;
+            if (size + n > new_capacity)
+                new_capacity = capacity() + n;
+            temp = allocate_copy(new_capacity, begin(), end());
+            m_data_allocator.deallocate(m_start, capacity());
+            destroy_element(m_start, m_finish);
+            m_start = temp;
+            m_finish = m_start + size;
+            m_end_of_storage = m_start + new_capacity;
+            relocate_insert(begin() + add_size, end(), begin() + add_size + n);
+            std::uninitialized_copy(first, last, m_start + add_size);
+            m_finish += n;
+            return ;
+        }
 
         iterator erase(iterator position)
         {
@@ -307,18 +414,34 @@ class vector
         }
 
     protected:
-        template <class InputIterator>
-        InputIterator relocate(InputIterator first, InputIterator last, InputIterator position)
+        template <class Iter1, class Iter>
+        Iter relocate(Iter1 first, Iter1 last, Iter position)
         {
-            InputIterator temp = position;
+            Iter temp = position;
             size_type n = ft::distance(first, last);
-            while (first != last)
+            Iter1 swap = first;
+            while (swap != last)
             {
-                *temp = *first;
+                swap = first;
+                *temp = *swap;
                 temp++;
                 first++;
             }
             return (position + n);
+        }
+
+        template <class Iter>
+        Iter relocate_insert(Iter first, Iter last, Iter position)
+        {
+            Iter temp = last;
+            size_type n = ft::distance(first, position);
+            while (first != last)
+            {
+                *(last + n) = *last;
+                last--;
+            }
+            *(last + n) = *last;
+            return (position);
         }
 
         template <class InputIterator>
@@ -364,7 +487,7 @@ bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y)
 template <class T, class Allocator>
 bool operator!=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
 {
-    return (!x == y);
+    return (!(x == y));
 }
 template <class T, class Allocator>
 bool operator> (const vector<T,Allocator>& x, const vector<T,Allocator>& y)

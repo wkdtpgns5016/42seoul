@@ -39,6 +39,7 @@ template < class Key,
         class Allocator = std::allocator<T> > 
 class rb_tree
 {
+    public:
     typedef Key                                         key_type;
     typedef T                                           value_type;
     typedef Allocator                                   allocator_type;
@@ -51,6 +52,13 @@ class rb_tree
     protected:
     node_allocator_type _node_alloc;
     node_ptr            _root;
+    key_compare         _comp;
+    size_t              _size;
+
+    public:
+    rb_tree() : _size(0) {}
+
+    
 
 
 };

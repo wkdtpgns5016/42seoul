@@ -4,71 +4,44 @@
 #include <iostream>
 #include <type_traits>
 #include "type_traits.hpp"
+#include "tree.hpp"
+#include "utility.hpp"
+#include <utility>
 
-
-template <typename T>
-void	printSize(ft::vector<T> const &vct, bool print_content = true)
+void show_pair(ft::pair<int, std::string> p)
 {
-	const typename ft::vector<T>::size_type size = vct.size();
-	const typename ft::vector<T>::size_type capacity = vct.capacity();
-	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
-	// Cannot limit capacity's max value because it's implementation dependent
-
-	std::cout << "size: " << size << std::endl;
-	std::cout << "capacity: " << capacity << std::endl;
-	std::cout << "capacity: " << isCapacityOk << std::endl;
-	std::cout << "max_size: " << vct.max_size() << std::endl;
-	if (print_content)
-	{
-		typename ft::vector<T>::const_iterator it = vct.begin();
-		typename ft::vector<T>::const_iterator ite = vct.end();
-		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
-			std::cout << "- " << *it << std::endl;
-	}
-	std::cout << "###############################################" << std::endl;
+	std::cout << p._first << " " << p._second << std::endl;
 }
-    
-#define TESTED_TYPE int
 
 int		main(void)
 {
-	ft::vector<TESTED_TYPE> vct(7);
-	ft::vector<TESTED_TYPE> vct_two(4);
-	ft::vector<TESTED_TYPE> vct_three;
-	ft::vector<TESTED_TYPE> vct_four;
+	ft::pair<int, ft::pair<int,std::string> > a;
+	ft::pair<int, std::string> p(8, "8a");
+	ft::pair<int, std::string> p2(18, "18a");
+	ft::pair<int, std::string> p3(5, "5a");
+	ft::pair<int, std::string> p4(15, "15a");
+	ft::pair<int, std::string> p5(17, "17a");
+	ft::pair<int, std::string> p6(25, "25a");
+	ft::pair<int, std::string> p7(40, "40a");
+	ft::pair<int, std::string> p8(80, "80a");
+	ft::rb_tree<int, ft::pair<int, std::string> > t;
 
-	for (unsigned long int i = 0; i < vct.size(); ++i)
-		vct[i] = (vct.size() - i) * 3;
-	for (unsigned long int i = 0; i < vct_two.size(); ++i)
-		vct_two[i] = (vct_two.size() - i) * 5;
-	printSize(vct);
-	printSize(vct_two);
+	t.insert_node(p);
+	t.insert_node(p2);
+	t.insert_node(p3);
+	t.insert_node(p4);
+	t.insert_node(p5);
+	t.insert_node(p6);
+	t.insert_node(p7);
+	t.insert_node(p8);
 
-	vct_three.assign(vct.begin(), vct.end());
-	vct.assign(vct_two.begin(), vct_two.end());
-	vct_two.assign(2, 42);
-	vct_four.assign(4, 21);
+	t.inorder_print_tree(t.get_root());
+	std::cout <<std::endl;
 
-	std::cout << "\t### After assign(): ###" << std::endl;
+	t.delete_node(t.get_root());
 
-	printSize(vct);
-	printSize(vct_two);
-	printSize(vct_three);
-	printSize(vct_four);
-
-	vct_four.assign(6, 84);
-	printSize(vct_four);
-
-	std::cout << "\t### assign() on enough capacity and low size: ###" << std::endl;
-
-	vct.assign(5, 53);
-	vct_two.assign(vct_three.begin(), vct_three.begin() + 3);
-
-	printSize(vct);
-	printSize(vct_two);
-	while (1)
-		;
+	t.inorder_print_tree(t.get_root());
+	std::cout <<std::endl;
 
 	return (0);
 }

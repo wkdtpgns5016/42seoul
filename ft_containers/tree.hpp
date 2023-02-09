@@ -2,10 +2,12 @@
 #define TREE_HPP
 
 #include "utility.hpp"
+#include "iterator.hpp"
 #include <memory>
 #include <exception>
 #include <algorithm>
 #include <iostream>
+#include <cstddef>
 
 enum rb_tree_color{
     RED,
@@ -21,7 +23,7 @@ struct rb_tree_node
     typedef T                           value_type;
     typedef rb_tree_node<value_type>    node_type;
     typedef node_type*                  node_ptr;
-    typedef const node_type*           const_node_ptr;
+    typedef const node_type*            const_node_ptr;
 
     rb_tree_color   _color;
     node_ptr        _parent;
@@ -32,6 +34,65 @@ struct rb_tree_node
     rb_tree_node(rb_tree_color color, node_ptr parent, node_ptr left, node_ptr right, value_type data)
     : _color(color), _parent(parent), _left(left), _right(right), _data(data) {}
     ~rb_tree_node() {}
+};
+
+template < class T > 
+class rb_tree_itterator
+{
+    typedef bidirectional_iterator_tag		         		iterator_category;
+    typedef T			        					 		value_type;
+    typedef ptrdiff_t			        			 		difference_type;
+    typedef T*			        							pointer;
+    typedef T&		        							    reference;
+
+    typedef typename rb_tree_node<value_type>::node_ptr     node_ptr;
+
+    public:
+    node_ptr    _node;
+    node_ptr    _NIL;
+
+    rb_tree_itterator() : _node(), _NIL() {}
+    rb_tree_itterator(node_ptr node, node_ptr nil) : _node(node), _NIL(nil) {}
+    ~rb_tree_itterator() {}
+    rb_tree_itterator(const rb_tree_itterator<value_type>& node) : _node(node.base()) {}
+
+    value_type base() const { return (_node); }
+    reference operator*() const { return *_node; }
+    pointer operator->() const { return _node; }
+
+    
+    // rb_tree_itterator& operator++() 
+    // { 
+    //     ++_current; 
+    //     return *this; 
+    // }
+    // rb_tree_itterator operator++(int) 
+    // { 
+    //     return rb_tree_itterator(_current++); 
+    // }
+
+    protected:
+    void    increment()
+    {
+        if (_node->_right != _NIL) 
+        {
+            _node = _node->_right;
+            while (_node->_left != _NIL)
+                _node = _node->_left;
+        }
+        else 
+        {
+            
+            node_ptr y = _node->_parent;
+            while (_node == y->_right) 
+            {
+                _node = y;
+                y = y->_parent;
+            }
+            // 추가
+        }
+    }
+
 };
 
 template < class Key,        
@@ -168,7 +229,7 @@ class rb_tree
         _size++;
     }
 
-    node_ptr delete_node(node_ptr node)
+    void delete_node(node_ptr node)
     {
         node_ptr y; // 삭제할 노드
         node_ptr x; // 삭제할 노드의 자식 노드
@@ -201,7 +262,23 @@ class rb_tree
             if (color == BLACK)
                 delete_fixup(x);
         }
-        return (y);
+        _node_alloc.deallocate(y, 1);
+        _node_alloc.destroy(y);
+    }
+
+    node_ptr find_node(const key_type & k)
+    {
+        node_ptr x = _root;
+        while (x != _NIL)
+        {
+            if (k == x->_data._first)
+                break ;
+            if (_comp(k, x->_data._first))
+                x = x->_left;
+            else
+                x = x->_right;
+        }
+        return (x);
     }
 
     protected:
@@ -250,7 +327,7 @@ class rb_tree
         node_ptr uncle = _NIL;
 
         uncle = (*node)->_parent->_parent->_right;
-        if (uncle->_color == RED)               // case 1 - Uncle의 Color가 RED인 경우
+        if (uncle->_color == RED)                     // case 1 - Uncle의 Color가 RED인 경우
         {
             (*node)->_parent->_color = BLACK;
             uncle->_color = BLACK;
@@ -262,9 +339,8 @@ class rb_tree
             (*node) = (*node)->_parent;
             left_rotate((*node));
         }
-        else
+        else                                          // case 3 - node가 Left Child인 경우
         {
-            // case 3 - node가 Left Child인 경우
             (*node)->_parent->_color = BLACK;
             (*node)->_parent->_parent->_color = RED;
             right_rotate((*node)->_parent->_parent);

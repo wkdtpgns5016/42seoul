@@ -7,6 +7,7 @@
 #include "tree.hpp"
 #include "utility.hpp"
 #include <utility>
+#include <map>
 
 void show_pair(ft::pair<int, std::string> p)
 {
@@ -35,13 +36,23 @@ int		main(void)
 	t.insert_node(p7);
 	t.insert_node(p8);
 
-	t.inorder_print_tree(t.get_root());
-	std::cout <<std::endl;
+	std::map<char,int> mymap;
 
-	t.delete_node(t.get_root());
+	mymap['b'] = 100;
+	mymap['a'] = 200;
 
-	t.inorder_print_tree(t.get_root());
-	std::cout <<std::endl;
+	// show content:
+	std::map<char,int>::iterator it = mymap.begin();
+	std::map<char,int>::iterator it2 = mymap.end();
 
+
+
+	while (it != it2)
+	{
+		--it2; 
+    	std::cout << it2->first << " => " << it2->second << '\n';
+		if (it == it2)
+			std::cout << &(*it) << " => " <<&(*it2) << '\n';
+	}
 	return (0);
 }

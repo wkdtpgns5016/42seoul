@@ -3,6 +3,7 @@
 
 #include "utility.hpp"
 #include "iterator.hpp"
+#include "algorithm.hpp"
 #include <memory>
 #include <exception>
 #include <algorithm>
@@ -34,71 +35,143 @@ struct rb_tree_node
     rb_tree_node(rb_tree_color color, node_ptr parent, node_ptr left, node_ptr right, value_type data)
     : _color(color), _parent(parent), _left(left), _right(right), _data(data) {}
     ~rb_tree_node() {}
+
+    rb_tree_node<T>* minimum(rb_tree_node<T>* node, rb_tree_node<T>* _NIL)
+    {
+        rb_tree_node<T>* x = node;
+        while (x->_left != _NIL)
+            x = x->_left;
+        return (x);
+    }
+
+    rb_tree_node<T>* maximum(rb_tree_node<T>* node, rb_tree_node<T>* _NIL)
+    {
+        rb_tree_node<T>* x = node;
+        while (x->_right != _NIL)
+            x = x->_right;
+        return (x);
+    }
 };
 
 template < class T > 
 class rb_tree_itterator
 {
-    typedef bidirectional_iterator_tag		         		iterator_category;
-    typedef T			        					 		value_type;
-    typedef ptrdiff_t			        			 		difference_type;
-    typedef T*			        							pointer;
-    typedef T&		        							    reference;
-
-    typedef typename rb_tree_node<value_type>::node_ptr     node_ptr;
-
     public:
+    typedef bidirectional_iterator_tag		            iterator_category;
+    typedef T			        						value_type;
+    typedef ptrdiff_t                                   difference_type;
+    typedef T*			        					    pointer;
+    typedef T&		        							reference;
+
+    typedef rb_tree_node<value_type>                    node_type;
+    typedef node_type*                                  node_ptr;
+
+    private:
     node_ptr    _node;
+    node_ptr    _root;
     node_ptr    _NIL;
 
+    public:
+
     rb_tree_itterator() : _node(), _NIL() {}
-    rb_tree_itterator(node_ptr node, node_ptr nil) : _node(node), _NIL(nil) {}
-    ~rb_tree_itterator() {}
-    rb_tree_itterator(const rb_tree_itterator<value_type>& node) : _node(node.base()) {}
+    rb_tree_itterator(node_ptr node, node_ptr root, node_ptr nil)
+     : _node(node), _root(root), _NIL(nil) {}
+    rb_tree_itterator(const rb_tree_itterator<value_type>& node) 
+     : _node(node._node), _root(node._root), _NIL(node._NIL) {}
 
-    value_type base() const { return (_node); }
-    reference operator*() const { return *_node; }
-    pointer operator->() const { return _node; }
-
+    reference operator*() const { return (_node->_data); }
+    pointer operator->() const { return (&(operator*())); }
     
-    // rb_tree_itterator& operator++() 
-    // { 
-    //     ++_current; 
-    //     return *this; 
-    // }
-    // rb_tree_itterator operator++(int) 
-    // { 
-    //     return rb_tree_itterator(_current++); 
-    // }
+    rb_tree_itterator& operator++() 
+    { 
+        increment();
+        return *this; 
+    }
+    rb_tree_itterator operator++(int) 
+    {
+        rb_tree_itterator temp(*this);
+        temp.increment();
+        return (temp);
+    }
 
-    protected:
+    rb_tree_itterator& operator--() 
+    { 
+        decrement();
+        return *this; 
+    }
+    rb_tree_itterator operator--(int) 
+    {
+        rb_tree_itterator temp(*this);
+        temp.decrement();
+        return (temp);
+    }
+
+    template<class Iterator1, class Iterator2>
+    bool operator==(const rb_tree_itterator<Iterator1>& x, 
+                    const rb_tree_itterator<Iterator2>& y)
+    {
+        return (x._root == y._root);
+    }
+
+    template<class Iterator1, class Iterator2>
+    bool operator!=(const rb_tree_itterator<Iterator1>& x, 
+                    const rb_tree_itterator<Iterator2>& y)
+    {
+        return (!(x == y));
+    }
+
+    private:
     void    increment()
     {
+        if (_node == _NIL)
+            _node = _root->minimum(_root, _NIL);
         if (_node->_right != _NIL) 
         {
             _node = _node->_right;
             while (_node->_left != _NIL)
                 _node = _node->_left;
         }
-        else 
+        else
         {
-            
             node_ptr y = _node->_parent;
-            while (_node == y->_right) 
+            while (_node == y->_right && y != _NIL) 
             {
                 _node = y;
                 y = y->_parent;
             }
-            // 추가
+            _node = y;
         }
     }
 
+    void    decrement()
+    {
+        if (_node == _NIL)
+            _node = _root->maximum(_root, _NIL);
+        else
+        {
+            if (_node->_left != _NIL)
+            {
+                _node = _node->_left;
+                while (_node->_right != _NIL)
+                    _node = _node->_right;
+            }
+            else
+            {
+                node_ptr y = _node->_parent;
+                while (_node == y->_left && y != _NIL) 
+                {
+                    _node = y;
+                    y = y->_parent;
+                }
+                _node = y;
+            }
+        }
+    }
+    
 };
 
-template < class Key,        
-        class T,         
-        class Compare = std::less<Key>,          
-        class Allocator = std::allocator<T> > 
+
+template < class Key, class T, class Compare, class Allocator > 
 class rb_tree
 {
     public:
@@ -106,10 +179,15 @@ class rb_tree
     typedef T                                           value_type;
     typedef Allocator                                   allocator_type;
     typedef Compare                                     key_compare;
-    typedef rb_tree_node<value_type>                    node_type;
+    typedef ft::rb_tree_node<value_type>                node_type;
     typedef std::allocator<node_type>                   node_allocator_type;
     typedef typename node_type::node_ptr                node_ptr;
     typedef typename node_type::const_node_ptr          const_node_ptr;
+
+    typedef ft::rb_tree_itterator<T>                    iterator;
+    typedef ft::rb_tree_itterator<const T>              const_iterator;
+    typedef ft::reverse_iterator<iterator>              reverse_iterator;
+    typedef ft::reverse_iterator<const_iterator>        const_reverse_iterator;
 
     protected:
     node_allocator_type _node_alloc;
@@ -129,6 +207,25 @@ class rb_tree
         _root = _NIL;
     }
 
+    rb_tree(const key_compare& comp, const allocator_type& alloc) : _node_alloc(alloc), _comp(comp), _size(0)
+    {
+        rb_tree();
+    }
+
+    template <class InputIterator>  
+    rb_tree(InputIterator first, InputIterator last, const key_compare& comp , const allocator_type& alloc) : _node_alloc(alloc), _comp(comp), _size(0)
+    {
+        rb_tree();
+        insert_node(first, last);
+    }
+
+    rb_tree(const rb_tree& tree) : _size(0)
+    {
+        if (this == &tree)
+            return ;
+        rb_tree(tree.begin(), tree.end(), tree.get_comp(), tree.get_allocator());
+    }
+
     node_ptr make_node(value_type& data)
     {
         node_ptr new_node = alloc_node(RED, data);
@@ -138,28 +235,12 @@ class rb_tree
         return (new_node);
     }
 
-    node_ptr minimum(node_ptr node)
-    {
-        node_ptr x = node;
-        while (x != _NIL)
-            x = x->_left;
-        return (x->_parent);
-    }
-
-    node_ptr maximum(node_ptr node)
-    {
-        node_ptr x = node;
-        while (x != _NIL)
-            x = x->_right;
-        return (x->_parent);
-    }
-
     node_ptr successor(node_ptr node)
     {
         node_ptr x = node;
         node_ptr y = node->_parent;
         if (node->_right != _NIL)
-            return (minimum(x->_right));
+            return (_root->minimum(x->_right, _NIL));
         while (y != _NIL && x == y->_right)
         {
             x = y;
@@ -173,7 +254,7 @@ class rb_tree
         node_ptr x = node;
         node_ptr y = node->_parent;
         if (node->left != _NIL)
-            return (maximum(x->left));
+            return (_root->maximum(x->left, _NIL));
         while (y != _NIL && x == y->_left)
         {
             x = y;
@@ -189,15 +270,38 @@ class rb_tree
         return (false);
     }
 
+    bool is_exist(const key_type& k)
+    {
+        if (find_node(k) != _NIL)
+            return (true);
+        return (false);
+    }
+
+    bool is_hint(iterator hint, const key_type& k)
+    {
+        if (hint == _NIL)
+        {
+            node_ptr max = _root->maximum(_root, _NIL);
+            if (_comp(max->_data.first < k))
+                return (true);
+            return (false);
+        }
+
+
+    }
+
     node_ptr get_root() const { return (_root); }
+    node_ptr get_nil() const { return (_NIL); }
     size_t get_size() const { return (_size); }
+    allocator_type get_allocator() const { return (_node_alloc); }
+    key_compare get_comp() const { return (_comp); }
 
     void inorder_print_tree(node_ptr t)
     {
         if (t != _NIL)
         {
             inorder_print_tree(t->_left);
-            std::cout << "[" << t->_data._first << "]" << t->_data._second << " | ";
+            std::cout << "[" << t->_data.first << "]" << t->_data.second << " | ";
             inorder_print_tree(t->_right);
         }
     }
@@ -216,23 +320,53 @@ class rb_tree
         {
             t->_parent->_right = c;
         }
-
         c->_parent = t->_parent; // link target's parent to child's parent.
     }
 
-    void insert_node(value_type& data)
+    template <class InputIterator> 
+    void insert_node(InputIterator first, InputIterator last)
+    {
+        while (first != last)
+        {
+            insert_node(*first);
+            first++;
+        }
+    }
+
+    template <class InputIterator> 
+    iterator insert_node(InputIterator hint, value_type& data)
+    {
+        node_ptr node = make_node(data);
+        if (is_empty())
+            insert_node_empty(node);
+        else
+            insert_node_with_hint(hint, node);
+        _size++;
+        return (iterator(node, _root, _NIL));
+    }
+
+    iterator insert_node(node_ptr node)
     {
         if (is_empty())
-            insert_node_empty(make_node(data));
+            insert_node_empty(node);
         else
-            insert_node_not_empty(make_node(data));
+            insert_node_not_empty(node);
         _size++;
+        return (iterator(node, _root, _NIL));
+    }
+
+    iterator insert_node(value_type& data)
+    {
+        return (insert_node(make_node(data)));
     }
 
     void delete_node(node_ptr node)
     {
         node_ptr y; // 삭제할 노드
         node_ptr x; // 삭제할 노드의 자식 노드
+
+        if (!is_exist(node))
+            return ;
 
         if (node->_left == _NIL)
         {
@@ -271,14 +405,129 @@ class rb_tree
         node_ptr x = _root;
         while (x != _NIL)
         {
-            if (k == x->_data._first)
+            if (k == x->_data.first)
                 break ;
-            if (_comp(k, x->_data._first))
+            if (_comp(k, x->_data.first))
                 x = x->_left;
             else
                 x = x->_right;
         }
         return (x);
+    }
+
+    iterator begin()
+    {
+        return (iterator(_root->minimum(_root, _NIL), _root, _NIL));
+    }
+
+    const_iterator begin() const
+    {
+        return (const_iterator(_root->minimum(_root, _NIL), _root, _NIL));
+    }
+
+    iterator end()
+    {
+        return (iterator(_NIL, _root, _NIL));
+    }
+
+    const_iterator end() const
+    {
+        return (const_iterator(_NIL, _root, _NIL));
+    }
+
+    reverse_iterator rbegin()
+    {
+        return (reverse_iterator(begin()));
+    }
+
+    const_reverse_iterator rbegin() const
+    {
+        return (const_reverse_iterator(begin()));
+    }
+
+    reverse_iterator rend()
+    {
+        return (reverse_iterator(end()));
+    }
+
+    const_reverse_iterator rend() const
+    {
+        return (const_reverse_iterator(end()));
+    }
+
+    iterator lower_bound(const key_type& k)
+    {
+        if (is_exist(k))
+            return (iterator(find_node(k), _root, _NIL));
+
+        node_ptr x = _root;
+        node_ptr y = _NIL;
+        node_ptr bound = _NIL;
+        while (x != _NIL)
+        {
+            y = x;
+            if (_comp(k, x->_data.first))
+                x = x->_left;
+            else
+                x = x->_right;
+        }
+        bound = successor(y);
+        return (iterator(y, _root, _NIL));
+    }
+
+    const_iterator lower_bound(const key_type& k) const
+    {
+        if (is_exist(k))
+            return (const_iterator(find_node(k), _root, _NIL));
+
+        node_ptr x = _root;
+        node_ptr y = _NIL;
+        node_ptr bound = _NIL;
+        while (x != _NIL)
+        {
+            y = x;
+            if (_comp(k, x->_data.first))
+                x = x->_left;
+            else
+                x = x->_right;
+        }
+        bound = successor(y);
+        return (const_iterator(y, _root, _NIL));
+        
+    }
+
+    iterator upper_bound (const key_type& k)
+    {
+        node_ptr x = _root;
+        node_ptr y = _NIL;
+        node_ptr bound = _NIL;
+        while (x != _NIL)
+        {
+            y = x;
+            if (_comp(k, x->_data.first))
+                x = x->_left;
+            else
+                x = x->_right;
+        }
+        bound = predecessor(y);
+        return (iterator(y, _root, _NIL));
+    }
+    
+    const_iterator upper_bound (const key_type& k) const
+    {
+        node_ptr x = _root;
+        node_ptr y = _NIL;
+        node_ptr bound = _NIL;
+        while (x != _NIL)
+        {
+            y = x;
+            if (_comp(k, x->_data.first))
+                x = x->_left;
+            else
+                x = x->_right;
+        }
+        bound = predecessor(y);
+        return (const_iterator(y, _root, _NIL));
     }
 
     protected:
@@ -391,6 +640,21 @@ class rb_tree
         _root->_parent = _NIL;
     }
 
+    void insert_node_with_hint(iterator hint, node_ptr node)
+    {
+        node_ptr y = hint._node;
+
+        // 트리에 노드 연결
+        node->_parent = y;
+        if (_comp(node->_data.first, y->_data.first))
+            y->_left = node;
+        else
+            y->_right = node;
+
+        // fixup 실행
+        insert_fixup(node);
+    }
+
     void insert_node_not_empty(node_ptr node)
     {
         node_ptr y = _NIL;
@@ -399,7 +663,7 @@ class rb_tree
         while (x != _NIL)
         {
             y = x;
-            if (_comp(node->_data._first, x->_data._first))
+            if (_comp(node->_data.first, x->_data.first))
                 x = x->_left;
             else
                 x = x->_right;
@@ -407,7 +671,7 @@ class rb_tree
 
         // 트리에 노드 연결
         node->_parent = y;
-        if (_comp(node->_data._first, y->_data._first))
+        if (_comp(node->_data.first, y->_data.first))
             y->_left = node;
         else
             y->_right = node;

@@ -6,17 +6,17 @@ namespace ft
     template <class T1, class T2>
     struct pair
     {
-        T1  _first;
-        T2  _second;
-        pair() : _first(), _second() {}
+        T1  first;
+        T2  second;
+        pair() : first(), second() {}
         template<class U, class V> 
-        pair (const pair<U,V>& pr) : _first(pr._first), _second(pr._second) {}
-        pair (const T1& a, const T2& b) : _first(a), _second(b) {}
+        pair (const pair<U,V>& pr) : first(pr.first), second(pr.second) {}
+        pair (const T1& a, const T2& b) : first(a), second(b) {}
         pair& operator= (const pair& pr)
         {
             if (this == &pr) return (*this);
-            _first = pr._first;
-            _second = pr._second;
+            first = pr.first;
+            second = pr.second;
             return (*this);
         }
 
@@ -25,7 +25,7 @@ namespace ft
     template <class T1, class T2>  
     bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
     {
-        if (lhs._first == rhs._first && lhs._second == rhs._second) 
+        if (lhs.first == rhs.first && lhs.second == rhs.second) 
             return (true);
         return (false);
     }
@@ -37,9 +37,9 @@ namespace ft
     template <class T1, class T2>  
     bool operator<  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
     {
-        if (lhs._first < rhs._first)
+        if (lhs.first < rhs.first)
         {
-            if (lhs._second < rhs._second)
+            if (lhs.second < rhs.second)
                 return (true);
             return (false);
         }

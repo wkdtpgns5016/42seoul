@@ -185,8 +185,7 @@ type_traits
     C++ 에선 흔히 이를 치환 실패는 오류가 아니다 - Substitution Failure Is Not An Error 혹은 줄여서 SFINAE
 
 map
-rb tree : https://blogshine.tistory.com/102
-
+    rb tree : https://blogshine.tistory.com/102
     • successor
         노드보다 크면서 가장 작은 값을 가진 노드
 
@@ -236,3 +235,8 @@ rb tree : https://blogshine.tistory.com/102
             i) 형제노드와 부모노드와 색상 교환
             ii) 형제노드 오른쪽 자식을 Black으로 변경
             iii) 부모노드를 기준으로 Left Rotation
+
+    upper_bound
+    • 매개변수 키값보다 오른쪽에 있는 가장 가까운 원소 반환
+    lower_bound
+    • 매개변수 키값 이거나 키값보다 왼쪽에 있는 가장 가까운 원소 반환

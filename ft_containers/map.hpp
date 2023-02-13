@@ -40,7 +40,7 @@ class map
         typedef value_type second_argument_type;
         bool operator() (const value_type& x, const value_type& y) const
         {
-            return comp(x.first_type, y.first_type);
+            return comp(x.first, y.first);
         }
     };
 
@@ -66,7 +66,9 @@ class map
     public:
     // constructor && destructor && operator
     map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-    : _m_tree(tree_type(comp, alloc)) {}
+    {
+        tree_type(comp, alloc);
+    }
 
     template <class InputIterator>  
     map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
@@ -75,8 +77,8 @@ class map
     map (const map& x)
     {
         if (this == &x)
-            return (*this);
-        _m_tree = tree_type(x.begin(), x.end());
+            return ;
+        _m_tree = tree_type(x.begin(), x.end(), x.key_comp(), x.get_allocator());
     }
 
     ~map ()
@@ -88,15 +90,16 @@ class map
     {
         if (this == &x)
             return (*this);
-        _m_tree = tree_type(x.begin(), x.end());
+        _m_tree = tree_type(x.begin(), x.end(), x.key_comp(), x.get_allocator());
+        return (*this);
     }
 
     mapped_type& operator[] (const key_type& k)
     {
-        if (count(k))
-            return ((*(this->find(k))).first);
-        else
-            return ((*((this->insert(make_pair(k,mapped_type()))).first)));
+        iterator iter = lower_bound(k);
+        if (iter == end() || key_comp()(k, (*iter).first))
+            iter = insert(iter, value_type(k, mapped_type()));
+        return ((*iter).second);
     }
 
     // iterator
@@ -195,7 +198,7 @@ class map
     // getter
     allocator_type get_allocator() const { return (_m_tree.get_allocator()); }
 
-    value_compare value_comp() const { return (value_compare()); }
+    value_compare value_comp() const { return (value_compare(_m_tree.get_comp())); }
 
     key_compare key_comp() const { return (_m_tree.get_comp()); }
 
@@ -207,8 +210,8 @@ class map
     pair<iterator,bool> insert (const value_type& val)
     {
         if (count(val.first))
-            return (make_pair(find(val.first), false));
-        return (make_pair(_m_tree.insert_node(val), true));
+            return (ft::make_pair(find(val.first), false));
+        return (ft::make_pair(_m_tree.insert_node(val), true));
     }
 
     iterator insert (iterator position, const value_type& val)
@@ -229,16 +232,16 @@ class map
     {
         while (first != last)
         {
-            insert(first._node->_data);
+            insert(*first);
             first++;
         }
     }
 
     void erase (iterator position)
     {
-        key_type k = position._node->_data.first;
+        key_type k = position.base()->_data.first;
         if (count(k))
-         _m_tree.delete_node(_m_tree.find(k));
+         _m_tree.delete_node(_m_tree.find_node(k));
 
     }
 
@@ -246,7 +249,7 @@ class map
     {
         if (count(k))
         {
-            _m_tree.delete_node(_m_tree.find(k));
+            _m_tree.delete_node(_m_tree.find_node(k));
             return (1);
         }
         return (0);
@@ -257,8 +260,8 @@ class map
         key_type k;
         while (first != last)
         {
-            k = first._node->_data.first;
-            _m_tree.delete_node(_m_tree.find(k));
+            k = first->first;
+            _m_tree.delete_node(_m_tree.find_node(k));
             first++;
         }
     }

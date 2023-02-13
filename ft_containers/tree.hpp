@@ -36,48 +36,39 @@ struct rb_tree_node
     : _color(color), _parent(parent), _left(left), _right(right), _data(data) {}
     ~rb_tree_node() {}
 
-    rb_tree_node<T>* minimum(rb_tree_node<T>* node, rb_tree_node<T>* _NIL)
-    {
-        rb_tree_node<T>* x = node;
-        while (x->_left != _NIL)
-            x = x->_left;
-        return (x);
-    }
-
-    rb_tree_node<T>* maximum(rb_tree_node<T>* node, rb_tree_node<T>* _NIL)
-    {
-        rb_tree_node<T>* x = node;
-        while (x->_right != _NIL)
-            x = x->_right;
-        return (x);
-    }
 };
 
-template < class T > 
+template < class T, class Ref, class Point> 
 class rb_tree_itterator
 {
     public:
     typedef bidirectional_iterator_tag		            iterator_category;
     typedef T			        						value_type;
     typedef ptrdiff_t                                   difference_type;
-    typedef T*			        					    pointer;
-    typedef T&		        							reference;
+    typedef Point			        					pointer;
+    typedef Ref		        							reference;
+
+    typedef rb_tree_itterator<value_type, value_type&, value_type*>             iterator;
+    typedef rb_tree_itterator<value_type, const value_type&, const value_type*> const_iterator;
 
     typedef rb_tree_node<value_type>                    node_type;
-    typedef node_type*                                  node_ptr;
+    typedef rb_tree_node<value_type>*                   node_ptr;
 
-    private:
+    protected:
     node_ptr    _node;
     node_ptr    _root;
     node_ptr    _NIL;
 
     public:
-
     rb_tree_itterator() : _node(), _NIL() {}
-    rb_tree_itterator(node_ptr node, node_ptr root, node_ptr nil)
-     : _node(node), _root(root), _NIL(nil) {}
-    rb_tree_itterator(const rb_tree_itterator<value_type>& node) 
-     : _node(node._node), _root(node._root), _NIL(node._NIL) {}
+    rb_tree_itterator(node_ptr node, node_ptr root, node_ptr NIL)
+    { 
+        _node = node;
+        _root = root;
+        _NIL = NIL;
+    }
+    rb_tree_itterator(const rb_tree_itterator<value_type, value_type&, value_type*>& node) 
+     : _node(node.base()), _root(node.get_root()), _NIL(node.get_nil()) {}
 
     reference operator*() const { return (_node->_data); }
     pointer operator->() const { return (&(operator*())); }
@@ -87,10 +78,11 @@ class rb_tree_itterator
         increment();
         return *this; 
     }
+
     rb_tree_itterator operator++(int) 
     {
-        rb_tree_itterator temp(*this);
-        temp.increment();
+        rb_tree_itterator temp = *this;
+        increment();
         return (temp);
     }
 
@@ -99,32 +91,23 @@ class rb_tree_itterator
         decrement();
         return *this; 
     }
+
     rb_tree_itterator operator--(int) 
     {
-        rb_tree_itterator temp(*this);
-        temp.decrement();
+        rb_tree_itterator temp = *this;
+        decrement();
         return (temp);
     }
 
-    template<class Iterator1, class Iterator2>
-    bool operator==(const rb_tree_itterator<Iterator1>& x, 
-                    const rb_tree_itterator<Iterator2>& y)
-    {
-        return (x._root == y._root);
-    }
-
-    template<class Iterator1, class Iterator2>
-    bool operator!=(const rb_tree_itterator<Iterator1>& x, 
-                    const rb_tree_itterator<Iterator2>& y)
-    {
-        return (!(x == y));
-    }
+    node_ptr base() const { return (_node); }
+    node_ptr get_root() const { return (_root); }
+    node_ptr get_nil() const { return (_NIL); }
 
     private:
     void    increment()
     {
         if (_node == _NIL)
-            _node = _root->minimum(_root, _NIL);
+            _node = minimum(_root, _NIL);
         if (_node->_right != _NIL) 
         {
             _node = _node->_right;
@@ -146,7 +129,7 @@ class rb_tree_itterator
     void    decrement()
     {
         if (_node == _NIL)
-            _node = _root->maximum(_root, _NIL);
+            _node = maximum(_root, _NIL);
         else
         {
             if (_node->_left != _NIL)
@@ -167,27 +150,98 @@ class rb_tree_itterator
             }
         }
     }
+
+    node_ptr minimum(node_ptr node, node_ptr _NIL)
+    {
+        node_ptr x = node;
+        while (x->_left != _NIL)
+            x = x->_left;
+        return (x);
+    }
+
+    node_ptr maximum(node_ptr node, node_ptr _NIL)
+    {
+        node_ptr x = node;
+        while (x->_right != _NIL)
+            x = x->_right;
+        return (x);
+    }
     
 };
 
+template<class Iterator1, class Iterator2>
+bool operator==(const rb_tree_itterator<Iterator1, Iterator1&, Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, Iterator2&, Iterator2*>& y)
+{
+    return (x.base() == y.base());
+}
+
+template<class Iterator1, class Iterator2>
+bool operator==(const rb_tree_itterator<Iterator1, const Iterator1&, const Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, Iterator2&, Iterator2*>& y)
+{
+    return (x.base() == y.base());
+}
+
+template<class Iterator1, class Iterator2>
+bool operator==(const rb_tree_itterator<Iterator1, Iterator1&, Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, const Iterator2&, const Iterator2*>& y)
+{
+    return (x.base() == y.base());
+}
+
+template<class Iterator1, class Iterator2>
+bool operator==(const rb_tree_itterator<Iterator1, const Iterator1&, const Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, const Iterator2&, const Iterator2*>& y)
+{
+    return (x.base() == y.base());
+}
+
+template<class Iterator1, class Iterator2>
+bool operator!=(const rb_tree_itterator<Iterator1, Iterator1&, Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, Iterator2&, Iterator2*>& y)
+{
+    return (x.base() != y.base());
+}
+
+template<class Iterator1, class Iterator2>
+bool operator!=(const rb_tree_itterator<Iterator1, const Iterator1&, const Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, Iterator2&, Iterator2*>& y)
+{
+    return (x.base() != y.base());
+}
+
+template<class Iterator1, class Iterator2>
+bool operator!=(const rb_tree_itterator<Iterator1, Iterator1&, Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, const Iterator2&, const Iterator2*>& y)
+{
+    return (x.base() != y.base());
+}
+
+template<class Iterator1, class Iterator2>
+bool operator!=(const rb_tree_itterator<Iterator1, const Iterator1&, const Iterator1*>& x, 
+                const rb_tree_itterator<Iterator2, const Iterator2&, const Iterator2*>& y)
+{
+    return (x.base() != y.base());
+}
 
 template < class Key, class T, class Compare, class Allocator > 
 class rb_tree
 {
     public:
-    typedef Key                                         key_type;
-    typedef T                                           value_type;
-    typedef Allocator                                   allocator_type;
-    typedef Compare                                     key_compare;
-    typedef ft::rb_tree_node<value_type>                node_type;
-    typedef std::allocator<node_type>                   node_allocator_type;
-    typedef typename node_type::node_ptr                node_ptr;
-    typedef typename node_type::const_node_ptr          const_node_ptr;
+    typedef Key                                             key_type;
+    typedef T                                               value_type;
+    typedef Allocator                                       allocator_type;
+    typedef Compare                                         key_compare;
+    typedef ft::rb_tree_node<value_type>                    node_type;
+    typedef std::allocator<node_type>                       node_allocator_type;
+    typedef typename node_type::node_ptr                    node_ptr;
+    typedef typename node_type::const_node_ptr              const_node_ptr;
 
-    typedef ft::rb_tree_itterator<T>                    iterator;
-    typedef ft::rb_tree_itterator<const T>              const_iterator;
-    typedef ft::reverse_iterator<iterator>              reverse_iterator;
-    typedef ft::reverse_iterator<const_iterator>        const_reverse_iterator;
+    typedef ft::rb_tree_itterator<T, T&, T*>                iterator;
+    typedef ft::rb_tree_itterator<T, const T&, const T*>    const_iterator;
+    typedef ft::reverse_iterator<iterator>                  reverse_iterator;
+    typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;
 
     protected:
     node_allocator_type _node_alloc;
@@ -226,7 +280,7 @@ class rb_tree
         rb_tree(tree.begin(), tree.end(), tree.get_comp(), tree.get_allocator());
     }
 
-    node_ptr make_node(value_type& data)
+    node_ptr make_node(const value_type& data)
     {
         node_ptr new_node = alloc_node(RED, data);
         new_node->_left = _NIL;
@@ -235,12 +289,28 @@ class rb_tree
         return (new_node);
     }
 
-    node_ptr successor(node_ptr node)
+    node_ptr minimum(node_ptr node, node_ptr _NIL) const
+    {
+        node_ptr x = node;
+        while (x->_left != _NIL)
+            x = x->_left;
+        return (x);
+    }
+
+    node_ptr maximum(node_ptr node, node_ptr _NIL) const
+    {
+        node_ptr x = node;
+        while (x->_right != _NIL)
+            x = x->_right;
+        return (x);
+    }
+
+    node_ptr successor(node_ptr node) const 
     {
         node_ptr x = node;
         node_ptr y = node->_parent;
         if (node->_right != _NIL)
-            return (_root->minimum(x->_right, _NIL));
+            return (minimum(x->_right, _NIL));
         while (y != _NIL && x == y->_right)
         {
             x = y;
@@ -249,28 +319,28 @@ class rb_tree
         return (y);
     }
 
-    node_ptr predecessor(node_ptr node)
+    node_ptr predecessor(node_ptr node) const
     {
         node_ptr x = node;
         node_ptr y = node->_parent;
-        if (node->left != _NIL)
-            return (_root->maximum(x->left, _NIL));
+        if (node->_left != _NIL)
+            return (maximum(x->_left, _NIL));
         while (y != _NIL && x == y->_left)
         {
             x = y;
-            y = y->parent;
+            y = y->_parent;
         }
         return (y);
     }
 
-    bool is_empty()
+    bool is_empty() const
     {
         if (_root == _NIL)
             return (true);
         return (false);
     }
 
-    bool is_exist(const key_type& k)
+    bool is_exist(const key_type& k) const
     {
         if (find_node(k) != _NIL)
             return (true);
@@ -279,15 +349,21 @@ class rb_tree
 
     bool is_hint(iterator hint, const key_type& k)
     {
-        if (hint == _NIL)
+        node_ptr hint_node = hint.base();
+
+        if (hint_node == _NIL)
         {
-            node_ptr max = _root->maximum(_root, _NIL);
-            if (_comp(max->_data.first < k))
+            node_ptr max = maximum(_root, _NIL);
+            if (_comp(max->_data.first, k))
                 return (true);
             return (false);
         }
-
-
+        else
+        {
+            if (_comp(hint_node->_data.first, k))
+                return (true);
+            return (false);
+        }
     }
 
     node_ptr get_root() const { return (_root); }
@@ -328,13 +404,14 @@ class rb_tree
     {
         while (first != last)
         {
-            insert_node(*first);
+            node_ptr node = make_node(*first);
+            insert_node(node);
             first++;
         }
     }
 
     template <class InputIterator> 
-    iterator insert_node(InputIterator hint, value_type& data)
+    iterator insert_node(InputIterator hint, const value_type& data)
     {
         node_ptr node = make_node(data);
         if (is_empty())
@@ -355,19 +432,19 @@ class rb_tree
         return (iterator(node, _root, _NIL));
     }
 
-    iterator insert_node(value_type& data)
+    iterator insert_node(const value_type& data)
     {
-        return (insert_node(make_node(data)));
+        node_ptr node = make_node(data);
+        return (insert_node(node));
     }
 
     void delete_node(node_ptr node)
     {
-        node_ptr y; // 삭제할 노드
-        node_ptr x; // 삭제할 노드의 자식 노드
+        node_ptr y = node; // 삭제할 노드
+        node_ptr x = _NIL; // 삭제할 노드의 자식 노드
 
-        if (!is_exist(node))
+        if (!is_exist(node->_data.first))
             return ;
-
         if (node->_left == _NIL)
         {
             x = node->_right;
@@ -400,7 +477,7 @@ class rb_tree
         _node_alloc.destroy(y);
     }
 
-    node_ptr find_node(const key_type & k)
+    node_ptr find_node(const key_type & k) const
     {
         node_ptr x = _root;
         while (x != _NIL)
@@ -417,12 +494,12 @@ class rb_tree
 
     iterator begin()
     {
-        return (iterator(_root->minimum(_root, _NIL), _root, _NIL));
+        return (iterator(minimum(_root, _NIL), _root, _NIL));
     }
 
     const_iterator begin() const
     {
-        return (const_iterator(_root->minimum(_root, _NIL), _root, _NIL));
+        return (const_iterator(minimum(_root, _NIL), _root, _NIL));
     }
 
     iterator end()
@@ -437,22 +514,22 @@ class rb_tree
 
     reverse_iterator rbegin()
     {
-        return (reverse_iterator(begin()));
+        return (reverse_iterator(end()));
     }
 
     const_reverse_iterator rbegin() const
     {
-        return (const_reverse_iterator(begin()));
+        return (const_reverse_iterator(end()));
     }
 
     reverse_iterator rend()
     {
-        return (reverse_iterator(end()));
+        return (reverse_iterator(begin()));
     }
 
     const_reverse_iterator rend() const
     {
-        return (const_reverse_iterator(end()));
+        return (const_reverse_iterator(begin()));
     }
 
     iterator lower_bound(const key_type& k)
@@ -642,7 +719,7 @@ class rb_tree
 
     void insert_node_with_hint(iterator hint, node_ptr node)
     {
-        node_ptr y = hint._node;
+        node_ptr y = hint.base();
 
         // 트리에 노드 연결
         node->_parent = y;

@@ -11,10 +11,6 @@
 #include "map.hpp"
 #include <vector>
 
-void show_pair(ft::pair<int, std::string> p)
-{
-	std::cout << p._first << " " << p._second << std::endl;
-}
 
 int		main(void)
 {

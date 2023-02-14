@@ -22,6 +22,7 @@ template < class T >
 struct rb_tree_node
 {
     typedef T                           value_type;
+    typedef T*                          value_ptr;
     typedef rb_tree_node<value_type>    node_type;
     typedef node_type*                  node_ptr;
     typedef const node_type*            const_node_ptr;
@@ -70,7 +71,8 @@ class rb_tree_itterator
     rb_tree_itterator(const rb_tree_itterator<value_type, value_type&, value_type*>& node) 
      : _node(node.base()), _root(node.get_root()), _NIL(node.get_nil()) {}
 
-    reference operator*() const { return (_node->_data); }
+
+    reference operator*() const { return ((_node->_data)); }
     pointer operator->() const { return (&(operator*())); }
     
     rb_tree_itterator& operator++() 
@@ -263,13 +265,23 @@ class rb_tree
 
     rb_tree(const key_compare& comp, const allocator_type& alloc) : _node_alloc(alloc), _comp(comp), _size(0)
     {
-        rb_tree();
+        value_type p;
+        _NIL = alloc_node(BLACK, p);
+        _NIL->_left = _NIL;
+        _NIL->_right = _NIL;
+        _NIL->_parent = _NIL;
+        _root = _NIL;
     }
 
     template <class InputIterator>  
     rb_tree(InputIterator first, InputIterator last, const key_compare& comp , const allocator_type& alloc) : _node_alloc(alloc), _comp(comp), _size(0)
     {
-        rb_tree();
+        value_type p;
+        _NIL = alloc_node(BLACK, p);
+        _NIL->_left = _NIL;
+        _NIL->_right = _NIL;
+        _NIL->_parent = _NIL;
+        _root = _NIL;
         insert_node(first, last);
     }
 
@@ -277,7 +289,7 @@ class rb_tree
     {
         if (this == &tree)
             return ;
-        rb_tree(tree.begin(), tree.end(), tree.get_comp(), tree.get_allocator());
+        *this = rb_tree(tree.begin(), tree.end(), tree.get_comp(), tree.get_allocator());
     }
 
     node_ptr make_node(const value_type& data)
@@ -350,6 +362,7 @@ class rb_tree
     bool is_hint(iterator hint, const key_type& k)
     {
         node_ptr hint_node = hint.base();
+        node_ptr hint_next_node = (hint++).base();
 
         if (hint_node == _NIL)
         {
@@ -361,7 +374,10 @@ class rb_tree
         else
         {
             if (_comp(hint_node->_data.first, k))
-                return (true);
+            {
+                if (_comp(k, hint_next_node->_data.first))
+                    return (true);
+            }
             return (false);
         }
     }
@@ -405,7 +421,8 @@ class rb_tree
         while (first != last)
         {
             node_ptr node = make_node(*first);
-            insert_node(node);
+            if (!is_exist(node->_data.first))
+                insert_node(node);
             first++;
         }
     }
@@ -440,9 +457,40 @@ class rb_tree
 
     void delete_node(node_ptr node)
     {
-        node_ptr y = node; // 삭제할 노드
-        node_ptr x = _NIL; // 삭제할 노드의 자식 노드
+        node_ptr y = _NIL;
+        node_ptr x = _NIL;
 
+        // if (node->_left == _NIL || node->_right == _NIL)
+        //     y = node;
+        // else
+        //     y = successor(node);
+
+        // if (y->_left != _NIL)
+        //     x = y->_left;
+        // else
+        //     x = y->_right;
+
+        // if (x != _NIL)
+        //     x->_parent = y->_parent;
+
+        // if (y->_parent == _NIL)
+        //     _root = x;
+        // else if (y == y->_parent->_left)
+        //     y->_parent->_left = x;
+        // else
+        //     y->_parent->_left = x;
+        
+        // if (y != node)
+        //     node->_data = y->_data;
+        // if (y->_color == BLACK)
+        //     delete_fixup(x);
+
+        // _node_alloc.deallocate(y, 1);
+        // _node_alloc.destroy(y);
+        // _size--;
+
+
+        rb_tree_color color = node->_color;
         if (!is_exist(node->_data.first))
             return ;
         if (node->_left == _NIL)
@@ -458,7 +506,7 @@ class rb_tree
         else
         {
             y = successor(node);
-            rb_tree_color color = y->_color;
+            color = y->_color;
             x = y->_right;
 
             transplant(y, y->_right);
@@ -469,12 +517,14 @@ class rb_tree
             y->_left = node->_left;
             y->_left->_parent = y;
             y->_color = node->_color;
-            
-            if (color == BLACK)
-                delete_fixup(x);
+
         }
-        _node_alloc.deallocate(y, 1);
-        _node_alloc.destroy(y);
+
+        if (color == BLACK)
+            delete_fixup(x);
+        _node_alloc.deallocate(node, 1);
+        _node_alloc.destroy(node);
+        _size--;
     }
 
     node_ptr find_node(const key_type & k) const
@@ -539,7 +589,6 @@ class rb_tree
 
         node_ptr x = _root;
         node_ptr y = _NIL;
-        node_ptr bound = _NIL;
         while (x != _NIL)
         {
             y = x;
@@ -548,7 +597,8 @@ class rb_tree
             else
                 x = x->_right;
         }
-        bound = successor(y);
+        if (_comp(x->_data.first, k))
+            y = successor(y);
         return (iterator(y, _root, _NIL));
     }
 
@@ -559,7 +609,6 @@ class rb_tree
 
         node_ptr x = _root;
         node_ptr y = _NIL;
-        node_ptr bound = _NIL;
         while (x != _NIL)
         {
             y = x;
@@ -568,7 +617,8 @@ class rb_tree
             else
                 x = x->_right;
         }
-        bound = successor(y);
+        if (_comp(x->_data.first, k))
+            y = successor(y);
         return (const_iterator(y, _root, _NIL));
         
     }
@@ -577,7 +627,6 @@ class rb_tree
     {
         node_ptr x = _root;
         node_ptr y = _NIL;
-        node_ptr bound = _NIL;
         while (x != _NIL)
         {
             y = x;
@@ -586,7 +635,8 @@ class rb_tree
             else
                 x = x->_right;
         }
-        bound = predecessor(y);
+        if (is_exist(k) || _comp(x->_data.first, k))
+            y = successor(y);
         return (iterator(y, _root, _NIL));
     }
     
@@ -594,7 +644,6 @@ class rb_tree
     {
         node_ptr x = _root;
         node_ptr y = _NIL;
-        node_ptr bound = _NIL;
         while (x != _NIL)
         {
             y = x;
@@ -603,7 +652,8 @@ class rb_tree
             else
                 x = x->_right;
         }
-        bound = predecessor(y);
+        if (is_exist(k) || _comp(x->_data.first, k))
+            y = successor(y);
         return (const_iterator(y, _root, _NIL));
     }
 
@@ -720,6 +770,9 @@ class rb_tree
     void insert_node_with_hint(iterator hint, node_ptr node)
     {
         node_ptr y = hint.base();
+
+        if (y == _NIL)
+            y = (--hint).base();
 
         // 트리에 노드 연결
         node->_parent = y;

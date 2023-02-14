@@ -52,6 +52,7 @@ class map
 
     typedef ft::rb_tree<key_type, value_type, key_compare, allocator_type>  tree_type;
 
+    typedef typename tree_type::node_type                                   node_type;
     typedef typename tree_type::iterator                                    iterator;
     typedef typename tree_type::const_iterator                              const_iterator;
     typedef ft::reverse_iterator<iterator>                                  reverse_iterator;
@@ -96,8 +97,8 @@ class map
 
     mapped_type& operator[] (const key_type& k)
     {
-        iterator iter = lower_bound(k);
-        if (iter == end() || key_comp()(k, (*iter).first))
+        iterator iter = find(k);
+        if ((*iter).first != k)
             iter = insert(iter, value_type(k, mapped_type()));
         return ((*iter).second);
     }
@@ -123,22 +124,22 @@ class map
         return (_m_tree.end());
     }
 
-    iterator rbegin()
+    reverse_iterator rbegin()
     {
         return (_m_tree.rbegin());
     }
     
-    const_iterator rbegin() const
+    const_reverse_iterator rbegin() const
     {
         return (_m_tree.rbegin());
     }
 
-    iterator rend()
+    reverse_iterator rend()
     {
         return (_m_tree.rend());
     }
     
-    const_iterator rend() const
+    const_reverse_iterator rend() const
     {
         return (_m_tree.rend());
     }
@@ -204,7 +205,7 @@ class map
 
     size_type size() const { return (_m_tree.get_size()); }
 
-    size_type max_size() const { return ((SIZE_MAX) / sizeof(value_type)); }
+    size_type max_size() const { return ((SIZE_MAX) / (sizeof(node_type))); }
 
     // element modify
     pair<iterator,bool> insert (const value_type& val)
@@ -260,7 +261,7 @@ class map
         key_type k;
         while (first != last)
         {
-            k = first->first;
+            k = (*first).first;
             _m_tree.delete_node(_m_tree.find_node(k));
             first++;
         }
@@ -273,7 +274,10 @@ class map
 
     void swap (map& x)
     {
-        std::swap(_m_tree, x._m_tree);
+        tree_type temp;
+        temp = _m_tree;
+        _m_tree = x._m_tree;
+        x._m_tree = temp;
     }
 };
 

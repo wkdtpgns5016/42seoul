@@ -63,6 +63,7 @@ gnlTester/
 push_swap_tester/
 pipex-tester/
 containers_test/
+ft_containers-unit-test/
 
 # Mac Finder .DS_store
 .DS_store

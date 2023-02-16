@@ -20,13 +20,24 @@
 #include <algorithm>
 #include <map>
 
+
+void test()
+{
+
+	ft::map<int, int> mp;
+
+    mp[0] = 0;
+    mp[1] = 1;
+    mp[2] = 2;
+    mp[3] = 3;
+    mp[4] = 4;
+    mp[5] = 5;
+
+    mp.erase(mp.begin(), mp.end());
+}
+
 int		main(void)
 {
-	ft::map<int, char> m;
-	std::map<int, char> m2;
-
-	std::cout << m.max_size() << "\n" << m2.max_size() << std::endl;
-	std::cout << (UINTPTR_MAX) <<std::endl;
-	
+    test();
 	return (0);
 }

@@ -67,10 +67,7 @@ class map
     public:
     // constructor && destructor && operator
     map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-    {
-        tree_type(comp, alloc);
-    }
-
+    : _m_tree(tree_type(comp, alloc)) {}
     template <class InputIterator>  
     map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
     : _m_tree(tree_type(first, last, comp, alloc)) {}
@@ -79,18 +76,23 @@ class map
     {
         if (this == &x)
             return ;
+        clear();
+        _m_tree.dealloc_nil();
         _m_tree = tree_type(x.begin(), x.end(), x.key_comp(), x.get_allocator());
     }
 
     ~map ()
     {
-        clear();
+        _m_tree.clear();
+        _m_tree.dealloc_nil();
     }
 
     map& operator= (const map& x)
     {
         if (this == &x)
             return (*this);
+        clear();
+        _m_tree.dealloc_nil();
         _m_tree = tree_type(x.begin(), x.end(), x.key_comp(), x.get_allocator());
         return (*this);
     }
@@ -262,8 +264,8 @@ class map
         while (first != last)
         {
             k = (*first).first;
-            _m_tree.delete_node(_m_tree.find_node(k));
             first++;
+            _m_tree.delete_node(_m_tree.find_node(k));
         }
     }
 
@@ -274,10 +276,7 @@ class map
 
     void swap (map& x)
     {
-        tree_type temp;
-        temp = _m_tree;
-        _m_tree = x._m_tree;
-        x._m_tree = temp;
+        _m_tree.swap(x._m_tree);
     }
 };
 

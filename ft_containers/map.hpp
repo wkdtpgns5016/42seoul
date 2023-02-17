@@ -50,7 +50,8 @@ class map
     typedef typename Allocator::pointer                                     pointer;
     typedef typename Allocator::const_pointer                               const_pointer;
 
-    typedef ft::rb_tree<key_type, value_type, key_compare, allocator_type>  tree_type;
+    typedef ft::rb_tree<key_type, value_type, key_with_pair<value_type>, 
+                        key_compare, allocator_type>                        tree_type;
 
     typedef typename tree_type::node_type                                   node_type;
     typedef typename tree_type::iterator                                    iterator;
@@ -76,7 +77,7 @@ class map
     {
         if (this == &x)
             return ;
-        clear();
+        _m_tree.clear();
         _m_tree.dealloc_nil();
         _m_tree = tree_type(x.begin(), x.end(), x.key_comp(), x.get_allocator());
     }

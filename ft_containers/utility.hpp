@@ -6,12 +6,14 @@ namespace ft
     template <class T1, class T2>
     struct pair
     {
-        T1  first;
-        T2  second;
+        typedef T1  first_type;
+        typedef T2  second_type;
+        first_type  first;
+        second_type  second;
         pair() : first(), second() {}
         template<class U, class V> 
         pair (const pair<U,V>& pr) : first(pr.first), second(pr.second) {}
-        pair (const T1& a, const T2& b) : first(a), second(b) {}
+        pair (const first_type& a, const second_type& b) : first(a), second(b) {}
         pair& operator= (const pair& pr)
         {
             if (this == &pr) return (*this);
@@ -59,6 +61,20 @@ namespace ft
     {
         return ( pair<T1,T2>(x,y) );
     }
+
+    template <class Pair>
+    struct key_with_pair
+    {
+        typename Pair::first_type &operator()(Pair & pair) const { return (pair.first); }
+        typename Pair::first_type &operator()(const Pair & pair) const { return (pair.first); }
+    };
+
+    template <class Value>
+    struct key_with_value
+    {
+        Value &operator()(Value & val) const { return (val); }
+        Value &operator()(const Value & val) const { return (val); }
+    };
 }
 
 #endif

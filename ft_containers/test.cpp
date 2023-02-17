@@ -19,25 +19,17 @@
 #include <exception>
 #include <algorithm>
 #include <map>
-
-
-void test()
-{
-
-	ft::map<int, int> mp;
-
-    mp[0] = 0;
-    mp[1] = 1;
-    mp[2] = 2;
-    mp[3] = 3;
-    mp[4] = 4;
-    mp[5] = 5;
-
-    mp.erase(mp.begin(), mp.end());
-}
+#include <set>
 
 int		main(void)
 {
-    test();
+	std::set<int> s;
+	s.insert(3);
+	s.insert(4);
+	s.insert(5);
+	s.insert(6);
+
+	std::cout << (*(s.begin())) << std::endl;
+	
 	return (0);
 }

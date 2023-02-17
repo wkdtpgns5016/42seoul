@@ -403,9 +403,17 @@ class vector
 
     void swap(vector<T,Allocator>& x)
     {
-        std::swap(_m_start, x._m_start);
-        std::swap(_m_finish, x._m_finish);
-        std::swap(_m_end_of_storage, x._m_end_of_storage);
+        T* temp_m_start = _m_start;
+        T* temp_m_finish = _m_finish;
+        T* temp_m_end_of_storage = _m_end_of_storage;
+
+        _m_start = x._m_start;
+        _m_finish = x._m_finish;
+        _m_end_of_storage = x._m_end_of_storage;
+
+        x._m_start = temp_m_start;
+        x._m_finish = temp_m_finish;
+        x._m_end_of_storage = temp_m_end_of_storage;
     }
     
     void clear()

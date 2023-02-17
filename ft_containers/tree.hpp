@@ -228,7 +228,7 @@ bool operator!=(const rb_tree_itterator<Iterator1, const Iterator1&, const Itera
     return (x.base() != y.base());
 }
 
-template < class Key, class T, class Compare, class Allocator > 
+template < class Key, class T, class KeyOfValue, class Compare, class Allocator > 
 class rb_tree
 {
     public:
@@ -256,8 +256,7 @@ class rb_tree
     public:
     rb_tree() :  _size(0) 
     {
-        value_type p;
-        _NIL = alloc_node(BLACK, p);
+        _NIL = alloc_node(BLACK, value_type());
         _NIL->_left = _NIL;
         _NIL->_right = _NIL;
         _NIL->_parent = _NIL;
@@ -266,8 +265,7 @@ class rb_tree
 
     rb_tree(const key_compare& comp, const allocator_type& alloc) : _node_alloc(alloc), _comp(comp), _size(0)
     {
-        value_type p;
-        _NIL = alloc_node(BLACK, p);
+        _NIL = alloc_node(BLACK, value_type());
         _NIL->_left = _NIL;
         _NIL->_right = _NIL;
         _NIL->_parent = _NIL;
@@ -277,8 +275,7 @@ class rb_tree
     template <class InputIterator>  
     rb_tree(InputIterator first, InputIterator last, const key_compare& comp , const allocator_type& alloc) : _node_alloc(alloc), _comp(comp), _size(0)
     {
-        value_type p;
-        _NIL = alloc_node(BLACK, p);
+        _NIL = alloc_node(BLACK, value_type());
         _NIL->_left = _NIL;
         _NIL->_right = _NIL;
         _NIL->_parent = _NIL;
@@ -384,15 +381,15 @@ class rb_tree
         if (hint_node == _NIL)
         {
             node_ptr max = maximum(_root, _NIL);
-            if (_comp(max->_data.first, k))
+            if (_comp(KeyOfValue()(max->_data), k))
                 return (true);
             return (false);
         }
         else
         {
-            if (_comp(hint_node->_data.first, k))
+            if (_comp(KeyOfValue()(hint_next_node->_data), k))
             {
-                if (_comp(k, hint_next_node->_data.first))
+                if (_comp(k, KeyOfValue()(hint_next_node->_data)))
                     return (true);
             }
             return (false);
@@ -404,16 +401,6 @@ class rb_tree
     size_t get_size() const { return (_size); }
     allocator_type get_allocator() const { return (_node_alloc); }
     key_compare get_comp() const { return (_comp); }
-
-    void inorder_print_tree(node_ptr t)
-    {
-        if (t != _NIL)
-        {
-            inorder_print_tree(t->_left);
-            std::cout << "[" << t->_data.first << "]" << t->_data.second << " | ";
-            inorder_print_tree(t->_right);
-        }
-    }
 
     void transplant(node_ptr t, node_ptr c)
     {
@@ -438,7 +425,7 @@ class rb_tree
         while (first != last)
         {
             node_ptr node = make_node(*first);
-            if (!is_exist(node->_data.first))
+            if (!is_exist(KeyOfValue()(node->_data)))
                 insert_node(node);
             first++;
         }
@@ -477,7 +464,7 @@ class rb_tree
         node_ptr y = _NIL;
         node_ptr x = _NIL;
         rb_tree_color color = node->_color;
-        if (!is_exist(node->_data.first))
+        if (!is_exist(KeyOfValue()(node->_data)))
             return ;
         if (node->_left == _NIL)
         {
@@ -543,9 +530,9 @@ class rb_tree
         node_ptr x = _root;
         while (x != _NIL)
         {
-            if (k == x->_data.first)
+            if (k == KeyOfValue()(x->_data))
                 break ;
-            if (_comp(k, x->_data.first))
+            if (_comp(k, KeyOfValue()(x->_data)))
                 x = x->_left;
             else
                 x = x->_right;
@@ -603,12 +590,12 @@ class rb_tree
         while (x != _NIL)
         {
             y = x;
-            if (_comp(k, x->_data.first))
+            if (_comp(k, KeyOfValue()(x->_data)))
                 x = x->_left;
             else
                 x = x->_right;
         }
-        if (_comp(y->_data.first, k))
+        if (_comp(KeyOfValue()(y->_data), k))
             y = successor(y);
         return (iterator(y, _root, _NIL));
     }
@@ -623,12 +610,12 @@ class rb_tree
         while (x != _NIL)
         {
             y = x;
-            if (_comp(k, x->_data.first))
+            if (_comp(k, KeyOfValue()(x->_data)))
                 x = x->_left;
             else
                 x = x->_right;
         }
-        if (_comp(y->_data.first, k))
+        if (_comp(KeyOfValue()(y->_data), k))
             y = successor(y);
         return (const_iterator(y, _root, _NIL));
         
@@ -641,12 +628,12 @@ class rb_tree
         while (x != _NIL)
         {
             y = x;
-            if (_comp(k, x->_data.first))
+            if (_comp(k, KeyOfValue()(x->_data)))
                 x = x->_left;
             else
                 x = x->_right;
         }
-        if (is_exist(k) || _comp(y->_data.first, k))
+        if (is_exist(k) || _comp(KeyOfValue()(y->_data), k))
             y = successor(y);
         return (iterator(y, _root, _NIL));
     }
@@ -658,12 +645,12 @@ class rb_tree
         while (x != _NIL)
         {
             y = x;
-            if (_comp(k, x->_data.first))
+            if (_comp(k, KeyOfValue()(x->_data)))
                 x = x->_left;
             else
                 x = x->_right;
         }
-        if (is_exist(k) || _comp(y->_data.first, k))
+        if (is_exist(k) || _comp(KeyOfValue()(y->_data), k))
             y = successor(y);
         return (const_iterator(y, _root, _NIL));
     }
@@ -787,7 +774,7 @@ class rb_tree
 
         // 트리에 노드 연결
         node->_parent = y;
-        if (_comp(node->_data.first, y->_data.first))
+        if (_comp(KeyOfValue()(node->_data), KeyOfValue()(y->_data)))
             y->_left = node;
         else
             y->_right = node;
@@ -804,7 +791,7 @@ class rb_tree
         while (x != _NIL)
         {
             y = x;
-            if (_comp(node->_data.first, x->_data.first))
+            if (_comp(KeyOfValue()(node->_data), KeyOfValue()(x->_data)))
                 x = x->_left;
             else
                 x = x->_right;
@@ -812,7 +799,7 @@ class rb_tree
 
         // 트리에 노드 연결
         node->_parent = y;
-        if (_comp(node->_data.first, y->_data.first))
+        if (_comp(KeyOfValue()(node->_data), KeyOfValue()(y->_data)))
             y->_left = node;
         else
             y->_right = node;

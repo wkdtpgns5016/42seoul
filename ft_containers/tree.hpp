@@ -50,8 +50,8 @@ class rb_tree_itterator
     typedef Point			        					pointer;
     typedef Ref		        							reference;
 
-    typedef rb_tree_itterator<value_type, value_type&, value_type*>             iterator;
-    typedef rb_tree_itterator<value_type, const value_type&, const value_type*> const_iterator;
+    // typedef rb_tree_itterator<value_type, value_type&, value_type*>             iterator;
+    // typedef rb_tree_itterator<value_type, const value_type&, const value_type*> const_iterator;
 
     typedef rb_tree_node<value_type>                    node_type;
     typedef rb_tree_node<value_type>*                   node_ptr;
@@ -227,6 +227,8 @@ bool operator!=(const rb_tree_itterator<Iterator1, const Iterator1&, const Itera
 {
     return (x.base() != y.base());
 }
+
+
 
 template < class Key, class T, class KeyOfValue, class Compare, class Allocator > 
 class rb_tree
@@ -668,6 +670,7 @@ class rb_tree
     {
         node_ptr y = node->_right;
         node->_right = y->_left;
+        if (y->_left != _NIL)
         y->_left->_parent = node;
         y->_parent = node->_parent;
         if (node->_parent == _NIL)
@@ -684,7 +687,8 @@ class rb_tree
     {
         node_ptr y = node->_left;
         node->_left = y->_right;
-        y->_right->_parent = node;
+        if (y->_right != _NIL)
+            y->_right->_parent = node;
         y->_parent = node->_parent;
         if (node->_parent == _NIL)
             _root = y;
@@ -832,7 +836,7 @@ class rb_tree
             right_rotate(brother);
             brother = (*node)->_parent->_right;
         }
-        if (brother->_right->_color == RED)       // Case 4 : 형제 오른쪽 자식이 Red
+        else                                   // Case 4 : 형제 오른쪽 자식이 Red
         {
             brother->_color = (*node)->_parent->_color;
             (*node)->_parent->_color = BLACK;

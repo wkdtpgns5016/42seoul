@@ -7,6 +7,7 @@
 #include "iterator.hpp"
 #include "algorithm.hpp"
 #include "type_traits.hpp"
+#include "utility.hpp"
 
 namespace ft
 {
@@ -266,13 +267,13 @@ class vector
     // element modify
     void push_back(const T& x)
     {
-        if (size() == capacity())
+        if (_m_finish == _m_end_of_storage)
         {
             pointer temp;
             size_type size = this->size();
             size_type new_capacity;
             if (capacity() < 3)
-                new_capacity = 1;
+                new_capacity = capacity() + 1;
             else
                 new_capacity = capacity() + capacity() / 2;
             temp = allocate_copy(new_capacity, begin(), end());
@@ -292,8 +293,9 @@ class vector
 
     void pop_back()
     {
-        _m_data_allocator.destroy(_m_finish - 1);
         _m_finish--;
+        _m_data_allocator.destroy(_m_finish);
+        // _m_data_allocator.deallocate(_m_finish, 1);
     }
     
     iterator insert(iterator position, const T& x)
@@ -403,17 +405,9 @@ class vector
 
     void swap(vector<T,Allocator>& x)
     {
-        T* temp_m_start = _m_start;
-        T* temp_m_finish = _m_finish;
-        T* temp_m_end_of_storage = _m_end_of_storage;
-
-        _m_start = x._m_start;
-        _m_finish = x._m_finish;
-        _m_end_of_storage = x._m_end_of_storage;
-
-        x._m_start = temp_m_start;
-        x._m_finish = temp_m_finish;
-        x._m_end_of_storage = temp_m_end_of_storage;
+        ft::swap(_m_start, x._m_start);
+        ft::swap(_m_finish, x._m_finish);
+        ft::swap(_m_end_of_storage, x._m_end_of_storage);
     }
     
     void clear()

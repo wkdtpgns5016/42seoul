@@ -62,6 +62,14 @@ namespace ft
         return ( pair<T1,T2>(x,y) );
     }
 
+    template <class T>
+    void swap (T& a, T& b)
+    {
+        T c = a;
+        a = b;
+        b = c;
+    }
+
     template <class Pair>
     struct key_with_pair
     {

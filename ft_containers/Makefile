@@ -27,6 +27,9 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
+bonus:
+	$(MAKE) all
+
 clean:
 	rm -f $(OBJS) $(OBJS_BONUS)
 
@@ -37,4 +40,4 @@ re:
 	$(MAKE) fclean 
 	$(MAKE) all
 
-.PHONY = all clean fclean re
+.PHONY = all clean fclean re bonus

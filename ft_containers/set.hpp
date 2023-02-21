@@ -29,11 +29,12 @@ class set
 	typedef typename allocator_type::pointer 								pointer;
 	typedef typename allocator_type::const_pointer 							const_pointer;
 
-    typedef ft::rb_tree<key_type, value_type, key_with_value<value_type>, 
+    typedef ft::rb_tree<key_type, value_type, 
+                        key_with_value<value_type>, 
 						key_compare, allocator_type>  						tree_type;
 
     typedef typename tree_type::node_type                                   node_type;
-    typedef typename tree_type::iterator                                    iterator;
+    typedef typename tree_type::const_iterator                              iterator;
     typedef typename tree_type::const_iterator                              const_iterator;
     typedef ft::reverse_iterator<iterator>                                  reverse_iterator;
     typedef ft::reverse_iterator<const_iterator>                            const_reverse_iterator;

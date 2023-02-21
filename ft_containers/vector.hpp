@@ -20,10 +20,10 @@ class vector
     // define types
     typedef T                                           value_type;
     typedef Allocator                                   allocator_type;
-    typedef typename Allocator::reference               reference;
-    typedef typename Allocator::const_reference         const_reference;
-    typedef typename Allocator::pointer                 pointer;
-    typedef typename Allocator::const_pointer           const_pointer;
+    typedef typename allocator_type::reference 		    reference;
+	typedef typename allocator_type::const_reference    const_reference;
+	typedef typename allocator_type::pointer 		    pointer;
+	typedef typename allocator_type::const_pointer 		const_pointer;
     typedef ft::random_access_iterator<pointer>         iterator;
     typedef ft::random_access_iterator<const_pointer>   const_iterator;
     typedef ft::reverse_iterator<iterator>              reverse_iterator;
@@ -272,10 +272,10 @@ class vector
             pointer temp;
             size_type size = this->size();
             size_type new_capacity;
-            if (capacity() < 3)
+            if (capacity() < 2)
                 new_capacity = capacity() + 1;
             else
-                new_capacity = capacity() + capacity() / 2;
+                new_capacity = capacity() * 2;
             temp = allocate_copy(new_capacity, begin(), end());
             _m_data_allocator.deallocate(_m_start, capacity());
             destroy_element(_m_start, _m_finish);
@@ -369,17 +369,31 @@ class vector
         pointer temp;
         size_type size = this->size();
         size_type new_capacity = capacity() * 2;
+        T* temp_start = _m_start;
+        T* temp_finish = _m_finish;
+        size_type temp_capacity = capacity();
         if (size + n > new_capacity)
             new_capacity = capacity() + n;
-        temp = allocate_copy(new_capacity, begin(), end());
-        _m_data_allocator.deallocate(_m_start, capacity());
-        destroy_element(_m_start, _m_finish);
-        _m_start = temp;
-        _m_finish = _m_start + size;
-        _m_end_of_storage = _m_start + new_capacity;
-        relocate_insert(begin() + add_size, end(), begin() + add_size + n);
-        std::uninitialized_copy(first, last, _m_start + add_size);
-        _m_finish += n;
+        try
+        {
+            temp = allocate_copy(new_capacity, begin(), end());
+            _m_start = temp;
+            _m_finish = _m_start + size;
+            _m_end_of_storage = _m_start + new_capacity;
+            relocate_insert(begin() + add_size, end(), begin() + add_size + n);
+            std::uninitialized_copy(first, last, _m_start + add_size);
+            _m_finish += n;
+        }
+        catch(...)
+        {
+            _m_data_allocator.deallocate(_m_start, new_capacity);
+            _m_start = temp_start;
+            _m_finish = temp_finish;
+            _m_end_of_storage = temp_start + temp_capacity;
+            throw;
+        }
+        _m_data_allocator.deallocate(temp_start, temp_capacity);
+        destroy_element(temp_start, temp_finish);
         return ;
     }
 
@@ -454,7 +468,7 @@ class vector
         {
             std::uninitialized_copy(first, last, result);
         }
-        catch(const std::bad_alloc& e)
+        catch(...)
         {
             _m_data_allocator.deallocate(result, n);
             throw ;

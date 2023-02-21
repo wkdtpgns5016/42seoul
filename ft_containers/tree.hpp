@@ -50,9 +50,6 @@ class rb_tree_itterator
     typedef Point			        					pointer;
     typedef Ref		        							reference;
 
-    // typedef rb_tree_itterator<value_type, value_type&, value_type*>             iterator;
-    // typedef rb_tree_itterator<value_type, const value_type&, const value_type*> const_iterator;
-
     typedef rb_tree_node<value_type>                    node_type;
     typedef rb_tree_node<value_type>*                   node_ptr;
 
@@ -375,7 +372,8 @@ class rb_tree
         return (false);
     }
 
-    bool is_hint(iterator hint, const key_type& k)
+    template<class InputIterator>
+    bool is_hint(InputIterator hint, const key_type& k)
     {
         node_ptr hint_node = hint.base();
         node_ptr hint_next_node = (hint++).base();
@@ -769,7 +767,8 @@ class rb_tree
         _root->_parent = _NIL;
     }
 
-    void insert_node_with_hint(iterator hint, node_ptr node)
+    template<class InputIterator>
+    void insert_node_with_hint(InputIterator hint, node_ptr node)
     {
         node_ptr y = hint.base();
 

@@ -1,0 +1,7 @@
+webserve
+Socket server TCP 작동방식
+https://tjdahr25.tistory.com/46?category=1020081
+
+
+
+I/O process

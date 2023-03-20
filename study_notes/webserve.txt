@@ -2,6 +2,275 @@ webserve
 Socket server TCP 작동방식
 https://tjdahr25.tistory.com/46?category=1020081
 
+HTTP Message
+    HTTP/1.1 클라이언트와 서버는 메시지를 전송하여 통신 이때 사용 되는 메시지가 HTTP 메시지
 
 
-I/O process
+    HTTP 메시지 포맷
+
+        start-line CRLF	: 시작줄
+        *(field-line CRLF)	: 헤더
+        CRLF			: 빈줄
+        [message body]	: 메세지 바디
+
+        start-line = request-line / status-line
+
+
+    HTTP 메시지 파싱
+
+    파싱 단계
+    1. 시작줄을 구조체로 읽기
+    2. 각 헤더 필드 이름 별 해시 테이블로 읽기
+    3. 읽은 메세지를 분석하여 Body가 표시되는지 안되는지 예상
+    4. Body가 있으면 메시지 본문 길이와 같은 양의 옥텟이 읽히거나 연결이 닫힐 때까지 스트림으로 읽는다
+
+    고려 사항
+    1. 반드시 HTTP 메시지를 US-ASCII[USASCII]의 상위 집합인 인코딩의 옥텟 시퀀스로 구문 분석해야함 => 유니코드 문자 스트림으로 구문 분석하면 문자열 처리 라이브러리가 옥텟 LF(%x0A)가       포함된 잘못된 멀티바이트 문자 시퀀스를 처리하는 다양한 방식으로 인해 보안 취약성이 발생
+    2. 발신자는 콘텐츠 이외의 프로토콜 요소 내에서 베어 CR(LF가 바로 뒤에 오지 않는 CR 문자)을 생성 해서는 안됨  (400 error)
+    3. 견고성을 위해 요청 줄을 수신하고 구문 분석할 것으로 예상되는 서버는 요청 줄 이전에 수신된 빈 줄(CRLF)을 하나 이상 무시해야 함
+    4. HTTP/1.1 user agent는 요청의 앞이나 뒤에 추가 CRLF를 보내서는 안됨 (400 error) (HTTP/1.0 user agent는 post 후 CRLF 보낼 가능성 있음)
+    5. 발신자는 시작 줄과 첫 번째 헤더 필드 사이에 공백을 보내서는 안됨 (400 error)
+
+
+    HTTP 버전
+
+    포맷 : HTTP/1.1 [http-version] / [digit] . [digit]
+
+    고려 사항
+    1. HTTP/1.1 메시지가 HTTP/1.0 수신자[HTTP/1.0] 또는 버전을 알 수 없는 수신자에게 전송될 때, HTTP/1.1 메시지는 모든 최신 기능을 무시해도 유효한 HTTP/1.0 메시지로 해석될 수 있도록 구성
+    2. HTTP 메시지를 처리하는 중개자(즉, 터널 역할을 하는 중개자를 제외한 모든 중개자)는 업스트림 문제에 대한 해결 방법으로 의도적으로 다운 그레이드하지 않는 한 전달 메시지에 반드시 자체 HTTP 버전을 보내야 함
+
+
+    ====================================================================================
+
+
+    Request Line
+
+    포맷 : [method] SP [Request-target] SP [http-version]
+
+    고려 사항
+    1. 구현한 메서드보다 긴 메서드를 수신한 서버는 501(구현되지 않음) 상태 코드로 응답해야 함
+    2. 구문 분석하고자 하는 URI보다 긴 요청 대상을 수신한 서버는 414(URI 너무 길다) 상태 코드로 응답해야 함
+    3. 모든 HTTP 발신자와 수신자는 최소한 8000 옥텟의 요청 줄 길이를 지원하는 것이 좋음
+
+
+    HTTP Method
+    HTTP 메서드는 클라이언트와 서버 사이에 이루어지는 요청(Request)과 응답(Response) 데이터를 전송하는 방식
+
+    종류
+    1. GET : 리소스 조회
+    2. POST:  요청 데이터 처리, 주로 등록에 사용
+    3. PUT : 리소스를 대체(덮어쓰기), 해당 리소스가 없으면 생성
+    4. PATCH : 리소스 부분 변경 (PUT이 전체 변경, PATCH는 일부 변경)
+    5. DELETE : 리소스 삭제
+    6. HEAD : GET과 동일하지만 메시지 부분(body 부분)을 제외하고, 상태 줄과 헤더만 반환
+    7. OPTIONS : 대상 리소스에 대한 통신 가능 옵션(메서드)을 설명(주로 CORS에서 사용)
+    8. CONNECT : 대상 자원으로 식별되는 서버에 대한 터널을 설정
+    9. TRACE : 대상 리소스에 대한 경로를 따라 메시지 루프백 테스트를 수행
+
+    고려 사항
+    1. 모든 범용 서버는 반드시 GET과 HEAD 메서드를 지원해야 함. (다른 모든 메서드는 선택 사항)
+    2. 인식할 수 없거나 구현되지 않은 요청 메서드를 수신하는 원본 서버는 501(구현되지 않음) 상태 코드로 응답해야 함
+    3. 식별되고 구현되었지만 대상 리소스에 허용되지 않는 요청 메서드를 수신하는 원본 서버는 405(메서드 허용되지 않음) 상태 코드로 응답해야 함
+
+
+    Request Target
+
+    포맷 : request-target = 
+            / origin-form
+                    / absolute-form
+                    / authority-form
+                    / asterisk-form
+
+    origin 형식: 끝에 '?'와 쿼리 문자열이 붙는 절대 경로입니다. 이는 가장 일반적인 형식이며, GET, POST, HEAD, OPTIONS 메서드와 함께 사용합니다. POST / HTTP 1.1 
+    GET /background.png HTTP/1.0 
+    HEAD /test.html?query=alibaba HTTP/1.1 
+    OPTIONS /anypage.html HTTP/1.0
+
+    absolute 형식: 완전한 URL 형식입니다. 프록시에 연결하는 경우 대부분 GET과 함께 사용됩니다. GET http://developer.mozilla.org/en-US/docs/Web/HTTP/Messages HTTP/1.1
+
+    authority 형식: 도메인 이름 및 옵션 포트(':'가 앞에 붙습니다)로 이루어진 URL의 authority component 입니다. HTTP 터널을 구축하는 경우에만 CONNECT와 함께 사용할 수 있습니다. CONNECT developer.mozilla.org:80 HTTP/1.1
+
+    asterisk 형식: OPTIONS와 함께 별표('*') 하나로 간단하게 서버 전체를 나타냅니다. OPTIONS * HTTP/1.1
+
+    고려 사항
+    1. 요청 대상에는 공백이 허용되지 않는다.
+    2. 클라이언트는 모든 HTTP/1.1 요청 메시지에서 호스트 헤더 필드([HTTP] 섹션 7.2)를 전송해야 함 
+    3. 대상 URI에 권한 권한 구성 요소가 포함된 경우 클라이언트는 사용자 정보 하위 구성 요소와 "@" 구분 기호를 제외하고 해당 권한 구성 요소와 동일한 Host 필드 값을 보내야 함([HTTP] 섹션 4.2). 
+    4. 대상 URI에 권한 구성 요소가 없거나 정의되지 않은 경우 클라이언트는 빈 필드 값으로 Host 헤더 필드를 보내야 함
+    5. 서버는 호스트 헤더 필드가 없는 HTTP/1.1 요청 메시지와 두 개 이상의 호스트 헤더 필드 줄 또는 잘못된 필드 값을 가진 호스트 헤더 필드가 포함된 요청 메시지에 400(잘못된 요청) 상태 코드로 응답해야 함
+
+
+    ==================================================================================================
+
+
+    Status line
+
+    포맷 : http-version sp status-code sp [reason-phrase]
+
+
+    Status-code : 서버가 클라이언트의 해당 요청을 이해하고 충족시키려는 시도의 결과를 설명하는 3자리 정수 코드
+    Reason-phrase : 숫자 상태 코드와 관련된 텍스트 설명을 제공하기 위한 목적으로만 존재하며, 
+    주로 대화형 텍스트 클라이언트에서 더 자주 사용되던 초기 인터넷 애플리케이션 프로토콜을 존중하기 위해 존재
+
+    고려 사항
+    1. 서버는 reason-phrase가 없는 경우에도(즉, 상태 줄이 공백으로 끝나는 경우에도) 상태 코드와 reason-phrase를 구분하는 공백을 반드시 보내야 함
+
+
+    ==================================================================================================
+
+
+    Field syntax
+
+    포맷 : field-name : OWS field-value OWS
+
+    고려 사항
+    1. 서버는 헤더 필드 이름과 콜론 사이에 공백이 포함된 수신된 요청 메시지를 응답 상태 코드 400(잘못된 요청)으로 거부해야 함
+    2. "message/http" 미디어 유형(섹션 10.1)을 제외하고는 이러한 줄 접기를 더 이상 사용하지 않습니다.
+    3. 발신자는 "message/http" 미디어 유형 내에서 패키징하기 위한 메시지가 아닌 한 줄 바꿈이 포함된 메시지(즉, obs-fold 규칙과 일치하는 필드 줄 값이 포함된 메시지)를 생성해서는 안됨
+    4. “message/http" 컨테이너 내에 있지 않은 요청 메시지에서 옵스 폴드를 수신한 서버는 400(잘못된 요청)을 보내 메시지를 거부
+    5. “message/http" 컨테이너 내에 있지 않은 응답 메시지에서 옵스 폴드를 수신한 프록시 또는 게이트웨이는 메시지를 삭제하고 502(게이트웨이 불량) 응답
+    6. 응답 메시지에서 "메시지/http" 컨테이너에 속하지 않는 옵스 폴드를 수신한 사용자 에이전트는 필드 값을 해석하기 전에 수신된 각 옵스 폴드를 하나 이상의 SP 옥텟으로 대체 해야함
+
+    =================================================================================================
+
+
+    Message Body
+
+    고려 사항
+    1. 요청에서 메시지 본문이 있으면 Content-Length 또는 Transfer-Encoding 헤더 필드로 표시됨
+    2. 응답에서 메시지 본문의 존재 여부는 응답하는 요청 메서드와 응답 상태코드에 따라 달라진다. HEAD 요청 메서드에 대한 응답은관련 응답 헤더 필드(Transfer-Encoding, Content-Length 등)가 있는 경우 요청 메서드가 GET 되었을 때의 값만 나타내므로메시지 본문을 포함하지 않는다. 
+    3. CONNECT 요청 메서드에 2xx(successful) 응답은 메시지 본문 대신 터널 모드로 전환한다.
+    4. 모든 1xx(Informational), 204(No Content) 및 304(Not Modified) 응답에는 메시지 본문이 포함되지 않는다.
+    5. 다른 모든 응답에는 메시지 본문이 포함되지만, 본문의 길이는 0일 수 있다.
+
+
+    Transfer Encoding
+
+    https://withbundo.blogspot.com/2017/08/http-20-http-ii-transfer-encoding.html
+
+    고려 사항
+    1. 서버는 상태 코드가 1xx(Informational) 또는 204(No Content) 응답에서 Transfer-Encoding 헤더 필드를 보내면 안됨
+    2. 서버는 CONNECT 요청에 2xx(Successful) 응답에서 Transfer-Encoding 헤더 필드를 보내면 안됨
+    3. 해당 요청이 HTTP/1.1(또는 그 이상)을 나타내지 않는 한 서버는 Transfer-Encoding을 포함하는 응답
+    4. 이해하지 못하는 transfer coding과 함께 요청 메시지를 받는 서버는 501 (Not Implemented)로 응답
+    5. 요청에 Transfer-Encoding  헤더 필드가 있고 청크 전송 인코딩이 최종 인코딩이 아닌 경우 메시지 본문 길이를 안정적으로 결정할 수 없으므로 서버는 400(요청 오류) 상태 코드로 응답한 다음 연결을 닫아야 함
+
+
+    Content Length
+
+    메시지에 Transfer-Encoding 헤더 필드가 없는 경우 Content-Length 헤더 필드([HTTP] 섹션 8.6)는 잠재적 콘텐츠에 대한 예상 크기를 십진수 옥텟으로 제공할 수 있습니다. 콘텐츠가 포함된 메시지의 경우 Content-Length 필드 값은 데이터(및 메시지)가 끝나는 위치를 결정하는 데 필요한 프레이밍 정보를 제공합니다. 콘텐츠를 포함하지 않는 메시지의 경우 Content-Length는 선택한 표현의 크기를 나타냅니다([HTTP] 섹션 8.6).
+
+    고려 사항
+    1. 발신자는 Transfer-Encoding 헤더 필드가 포함된 메시지에는 Content-Length 헤더 필드를 보내서는 안됨
+    2. 전송 인코딩 없이 잘못된 Content-Length 헤더 필드가 포함된 메시지를 수신한 경우, 필드 값을 쉼표로 구분된 목록으로 성공적으로 구문 분석할 수 있고([HTTP] 5.6.1절) 목록의 모든 값이 유효하며 목록의 모든 값이 동일한 경우를 제외하고는 메시지 프레임이 유효하지 않으며 수신자는 이를 복구 불가능한 오류로 처리해야 함 (400 error)
+    3. 프록시가 수신한 응답 메시지에 있는 경우 프록시는 서버와의 연결을 닫고 수신한 응답을 삭제 (502 error) 
+    4. 사용자 에이전트가 수신한 응답 메시지인 경우 사용자 에이전트는 서버에 대한 연결을 닫고 수신한 응답을 삭제해야 함
+    5.  발신자가 연결을 닫거나 수신자가 지정된 옥텟 수를 수신하기 전에 시간 초과를 하면 수신자는 메시지가 불완전한 것으로 간주하고 연결을 닫아야 함
+    6. 요청 메시지이고 위의 조건 중 어느 것도 해당하지 않으면 메시지 본문 길이가 0입니다(메시지 본문이 없음)그렇지 않으면 메시지 본문 길이가 선언되지 않은 응답 메시지이므로 서버가 연결을 닫기 전에 수신한 옥텟 수에 따라 메시지 본문 길이가 결정
+    7. 서버는 message body를 포함하지만 content length가 포함되지 않은 요청을 411(길이 필요)로 응답하여 거부할 수 있음
+
+HTTP 메시지 객체 설계
+
+    HTTP 메시지 포맷
+
+        start-line CRLF	: 시작줄
+        *(field-line CRLF)	: http 헤더
+        CRLF			: 빈줄
+        [message body]	: 메세지 바디
+
+    Request 메시지 포맷
+
+        Start-line : HTTP 메서드 + Request Target + HTTP 버전 (request line)
+
+        http Header : (헤더와 필드를 콜론으로 구분)
+        1.	General 헤더: Via와 같은 헤더는 메시지 전체에 적용됩니다.
+        2.	Request 헤더: User-Agent (en-US), Accept-Type와 같은 헤더는 요청의 내용을 좀 더 구체화 시키고(Accept-Language), 컨텍스를 제공하기도 하며				(Referer), 조건에 따른 제약 사항을 가하기도 하면서(If-None) 요청 내용을 수정합니다.
+        3.	Entity 헤더: Content-Length와 같은 헤더는 요청 본문에 적용됩니다. 당연히 요청 내에 본문이 없는 경우 entity 헤더는 전송되지 않습니다.
+
+        Body 종류 : 
+        1.	단일-리소스 본문(single-resource bodies): 헤더 두 개(Content-Type와 Content-Length)로 정의된 단일 파일로 구성됩니다.
+        2.	다중-리소스 본문(multiple-resource bodies): 멀티파트 본문으로 구성되는 다중 리소스 본문에서는 파트마다 다른 정보를 지니게 됩니다. 보통 HTML 폼 (en-US)과 관련이 있습니다.
+
+
+    Response 메시지 포맷
+
+        Start-line : HTTP 버전 + 상태 코드 + 상태 메시지 (status line)
+
+        http Header : (헤더와 필드를 콜론으로 구분)
+        1.	General 헤더: Via와 같은 헤더는 메시지 전체에 적용됩니다.
+        2.	Response 헤더: Vary와 Accept-Ranges와 같은 헤더는 상태 줄에 미처 들어가지 못했던 서버에 대한 추가 정보를 제공합니다.
+        3.	Entity 헤더: Content-Length와 같은 헤더는 요청 본문에 적용됩니다. 당연히 요청 내에 본문이 없는 경우 entity 헤더는 전송되지 않습니다.
+
+        Body 종류 :
+        1.	이미 길이가 알려진 단일 파일로 구성된 단일-리소스 본문: 헤더 두개(Content-Type와 Content-Length)로 정의 합니다.
+        2.	길이를 모르는 단일 파일로 구성된 단일-리소스 본문: Transfer-Encoding가 chunked로 설정되어 있으며, 파일은 청크로 나뉘어 인코딩 되어 있습니다.
+        3.	서로 다른 정보를 담고 있는 멀티파트로 이루어진 다중 리소스 본문: 이 경우는 상대적으로 위의 두 경우에 비해 보기 힘듭니다.
+
+    초기 아이디어
+    1. HTTP 메시지 포맷은 request나 response나 구조적으로 동일하므로 HTTP 메시지 객체를 상속받아 request/response 객체를 구현
+    2. HTTP 메시지 포맷 내부 각각의 요소 또한 객체로 구현하여 관리
+    3. Start line, http header, body와 같은 간단한 객체들은 구조체로 설계
+
+    ==================================================================================================================================
+
+    Start line 객체 명세
+
+        Sturct	: StartLine
+
+        Attribute	: 
+
+        Method	: virtual int isValid() = 0 (유효성 검사 메소드)
+
+    Request line 객체 명세
+
+        Sturct	: RequestLine -> (StartLine 상속)
+
+        Attribute	: HttpMethod		- enum
+                RequestTarget	- string
+                HttpVersion		- string
+
+        Method	: int isValid() (유효성 검사 메소드)
+
+    Status line 객체 명세
+
+        Sturct	: StatusLine -> (StartLine 상속)
+
+        Attribute	: HttpVersion		- string
+                StatusCode		- macro
+                StatusMessage	- string
+
+        Method	: int isValid() (유효성 검사 메소드)
+
+    Http Header 객체 명세
+
+        Sturct	: HttpHeader
+
+        Attribute	: Header			- map
+
+        Method	: int isValid() (유효성 검사 메소드)
+
+    HTTP 메시지 객체 명세
+
+        Class	: HttpMessage 
+
+        Attribute	: HttpHeader		 - 객체
+                HttpMessageBody	 - 객체
+
+        Method	: virtual int isValid() = 0 (유효성 검사 메소드)
+
+    Request 메시지 객체 명세
+
+        Class	: RequestMessage -> (HttpMessage 상속)
+
+        Attribute	: RequestLine		- 객체
+
+        Method	: int isValid() (유효성 검사 메소드)
+
+    Response 메시지 객체 명세
+
+        Class	: ResponseMessage -> (HttpMessage 상속)
+
+        Attribute	: StatusLine		- 객체
+
+        Method	: int isValid() (유효성 검사 메소드)

@@ -214,47 +214,53 @@ HTTP 메시지 객체 설계
 
     ==================================================================================================================================
 
-    Start line 객체 명세
+    
+    Start line 객체 명세  ( 템플릿 메소드 패턴)
 
-        Sturct	: StartLine
+        Class	: StartLine
 
         Attribute	: 
 
         Method	: virtual int isValid() = 0 (유효성 검사 메소드)
+                virtual string getString() = 0 (문자열 출력 메소드)
 
     Request line 객체 명세
 
-        Sturct	: RequestLine -> (StartLine 상속)
+        Class	: RequestLine -> (StartLine 상속)
 
         Attribute	: HttpMethod		- enum
                 RequestTarget	- string
                 HttpVersion		- string
 
         Method	: int isValid() (유효성 검사 메소드)
+                string getString() (문자열 출력 메소드)
 
     Status line 객체 명세
 
-        Sturct	: StatusLine -> (StartLine 상속)
+        Class	: StatusLine -> (StartLine 상속)
 
         Attribute	: HttpVersion		- string
                 StatusCode		- macro
                 StatusMessage	- string
 
         Method	: int isValid() (유효성 검사 메소드)
+                string getString() (문자열 출력 메소드)
 
     Http Header 객체 명세
 
-        Sturct	: HttpHeader
+        Class	: HttpHeader
 
-        Attribute	: Header			- map
+        Attribute	: type			- enum
+                header			- pair
 
         Method	: int isValid() (유효성 검사 메소드)
+                string getString() (문자열 출력 메소드)
 
-    HTTP 메시지 객체 명세
+    HTTP 메시지 객체 명세 (템플릿 메소드 패턴)
 
         Class	: HttpMessage 
 
-        Attribute	: HttpHeader		 - 객체
+        Attribute	: HttpHeader		 - List<HttpHeader>
                 HttpMessageBody	 - 객체
 
         Method	: virtual int isValid() = 0 (유효성 검사 메소드)
